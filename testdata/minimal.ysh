@@ -52,5 +52,79 @@ var j8 = b'hi \t \' \\'
 echo u'hi \t \' \\'
 var j8 = u'hi \t \' \\'
 
-# TODO:
-# - triple quoted versions of all of them, in expression mode and command mode
+#
+# Triple-quoted strings
+#  ''' r'''
+#  """
+#  b""" u"""
+#
+
+var empty = ''
+
+# raw
+
+echo '''
+  C:\Program Files\
+  one ' 
+  two ''
+  ''' | cat
+
+var x = '''
+  C:\Program Files\
+  one ' 
+  two ''
+  ''' ++ empty
+
+echo r'''
+  C:\Program Files\
+  one '
+  two ''
+  ''' | cat
+
+var x = r'''
+  C:\Program Files\
+  one '
+  two ''
+  ''' ++ empty
+
+# double quoted
+
+echo """
+  one "
+  two ""
+  """
+
+var x = """
+  one "
+  two ""
+  """
+
+# j8
+
+echo b'''
+  one '
+  two ''
+  three \'''
+  ''' | cat
+
+var x = b'''
+  j8 \'''
+  one '
+  two ''
+  three \'''
+  ''' ++ empty
+
+echo u'''
+  one '
+  two ''
+  three \'''
+  ''' | cat
+
+var x = u'''
+  j8 \'''
+  one '
+  two ''
+  three \'''
+  ''' ++ empty
+
+echo done
