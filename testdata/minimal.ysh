@@ -201,7 +201,8 @@ echo done
 # Interpolation
 #
 
-var foo = '99'
+var base_dir = '/bin'
+var file = 'zz'
 
 echo $base_dir/file /tmp/$file-suffix
 
