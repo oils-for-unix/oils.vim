@@ -72,7 +72,8 @@ syn region nestedBracket start='\[' end=']' skip='\\[\[\]]' contains=@nested,@qu
 
 syn region nestedBrace start='{' end='}' skip='\\[{}]' contains=@nested,@quotedStrings,@tripleQuotedStrings contained
 
-syn region rhsExpr start='= ' end='$' contains=@nested,@quotedStrings,@tripleQuotedStrings
+" a rhsExpr can end with ; or the line
+syn region rhsExpr start='= ' end=';' end='$' contains=@nested,@quotedStrings,@tripleQuotedStrings
 
 " Define highlighting
 hi def link yshComment Comment
@@ -92,11 +93,6 @@ hi def link backslashSq Character
 
 hi def link @nested Special
 hi def link rhsExpr String
-
-" hi def link nestedParen Special
-" hi def link nestedBracket Special
-" hi def link nestedBrace Special
-
 
 let b:current_syntax = "ysh"
 

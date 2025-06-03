@@ -91,6 +91,11 @@ echo *.[ch]
               43,
               f(5))
 
+    # hard cases with ;
+    var z = f(1); echo hi
+    var z = g(1, 2
+              3); echo hi
+
     setvar a[0 + 0] = 42
 
     = g(42,
