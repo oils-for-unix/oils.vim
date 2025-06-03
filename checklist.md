@@ -20,18 +20,23 @@ that nested delimiters like `() [] {} $() $[]` are **real code**.
 See:
 
 - [testdata/minimal.ysh](testdata/minimal.ysh)
+- [syntax/ysh-minimal.vim](syntax/ysh-minimal.vim)
 
 Install this Vim syntax definition with the instructions in
 [README.md](README.md), and see what it looks like:
 
 ![YSH Minimal Lexing](https://oils.pub/image-deploy/ysh-minimal-lexing.png)
 
-At the end, you will be left with the **nested double quotes bug**:
+At the end, you will be left with a **pretty nice syntax highlighter**, but it
+has a **nested double quotes** bug:
 
 ![Nested Double Quotes Bug](https://oils.pub/image-deploy/nested-double-quotes-bug.png)
 
 That is, the second double quote should not close the string.  It should open a
 new string:
+
+    echo "hi $[d["key"]]"  # this is the inner string
+                 ^^^^^
 
     echo "hi $[d["key"]]"
          ^^^^^^^^^   ^^^^
