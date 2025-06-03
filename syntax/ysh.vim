@@ -16,6 +16,9 @@ endif
 " YSH keywords (not sure how to do leading =)
 syn keyword yshKeyword proc func const var setvar setglobal call
 
+" = keyword occurs at the beginning of a line
+syn match equalsKeyword '^[ \t]*=[ ]'
+
 " End-of-line comments
 syn match yshComment '^#.*$'
 syn match yshComment '[ \t]#.*$'
@@ -75,6 +78,7 @@ syn region expr start='(' end=')' skip='\\[()]' contains=expr,@quotedStrings,@tr
 " Define highlighting
 hi def link yshComment Comment
 hi def link yshKeyword Keyword
+hi def link equalsKeyword Keyword
 
 hi def link rawString String
 hi def link j8String String

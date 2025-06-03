@@ -11,12 +11,13 @@ proc p { echo hi }
 func f(x) { return (x) }
 
 call len('str')
-= len(g)  # not highlighted
 
-echo not#comment
+= len(g)  # = keyword
 
-echo $foo and $x
-echo "$foo and $y"
+#=foo
+#echo =foo
+
+echo not#comment  # space required before comment
 
 #
 # Escaping quotes with \' \"
@@ -25,10 +26,10 @@ echo "$foo and $y"
 echo \'single \'single \"double \"double
 
 #
-# Single-quoted strings
+# Single-quoted strings are raw by default
 #
 
-# command mode
+# Command mode
 echo '/usr/bin'
 echo r'C:\Program Files\'  # r'' prefix is allowed
 
@@ -43,21 +44,17 @@ echo ls bar'bar'
 echo ls -r'bar' 
 
 #
-# Double-quoted strings
+# Double-quoted strings support interpolation (and a few \ escapes)
 #
 
-echo "hi $r1 \" \\"
-var dq = "hi $r2 \" \\"
+echo "hi $r1 \$ \" \\"
+var dq = "hi $r2 \$ \" \\"
 
-echo $"hi $r1 \" \\"
-var dq = $"hi $r2 \" \\"
-
-# TODO: interpolation
-# var dq = "hi ${r2}"
-# var dq = "hi $[r2]"
+echo $"hi $r1 \$ \" \\"
+var dq = $"hi $r2 \$ \" \\"
 
 #
-# J8 strings
+# J8 strings have \ escapes
 #
 
 echo b'hi \t \' \\'
@@ -152,7 +149,7 @@ var x = u'''
   ''' ++ empty
 
 #
-# More
+# Expression Work Fine, Without Color
 #
 
 var d = {hi: 42}
@@ -162,16 +159,25 @@ echo "sum = $[42 + d['hi']]"
 var ch = 'i'
 echo $[42 + d["h$[ch]"]]
 
-# Nested double quotes!
+
+#
+# Bug -  nested double quotes don't work correctly
+#
+# This is Limitation of the MINIMAL style - lexing is non-recursive
+#
+
 echo "$[42 + d["h$[ch]"]]"
 echo "hi $["inner"]"
 
 echo done
 
-pp (1 + (2 + 3))
+#
+# Interpolation
+#
 
-pp ('hi' ++ "hi $x" + r'c:\' + b'\n')
+var foo = '99'
 
-if (42 > 3) {
-  echo 'yes'
-}
+echo $foo and $x
+
+# Inside double quotes - require modes, Vim regions
+echo "$foo and $x"
