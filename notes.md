@@ -38,3 +38,48 @@ We also have:
 
     func f (x, y) { ...
 
+## Strategy for ysh-recursive
+
+Command mode -> Expression
+
+    pp (x)             
+    pp [x]              
+    call f(x)
+    = f(x)
+
+    echo ls --flag=$[x + 1]  
+    echo @[glob('*.py')]
+
+Command mode -> Double quoted
+
+    echo "hi $x"
+    echo $"explicit $x"
+
+Expression mode -> Command
+
+    = :| foo.txt *.py |   # note: no redirects here though
+    = $(echo command sub)
+    = @(echo spliced command sub)
+    = ^(echo unevaluated)
+
+Expression mode -> Double Quoted
+
+    = "hi $x"
+    = $"explicit $x"
+    = ^"unevaluated $x"
+
+Double-Quoted mode ->
+
+    echo "greeting = $(echo hi)"  # Command
+    echo "sum = $[x + y]"         # Expression
+
+---
+
+Inconsequential sigil pairs:
+
+    myproc { echo block }
+
+    # never changes the mode, although could be highlighted
+    diff <(sort left.txt) <(sort right.txt) 
+
+    var x = ^[42 + i]  # never changes the mode
