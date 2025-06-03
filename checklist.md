@@ -38,6 +38,19 @@ new string:
 
 We can fix this with recursion.
 
+### Tips
+
+Everything in this stage can be expressed with regexes.  **My favorite regex** is
+`" ([^"\]|\\.)* "` - it correctly delimits C-style string literals with
+backslash escapes.  (Related article: <https://research.swtch.com/pcdata>).
+
+- Make sure that a `'` closes a raw string, even if there's a `\` before it:
+  `r'C:\Program Files\'`.
+- Make sure that `\"` does **not** close a double quoted string, and that `\'` does
+  not close a J8 string.
+- Make sure that `echo not#comment` is not a comment.  This is a special shell
+  rule.
+
 ## Stage 2 - Mutually Recursive Commands, Strings, and Expressions
 
 TODO
@@ -49,6 +62,8 @@ This requires **lexer modes**.
 - It's harder in TreeSitter, because stateful / modal lexers require external
   scanners in C, which have an awkward interface constrained by incremental
   parsing.
+
+See:
 
 - [testdata/lexer-modes.ysh](testdata/lexer-modes.ysh)
 
