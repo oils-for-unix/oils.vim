@@ -109,3 +109,8 @@ History expansion?
 
 - `echo foo = bar` - we might want to make `=` special
 - `pp [ch]` vs `pp *.[ch]` - is a leading space enough to distinguish the two?
+
+Also fiddly:
+
+- leading space rule for `pp (x)`
+- space rule for `= f(x)`

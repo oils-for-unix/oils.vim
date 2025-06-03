@@ -57,8 +57,14 @@ syn region tripleDollarDqString start='$"""' end='"""' contains=yshInterpolation
 syn match yshInterpolation "\$\w\+"
 
 " pp (x)
-" TODO: pp [x] may be hard?
-syn region expr start='(' end=')' skip='\\[()]' contains=expr,@quotedStrings,@tripleQuotedStrings
+" space required - pp(x) is illegal - it would be call pp(x)
+" syn region exprParen start='[ \t](' end=')' skip='\\[()]' contains=exprParen,@quotedStrings,@tripleQuotedStrings
+syn region exprParen start='(' end=')' skip='\\[()]' contains=exprParen,@quotedStrings,@tripleQuotedStrings
+
+" space required before pp [x], it is different than *.[ch]
+" is the right syntax for \[ or \]?
+" syn region exprBracket start='[ \t]\[' end=']' skip='\\[\[\]]' contains=exprBracket,@quotedStrings,@tripleQuotedStrings
+syn region exprBracket start='\[' end=']' skip='\\[\[\]]' contains=exprBracket,@quotedStrings,@tripleQuotedStrings
 
 " Define highlighting
 hi def link yshComment Comment
@@ -83,7 +89,8 @@ hi def link yshInterpolation Special
 hi def link backslashDq Special
 hi def link backslashSq Special
 
-hi def link expr Special
+hi def link exprParen Special
+hi def link exprBracket Special
 
 
 let b:current_syntax = "ysh"
