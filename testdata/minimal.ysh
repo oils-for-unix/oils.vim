@@ -164,3 +164,11 @@ echo "$[42 + d["h$[ch]"]]"
 echo "hi $["inner"]"
 
 echo done
+
+pp (1 + (2 + 3))
+
+pp ('hi' ++ "hi $x" + r'c:\' + b'\n')
+
+if (42 > 3) {
+  echo 'yes'
+}

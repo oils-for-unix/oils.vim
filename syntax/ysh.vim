@@ -39,6 +39,9 @@ syn match yshComment '[ \t]#.*$'
 syn match backslashSq "\\'"
 syn match backslashDq '\\"'
 
+syn cluster quotedStrings contains=rawString,j8String,sqString,dqString,dollarDqString
+syn cluster tripleQuotedStrings contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
+
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
 syn region rawString start="\<r'" end="'"
@@ -65,6 +68,10 @@ syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' end='"""' contains=yshInterpolation
 syn region tripleDollarDqString start='$"""' end='"""' contains=yshInterpolation
 
+" pp (x)
+" TODO: pp [x] may be hard?
+syn region expr start='(' end=')' skip='\\[()]' contains=expr,@quotedStrings,@tripleQuotedStrings
+
 " Define highlighting
 hi def link yshComment Comment
 hi def link yshKeyword Keyword
@@ -84,6 +91,8 @@ hi def link tripleDollarDqString String
 hi def link yshInterpolation Special
 hi def link backslashDq Special
 hi def link backslashSq Special
+
+hi def link expr Special
 
 
 let b:current_syntax = "ysh"
