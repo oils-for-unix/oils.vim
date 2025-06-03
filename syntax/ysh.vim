@@ -13,31 +13,16 @@ endif
 " This avoids problems with long multiline strings
 :syntax sync minlines=200
 
-" YSH keywords (not sure how to do leading =)
-syn keyword yshKeyword proc func const var setvar setglobal call
+syn keyword shellKeyword if elif else case for while
 
+" YSH keywords
+syn keyword yshKeyword proc func const var setvar setglobal call break continue return
 " = keyword occurs at the beginning of a line
 syn match equalsKeyword '^[ \t]*=[ ]'
 
 " End-of-line comments
 syn match yshComment '^#.*$'
 syn match yshComment '[ \t]#.*$'
-
-" TODO:
-" - rarely used: $"" prefix
-"   - also leaving out bash-style $'\n' strings
-"
-" More structure
-"
-" - backslash escapes within strings:
-"    - \" \$ in double quotes
-"    - \u{123456} in J8-style strings
-"
-" - Is there way to understand recursion like ${a:-'foo'}?  Or just leave that
-"   out
-" - There is also recursion of $(hostname) and such.
-"
-" - Here docs?  They are hard, could leave them out of YSH
 
 syn match backslashSq "\\'"
 syn match backslashDq '\\"'
@@ -77,6 +62,8 @@ syn region expr start='(' end=')' skip='\\[()]' contains=expr,@quotedStrings,@tr
 
 " Define highlighting
 hi def link yshComment Comment
+
+hi def link shellKeyword Keyword
 hi def link yshKeyword Keyword
 hi def link equalsKeyword Keyword
 

@@ -1,9 +1,26 @@
 
+var x = 42
+
 pp (1 + (2 + 3))
 
-pp ('hi' ++ "hi $x" + r'c:\' + b'\n')
+pp ('hi' ++ "hi $x" ++ r'c:\' ++ b'\n')
 
 if (42 > 3) {
   echo 'yes'
 }
 
+: '''
+" TODO:
+"
+" More structure
+"
+" - backslash escapes within strings:
+"    - \" \$ in double quotes
+"    - \u{123456} in J8-style strings
+"
+" - Is there way to understand recursion like ${a:-'foo'}?  Or just leave that
+"   out
+" - There is also recursion of $(hostname) and such.
+"
+" - Here docs?  They are hard, could leave them out of YSH
+'''

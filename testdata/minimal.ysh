@@ -2,6 +2,7 @@
 # Keywords
 #
 
+# YSH keywords
 var v = 42
 const c = 99
 setvar dq = 'zz'
@@ -17,10 +18,37 @@ call len('str')
 #=foo
 #echo =foo
 
+# Shell keywords
+if test --file / {
+  echo 'exists'
+} elif true {
+  echo 'true'
+} else {
+  echo 'else'
+}
+
+case (42) {
+  (42)   { echo 'match' }
+  (else) { echo 'other' }
+}
+
+for x in a b {
+  echo $x
+}
+
+while false {
+  echo hi
+}
+
+#
+# Comment
+#
+
 echo not#comment  # space required before comment
 
 #
-# Escaping quotes with \' \"
+# Quotes can be quoted with \
+# e.g. with \' \"
 #
 
 echo \'single \'single \"double \"double

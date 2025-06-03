@@ -9,7 +9,11 @@ set -o errexit
 
 test-files() {
   ### Run testdata
-  ysh testdata/minimal.ysh
+  for f in testdata/*.ysh; do
+    echo "=== $f ==="
+    ysh $f
+    echo
+  done
 }
 
 "$@"
