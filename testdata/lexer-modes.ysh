@@ -41,3 +41,43 @@ echo *.[ch]
 "
 " - Here docs?  They are hard, could leave them out of YSH
 '''
+
+#
+# Copied from notes.md
+#
+
+
+# Command mode -> Expression
+
+    var y = f(42)
+    = f(42)
+    call f(42)
+    pp ('hi')
+    pp ['hi']              
+
+    echo ls --flag=$[x + 1]  
+    echo @[glob('*.py')]
+
+# Command mode -> Double quoted
+
+    echo "hi $x"
+    echo $"explicit $x"
+
+# Expression mode -> Command
+
+    = :| foo.txt *.py |   # note: no redirects here though
+    = $(echo command sub)
+    = @(echo spliced command sub)
+    = ^(echo unevaluated)
+
+# Expression mode -> Double Quoted
+
+    = "hi $x"
+    = $"explicit $x"
+    = ^"unevaluated $x"
+
+# Double-Quoted mode ->
+
+    echo "greeting = $(echo hi)"  # Command
+    echo "sum = $[x + y]"         # Expression
+

@@ -42,10 +42,11 @@ We also have:
 
 Command mode -> Expression
 
-    pp (x)             
-    pp [x]              
-    call f(x)
-    = f(x)
+    var y = f(42)
+    = f(42)
+    call f(42)
+    pp ('hi')
+    pp ['hi']              
 
     echo ls --flag=$[x + 1]  
     echo @[glob('*.py')]
