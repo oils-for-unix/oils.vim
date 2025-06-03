@@ -77,17 +77,35 @@ See:
 
 TODO
 
-We may want to highlight:
+Backslashes mean different things in different modes:
 
 - `\;` in the unquoted lexer mode, but not `\n`
 - `\$` in double quoted strings, but not `\n`
-- `\n` and `\yff` and `\u{3bc}` in J8 strings, as well as unquoted in
-  expressions
-- `/[a-z]/` in Eggex
+- `\n` and `\yff` and `\u{3bc}` in J8 strings
+  - as well as unquoted in expressions
 
-Redirects are their own little lexical language, and don't affect lexer modes:
+Expressions:
+
+- `/[a-z]/` in Eggex are somewhat special
+
+Redirects appear in commands, and don't affect lexer modes.  They have their
+own little lexical language:
 
 - `echo hi 2> /dev/null`
 - `echo hi {left}< left {right}< right`
 - `>> <<`
 - `<<<`
+
+Commands and YSH array literals `:| a b|`:
+
+- Brace expansion: `{a,b}@example.com`
+- Globs: `*.py` and `?.[ch]`
+
+History expansion?
+
+- `!!` and `!$` and ...
+
+## Problems / Syntax to Change?
+
+- `echo foo = bar` - we might want to make `=` special
+- `pp [ch]` vs `pp *.[ch]` - is a leading space enough to distinguish the two?

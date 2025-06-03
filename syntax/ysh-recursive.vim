@@ -27,6 +27,9 @@ syn match yshComment '[ \t]#.*$'
 syn match backslashSq "\\'"
 syn match backslashDq '\\"'
 
+syn cluster quotedStrings contains=rawString,j8String,sqString,dqString,dollarDqString
+syn cluster tripleQuotedStrings contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
+
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
 syn region rawString start="\<r'" end="'"
@@ -38,23 +41,24 @@ syn region j8String start="\<[bu]'" skip='\\.' end="'"
 syn region sqString start="'" end="'"
 
 " Double-quoted strings
-" minimal style omits 'contains=yshInterpolation'
-syn region dqString start='"' skip='\\.' end='"' 
+syn region dqString start='"' skip='\\.' end='"' contains=yshInterpolation
 
 " Explicit with $
-" minimal style omits 'contains=yshInterpolation'
-syn region dollarDqString start='$"' skip='\\.' end='"'
+syn region dollarDqString start='$"' skip='\\.' end='"' contains=yshInterpolation
 
 " Python-like triple-quoted strings
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
-" minimal style omits 'contains=yshInterpolation'
-syn region tripleDqString start='"""' end='"""'
-syn region tripleDollarDqString start='$"""' end='"""'
+syn region tripleDqString start='"""' end='"""' contains=yshInterpolation
+syn region tripleDollarDqString start='$"""' end='"""' contains=yshInterpolation
 
 " String interpolation within double quotes
 syn match yshInterpolation "\$\w\+"
+
+" pp (x)
+" TODO: pp [x] may be hard?
+syn region expr start='(' end=')' skip='\\[()]' contains=expr,@quotedStrings,@tripleQuotedStrings
 
 " Define highlighting
 hi def link yshComment Comment
@@ -78,5 +82,8 @@ hi def link tripleDollarDqString String
 hi def link yshInterpolation Special
 hi def link backslashDq Special
 hi def link backslashSq Special
+
+hi def link expr Special
+
 
 let b:current_syntax = "ysh"
