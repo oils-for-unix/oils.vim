@@ -17,7 +17,8 @@ endif
 syn keyword yshKeyword proc func const var setvar setglobal call
 
 " End-of-line comments
-syn match yshComment '#.*$'
+syn match yshComment '^#.*$'
+syn match yshComment '[ \t]#.*$'
 
 " TODO:
 " - rarely used: $"" prefix

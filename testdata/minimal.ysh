@@ -13,6 +13,8 @@ func f(x) { return (x) }
 call len('str')
 = len(g)  # not highlighted
 
+echo not#comment
+
 #
 # Escaping quotes with \' \"
 #
