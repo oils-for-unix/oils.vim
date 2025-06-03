@@ -77,10 +77,17 @@ See:
 
 TODO
 
-We may want to handle:
+We may want to highlight:
 
-- `\;` vs. \z` in the unquoted lexer mode
-- `\n` and `\u{3bc}` in expressions
-- `\n` and `\u{3bc}` in J8 strings
+- `\;` in the unquoted lexer mode, but not `\n`
+- `\$` in double quoted strings, but not `\n`
+- `\n` and `\yff` and `\u{3bc}` in J8 strings, as well as unquoted in
+  expressions
 - `/[a-z]/` in Eggex
-- `\;` when unquoted
+
+Redirects are their own little lexical language, and don't affect lexer modes:
+
+- `echo hi 2> /dev/null`
+- `echo hi {left}< left {right}< right`
+- `>> <<`
+- `<<<`
