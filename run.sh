@@ -7,8 +7,9 @@ set -o nounset
 set -o pipefail
 set -o errexit
 
-make-links() {
-  ln -s ../oils/doc/syntax/*.ysh .
+test-files() {
+  ### Run testdata
+  ysh testdata/minimal.ysh
 }
 
 "$@"

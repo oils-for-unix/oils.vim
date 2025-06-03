@@ -1,0 +1,56 @@
+#
+# Keywords
+#
+
+var v = 42
+const c = 99
+setvar dq = 'zz'
+setglobal g = "yy"
+
+proc p { echo hi }
+func f(x) { return (x) }
+
+call len('str')
+= len(g)  # not highlighted
+
+#
+# Single-quoted strings
+#
+
+# command mode
+echo '/usr/bin'
+echo r'C:\Program Files\'  # r'' prefix is allowed
+
+# expression mode
+var r1 = '/usr/bin/'
+var r2 = r'C:\Program Files'  # r'' prrefix is allowed
+
+# corner cases for r''
+echo ls --foo='bar'
+echo ls --foo=r'bar'
+echo ls bar'bar'
+echo ls -r'bar' 
+
+#
+# Double-quoted strings
+#
+
+echo "hi $r1 \" \\"
+var dq = "hi $r2 \" \\"
+
+# TODO: interpolation
+# var dq = "hi ${r2}"
+# var dq = "hi $[r2]"
+
+#
+# J8 strings
+#
+
+echo b'hi \t \' \\'
+var j8 = b'hi \t \' \\'
+
+echo u'hi \t \' \\'
+var j8 = u'hi \t \' \\'
+
+# TODO:
+# - triple quoted versions of all of them, in expression mode and command mode

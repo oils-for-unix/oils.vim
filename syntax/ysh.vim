@@ -42,13 +42,15 @@ syn match yshComment "#.*$"
 " Raw
 " \< means word boundary, which isn't exactly right, but it's better than not
 " including it 
-syn region yshRawString start="\<r'" end='\''
+syn region yshRawString start="\<r'" end="'"
+
+syn region j8String start="\<[bu]'" skip='\\.' end="'"
 
 " Single-quoted string
 syn region yshSingleQuoteString start="'" end="'"
 
 " Double-quoted strings
-syn region yshDoubleQuoteString start='"' skip=/\\./ end='"' contains=yshInterpolation
+syn region yshDoubleQuoteString start='"' skip='\\.' end='"' contains=yshInterpolation
 
 " String interpolation within double quotes
 syn match yshInterpolation "\$\w\+" contained
@@ -65,6 +67,7 @@ hi def link yshComment Comment
 hi def link yshKeyword Keyword
 
 hi def link yshRawString String
+hi def link j8String String
 hi def link yshSingleQuoteString String
 hi def link yshDoubleQuoteString String
 hi def link yshInterpolation Special
