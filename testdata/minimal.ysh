@@ -203,7 +203,7 @@ echo done
 
 var foo = '99'
 
-echo $foo and $x
+echo $base_dir/file /tmp/$file-suffix
 
 # Inside double quotes - require modes, Vim regions
-echo "$foo and $x"
+echo "$base_dir/file /tmp/$file-suffix"
