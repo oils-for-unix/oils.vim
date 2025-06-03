@@ -49,7 +49,7 @@ syn region sqString start="'" end="'"
 syn region dqString start='"' skip='\\.' end='"' contains=yshInterpolation
 
 " Explicit with $
-syn region dollarDqString start='\$"' skip='\\.' end='"' contains=yshInterpolation
+syn region dollarDqString start='$"' skip='\\.' end='"' contains=yshInterpolation
 
 " String interpolation within double quotes
 syn match yshInterpolation "\$\w\+" contained
@@ -59,6 +59,7 @@ syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' end='"""' contains=yshInterpolation
+syn region tripleDollarDqString start='$"""' end='"""' contains=yshInterpolation
 
 " Define highlighting
 hi def link yshComment Comment
@@ -76,5 +77,6 @@ hi def link tripleRawString String
 hi def link tripleJ8String String
 hi def link tripleSqString String
 hi def link tripleDqString String
+hi def link tripleDollarDqString String
 
 let b:current_syntax = "ysh"

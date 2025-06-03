@@ -102,6 +102,16 @@ var x = """
   two ""
   """
 
+echo $"""
+  \$ one "
+  \$ two ""
+  """
+
+var x = $"""
+  \$ one "
+  \$ two ""
+  """
+
 # j8
 
 echo b'''
