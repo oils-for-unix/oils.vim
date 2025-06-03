@@ -35,14 +35,17 @@ syn match yshComment "#.*$"
 "
 " - Is there way to understand recursion like ${a:-'foo'}?  Or just leave that
 "   out
-" - There is also recursiong of $(hostname) and such.
+" - There is also recursion of $(hostname) and such.
 "
 " - Here docs?  They are hard, could leave them out of YSH
 
-" Single-quoted string
-syn region yshSingleQuoteString start='\'' end='\''
+" Raw
+" \< means word boundary, which isn't exactly right, but it's better than not
+" including it 
+syn region yshRawString start="\<r'" end='\''
 
-"syn region yshRawString start='r\'' end='\''
+" Single-quoted string
+syn region yshSingleQuoteString start="'" end="'"
 
 " Double-quoted strings
 syn region yshDoubleQuoteString start='"' skip=/\\./ end='"' contains=yshInterpolation
@@ -54,13 +57,14 @@ syn match yshInterpolation "\$\w\+" contained
 syn region yshTripleSingleQuoteString start="'''" end="'''"
 syn region yshTripleDoubleQuoteString start='"""' end='"""' contains=yshInterpolation
 
-" YSH keywords
-syn keyword yshKeyword proc func const var setvar call
+" YSH keywords (not sure about leading =)
+syn keyword yshKeyword proc func const var setvar setglobal call
 
 " Define highlighting
 hi def link yshComment Comment
 hi def link yshKeyword Keyword
 
+hi def link yshRawString String
 hi def link yshSingleQuoteString String
 hi def link yshDoubleQuoteString String
 hi def link yshInterpolation Special
