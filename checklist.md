@@ -28,7 +28,15 @@ Install this Vim syntax definition with the instructions in
 
 At the end, you will be left with the **nested double quotes bug**:
 
-TODO: screenshot.
+![Nested Double Quotes Bug](https://oils.pub/image-deploy/nested-double-quotes-bug.png)
+
+That is, the second double quote should not close the string.  It should open a
+new string:
+
+    echo "hi $[d["key"]]"
+         ^^^^^^^^^   ^^^^
+
+We can fix this with recursion.
 
 ## Stage 2 - Mutually Recursive Commands, Strings, and Expressions
 
