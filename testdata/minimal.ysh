@@ -38,6 +38,9 @@ echo ls -r'bar'
 echo "hi $r1 \" \\"
 var dq = "hi $r2 \" \\"
 
+echo $"hi $r1 \" \\"
+var dq = $"hi $r2 \" \\"
+
 # TODO: interpolation
 # var dq = "hi ${r2}"
 # var dq = "hi $[r2]"

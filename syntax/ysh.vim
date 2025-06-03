@@ -43,10 +43,13 @@ syn region rawString start="\<r'" end="'"
 syn region j8String start="\<[bu]'" skip='\\.' end="'"
 
 " Single-quoted string
-syn region yshSingleQuoteString start="'" end="'"
+syn region sqString start="'" end="'"
 
 " Double-quoted strings
-syn region yshDoubleQuoteString start='"' skip='\\.' end='"' contains=yshInterpolation
+syn region dqString start='"' skip='\\.' end='"' contains=yshInterpolation
+
+" Explicit with $
+syn region dollarDqString start='\$"' skip='\\.' end='"' contains=yshInterpolation
 
 " String interpolation within double quotes
 syn match yshInterpolation "\$\w\+" contained
@@ -54,8 +57,8 @@ syn match yshInterpolation "\$\w\+" contained
 " Python-like triple-quoted strings
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
-syn region yshTripleSingleQuoteString start="'''" end="'''"
-syn region yshTripleDoubleQuoteString start='"""' end='"""' contains=yshInterpolation
+syn region tripleSqString start="'''" end="'''"
+syn region tripleDqString start='"""' end='"""' contains=yshInterpolation
 
 " Define highlighting
 hi def link yshComment Comment
@@ -63,14 +66,15 @@ hi def link yshKeyword Keyword
 
 hi def link rawString String
 hi def link j8String String
-hi def link yshSingleQuoteString String
-hi def link yshDoubleQuoteString String
+hi def link sqString String
+hi def link dqString String
+hi def link dollarDqString String
 
 hi def link yshInterpolation Special
 
 hi def link tripleRawString String
 hi def link tripleJ8String String
-hi def link yshTripleSingleQuoteString String
-hi def link yshTripleDoubleQuoteString String
+hi def link tripleSqString String
+hi def link tripleDqString String
 
 let b:current_syntax = "ysh"
