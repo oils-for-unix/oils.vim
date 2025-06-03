@@ -8,8 +8,11 @@ In this stage, handle:
 1. Keywords like `for func`
 1. Comments: `# hi`
 1. Quotes that are Quoted: `\' \"`
-1. String Literals - 3 kinds, 5 styles
-   - And the corresponding multi-line string literals
+1. String Literals 
+   - 3 kinds, 5 styles - `r' u' $"`
+   - And the corresponding multi-line string literals - `r''' u''' $"""`
+1. Unquoted `$foo`
+   - But not `"$foo"` or `${foo}`
 
 Key idea: once we **understand** comments and string literals, then we know
 that nested delimiters like `() [] {} $() $[]` are **real code**.
@@ -18,19 +21,26 @@ See:
 
 - [testdata/minimal.ysh](testdata/minimal.ysh)
 
-At the end, you will be left with the NESTED double quotes bug.
+Install this Vim syntax definition with the instructions in
+[README.md](README.md), and see what it looks like:
+
+![YSH Minimal Lexing](https://oils.pub/image-deploy/ysh-minimal-lexing.png)
+
+At the end, you will be left with the **nested double quotes bug**:
 
 TODO: screenshot.
 
 ## Stage 2 - Mutually Recursive Commands, Strings, and Expressions
 
+TODO
+
 This requires **lexer modes**.
 
-- In Vim, we do it with regions.
+- In Vim, we use "regions".
 - TextMate may be similar.
-- It's harder in TreeSitter.
-
-TODO
+- It's harder in TreeSitter, because stateful / modal lexers require external
+  scanners in C, which have an awkward interface constrained by incremental
+  parsing.
 
 - [testdata/lexer-modes.ysh](testdata/lexer-modes.ysh)
 
@@ -38,7 +48,7 @@ TODO
 
 TODO
 
-- We may want to handle:
+We may want to handle:
 
 - `\n` in expressions
 - `\n` in J8 strings

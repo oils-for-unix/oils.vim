@@ -40,9 +40,7 @@ while false {
   echo hi
 }
 
-#
-# Comment
-#
+# Comment at beginning of line
 
 echo not#comment  # space required before comment
 
