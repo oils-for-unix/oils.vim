@@ -35,6 +35,9 @@ syn match yshComment '#.*$'
 "
 " - Here docs?  They are hard, could leave them out of YSH
 
+syn match backslashSq "\\'"
+syn match backslashDq '\\"'
+
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
 syn region rawString start="\<r'" end="'"
@@ -71,12 +74,15 @@ hi def link sqString String
 hi def link dqString String
 hi def link dollarDqString String
 
-hi def link yshInterpolation Special
-
 hi def link tripleRawString String
 hi def link tripleJ8String String
 hi def link tripleSqString String
 hi def link tripleDqString String
 hi def link tripleDollarDqString String
+
+hi def link yshInterpolation Special
+hi def link backslashDq Special
+hi def link backslashSq Special
+
 
 let b:current_syntax = "ysh"
