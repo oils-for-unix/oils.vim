@@ -15,6 +15,12 @@ I use [vim-plug][], which is configured in your `~/.vimrc` like this:
 
 [vim-plug]: https://github.com/junegunn/vim-plug
 
+## Local Testing
+
+Temporarily change the line to point at a local copy:
+
+    Plug '~/git/oils-for-unix/oils.vim'
+
 ## Links
 
 

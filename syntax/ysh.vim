@@ -42,8 +42,10 @@ syn match yshComment "#.*$"
 " Single-quoted string
 syn region yshSingleQuoteString start='\'' end='\''
 
+"syn region yshRawString start='r\'' end='\''
+
 " Double-quoted strings
-syn region yshDoubleQuoteString start='"' skip=/\\"/ end='"' contains=yshInterpolation
+syn region yshDoubleQuoteString start='"' skip=/\\./ end='"' contains=yshInterpolation
 
 " String interpolation within double quotes
 syn match yshInterpolation "\$\w\+" contained
