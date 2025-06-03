@@ -58,15 +58,15 @@ syn region dqString start='"' skip='\\.' end='"' contains=yshInterpolation
 " Explicit with $
 syn region dollarDqString start='$"' skip='\\.' end='"' contains=yshInterpolation
 
-" String interpolation within double quotes
-syn match yshInterpolation "\$\w\+" contained
-
 " Python-like triple-quoted strings
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' end='"""' contains=yshInterpolation
 syn region tripleDollarDqString start='$"""' end='"""' contains=yshInterpolation
+
+" String interpolation within double quotes
+syn match yshInterpolation "\$\w\+"
 
 " pp (x)
 " TODO: pp [x] may be hard?

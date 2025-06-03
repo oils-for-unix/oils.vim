@@ -15,6 +15,9 @@ call len('str')
 
 echo not#comment
 
+echo $foo and $x
+echo "$foo and $y"
+
 #
 # Escaping quotes with \' \"
 #
