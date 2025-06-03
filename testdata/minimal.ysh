@@ -148,4 +148,19 @@ var x = u'''
   three \'''
   ''' ++ empty
 
+#
+# More
+#
+
+var d = {hi: 42}
+echo $[42 + d['hi']]
+echo "sum = $[42 + d['hi']]"
+
+var ch = 'i'
+echo $[42 + d["h$[ch]"]]
+
+# Nested double quotes!
+echo "$[42 + d["h$[ch]"]]"
+echo "hi $["inner"]"
+
 echo done
