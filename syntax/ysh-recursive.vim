@@ -17,8 +17,10 @@ syn keyword shellKeyword if elif else case for while
 
 " YSH keywords
 syn keyword yshKeyword proc func const var setvar setglobal call break continue return
+
 " = keyword occurs at the beginning of a line
-syn match equalsKeyword '^[ \t]*=[ ]'
+" disabled since it interfers with rhsExpr
+" syn match equalsKeyword '^[ \t]*=[ ]'
 
 " End-of-line comments
 syn match yshComment '^#.*$'
@@ -77,7 +79,7 @@ hi def link yshComment Comment
 
 hi def link shellKeyword Keyword
 hi def link yshKeyword Keyword
-hi def link equalsKeyword Keyword
+" hi def link equalsKeyword Keyword
 
 hi def link @quotedStrings String
 
@@ -98,7 +100,7 @@ hi def link rhsExpr String
 
 let b:current_syntax = "ysh"
 
-" testing function
+" Function that displays the stack of lexer modes under the cursor
 " :call SynStack()
 function! SynStack()
   if !exists("*synstack")
