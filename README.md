@@ -36,4 +36,5 @@ So I am trying something simpler.
 ---
 
 - [notes.md](notes.md)
+- [checklist.md](checklist.md)
 
