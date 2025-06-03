@@ -76,7 +76,8 @@ hi def link tripleDqString String
 hi def link tripleDollarDqString String
 
 hi def link yshInterpolation Special
-hi def link backslashDq Special
-hi def link backslashSq Special
+
+hi def link backslashDq Character
+hi def link backslashSq Character
 
 let b:current_syntax = "ysh"

@@ -85,9 +85,10 @@ hi def link tripleSqString String
 hi def link tripleDqString String
 hi def link tripleDollarDqString String
 
-hi def link yshInterpolation Special
-hi def link backslashDq Special
-hi def link backslashSq Special
+hi def link yshInterpolation Identifier
+
+hi def link backslashDq Character
+hi def link backslashSq Character
 
 hi def link exprParen Special
 hi def link exprBracket Special
