@@ -56,15 +56,21 @@ syn region tripleDollarDqString start='$"""' end='"""' contains=yshInterpolation
 " String interpolation within double quotes
 syn match yshInterpolation "\$\w\+"
 
+syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
+
 " pp (x)
 " space required - pp(x) is illegal - it would be call pp(x)
 " syn region exprParen start='[ \t](' end=')' skip='\\[()]' contains=exprParen,@quotedStrings,@tripleQuotedStrings
-syn region exprParen start='(' end=')' skip='\\[()]' contains=exprParen,@quotedStrings,@tripleQuotedStrings
+syn region nestedParen start='(' end=')' skip='\\[()]' contains=@nested,@quotedStrings,@tripleQuotedStrings contained
 
 " space required before pp [x], it is different than *.[ch]
 " is the right syntax for \[ or \]?
 " syn region exprBracket start='[ \t]\[' end=']' skip='\\[\[\]]' contains=exprBracket,@quotedStrings,@tripleQuotedStrings
-syn region exprBracket start='\[' end=']' skip='\\[\[\]]' contains=exprBracket,@quotedStrings,@tripleQuotedStrings
+syn region nestedBracket start='\[' end=']' skip='\\[\[\]]' contains=@nested,@quotedStrings,@tripleQuotedStrings contained
+
+syn region nestedBrace start='{' end='}' skip='\\[{}]' contains=@nested,@quotedStrings,@tripleQuotedStrings contained
+
+syn region rhsExpr start='= ' end='$' contains=@nested,@quotedStrings,@tripleQuotedStrings
 
 " Define highlighting
 hi def link yshComment Comment
@@ -73,25 +79,30 @@ hi def link shellKeyword Keyword
 hi def link yshKeyword Keyword
 hi def link equalsKeyword Keyword
 
-hi def link rawString String
-hi def link j8String String
-hi def link sqString String
-hi def link dqString String
-hi def link dollarDqString String
+hi def link @quotedStrings String
 
-hi def link tripleRawString String
-hi def link tripleJ8String String
-hi def link tripleSqString String
-hi def link tripleDqString String
-hi def link tripleDollarDqString String
+hi def link @tripleQuotedStrings String
 
 hi def link yshInterpolation Identifier
 
 hi def link backslashDq Character
 hi def link backslashSq Character
 
-hi def link exprParen Special
-hi def link exprBracket Special
+hi def link @nested Special
+hi def link rhsExpr String
+
+" hi def link nestedParen Special
+" hi def link nestedBracket Special
+" hi def link nestedBrace Special
 
 
 let b:current_syntax = "ysh"
+
+" testing function
+" :call SynStack()
+function! SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc

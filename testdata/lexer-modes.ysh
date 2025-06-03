@@ -1,5 +1,6 @@
 
 var x = 42
+var x = f(42) SynStack()
 
 var a = [0, 1, 2]
 
@@ -81,3 +82,28 @@ echo *.[ch]
     echo "greeting = $(echo hi)"  # Command
     echo "sum = $[x + y]"         # Expression
 
+
+# Multi-line versions
+
+    func g(...args) { return (args[0]) }
+
+    var y = g(42,
+              43,
+              f(5))
+
+    = g(42,
+        43,
+        f(5))
+
+    call g(42,
+           43,
+           f(5))
+
+    var d = {
+      k1: 'value',
+      k2: g(5,
+            6, 7),
+      bracket: [
+        1, 2, 3
+      ],
+    }
