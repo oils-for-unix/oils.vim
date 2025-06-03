@@ -27,19 +27,19 @@ Install this Vim syntax definition with the instructions in
 
 ![YSH Minimal Lexing](https://oils.pub/image-deploy/ysh-minimal-lexing.png)
 
-At the end, you will be left with a **pretty nice syntax highlighter**, but it
-has a **nested double quotes** bug:
+At the end, you will be left with a **pretty nice syntax highlighter**.  But
+there is a bug with nested double quotes:
 
 ![Nested Double Quotes Bug](https://oils.pub/image-deploy/nested-double-quotes-bug.png)
 
 That is, the second double quote should not close the string.  It should open a
 new string:
 
-    echo "hi $[d["key"]]"  # this is the inner string
-                 ^^^^^
-
-    echo "hi $[d["key"]]"
+    echo "hi $[d["key"]]"   # this is wrong
          ^^^^^^^^^   ^^^^
+
+    echo "hi $[d["key"]]"   # this is the inner string
+                 ^^^^^
 
 We can fix this with recursion.
 
@@ -49,12 +49,13 @@ Everything in this stage can be expressed with regexes.  **My favorite regex** i
 `" ([^"\]|\\.)* "` - it correctly delimits C-style string literals with
 backslash escapes.  (Related article: <https://research.swtch.com/pcdata>).
 
-- Make sure that a `'` closes a raw string, even if there's a `\` before it:
-  `r'C:\Program Files\'`.
+- Make sure that a `'` closes a raw string, even if there's a `\` before it
+  - e.g. `r'C:\Program Files\'`.
 - Make sure that `\"` does **not** close a double quoted string, and that `\'` does
   not close a J8 string.
-- Make sure that `echo not#comment` is not a comment.  This is a special shell
-  rule.
+  - e.g. `"\""` and `b'\''`
+- Make sure that `echo not#comment` is not a comment.
+  - In shell, a comment is a separate "word".
 
 ## Stage 2 - Mutually Recursive Commands, Strings, and Expressions
 
@@ -78,7 +79,8 @@ TODO
 
 We may want to handle:
 
-- `\n` in expressions
-- `\n` in J8 strings
+- `\;` vs. \z` in the unquoted lexer mode
+- `\n` and `\u{3bc}` in expressions
+- `\n` and `\u{3bc}` in J8 strings
 - `/[a-z]/` in Eggex
 - `\;` when unquoted
