@@ -93,7 +93,7 @@ syn region nestedBrace matchgroup=nestedPair start='{' end='}' skip='\\[{}]'
 " - a comment, with me=s-2 for ending BEFORE the #
 " - semicolon ; with me=s-1
 " - end of line
-syn region rhsExpr start='= ' end=' #'me=s-2 end=';'me=s-1 end='$'
+syn region rhsExpr matchgroup=Normal start='= ' end=' #'me=s-2 end=';'me=s-1 end='$'
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 " note: call is the same as =, but the 'call' keyword also interferes
 
