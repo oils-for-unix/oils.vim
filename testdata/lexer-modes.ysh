@@ -153,3 +153,31 @@ echo \( hi \) \[ hi \]
         1, 2, 3
       ],
     }) + 42
+
+
+# Backslash esacped \( \) \[ \] \{ \}
+
+echo $(echo \( \))
+echo $(echo \[ \])
+echo $(echo \{ \})
+
+# These aren't valid
+#echo $( echo "\( \)" )
+#echo $( echo "\[ \]" )
+#echo $( echo "\{ \}" )
+
+= $(echo \( \))
+= $(echo \[ \])
+= $(echo \{ \})
+
+= ( $(echo \( \)) )
+= ( $(echo \[ \]) )
+= ( $(echo \{ \}) )
+
+= [ $(echo \( \)) ]
+= [ $(echo \[ \]) ]
+= [ $(echo \{ \}) ]
+
+= { k: $(echo \( \)) }
+= { k: $(echo \[ \]) }
+= { k: $(echo \{ \}) }

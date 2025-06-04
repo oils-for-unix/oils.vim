@@ -6,12 +6,9 @@ if exists("b:current_syntax")
 endif
 
 " This avoids problems with long multiline strings
-
 :syntax sync minlines=200
 
 syn keyword shellKeyword if elif else case for while
-
-" YSH keywords
 syn keyword yshKeyword proc func const var setvar setglobal call break continue return
 
 " = keyword occurs at the beginning of a line
@@ -22,22 +19,25 @@ syn keyword yshKeyword proc func const var setvar setglobal call break continue 
 syn match yshComment '^#.*$'
 syn match yshComment '[ \t]#.*$'
 
-" TODO: could add more here
+" TODO: could refine this, but it is enough for segmentation / nested pairs / sigil pairs
 syn match backslashQuoted /\\['"$@()\[\]]/
 
-syn cluster quotedStrings 
+syn cluster quotedStrings
       \ contains=rawString,j8String,sqString,dqString,dollarDqString
 syn cluster tripleQuotedStrings 
       \ contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
 
-syn cluster dollarSub
-      \ contains=varSubName,varSubBracedName,varSubNumber,varSubBracedNumber,commandSub,exprSub
-" note: expressions can't have varSubName, only the other 5
+" note: expressions can't have varSubName
 syn cluster dollarSubInExpr
       \ contains=varSubBracedName,varSubNumber,varSubBracedNumber,commandSub,exprSub
+syn cluster dollarSub
+      \ contains=varSubName,@dollarSubInExpr
 
 syn cluster splice
       \ contains=varSplice,exprSplice,commandSplice
+
+syn cluster expr 
+      \ contains=@dollarSubInExpr,@splice,caretDqString,caretCommand,caretExpr,yshArrayLiteral
 
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
@@ -57,13 +57,10 @@ syn region dqString start='"' skip='\\.' end='"'
 syn region dollarDqString start='\$"' skip='\\.' end='"' 
       \ contains=@dollarSub
 
-syn cluster expr 
-      \ contains=@dollarSubInExpr,@splice,caretDqString,caretCommand,caretExpr,yshArrayLiteral
- 
 syn region caretDqString matchgroup=sigilPair start='\^"' skip='\\.' end='"' 
       \ contains=@dollarSub
 
-" Python-like triple-quoted strings
+" 5 triple-quoted variants of the above (Python-like)
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
@@ -72,20 +69,18 @@ syn region tripleDqString start='"""' end='"""'
 syn region tripleDollarDqString start='$"""' end='"""' 
       \ contains=@dollarSub
 
-" String interpolation within double quotes
+" $name
 syn match varSubName '\$[a-zA-Z_][a-zA-Z0-9_]*'
-
+" ${name}
 syn match varSubBracedName '\${[a-zA-Z_][a-zA-Z0-9_]*}'
-
 " $1 is valid, but not $11.  Should be ${11}
 syn match varSubNumber '\$[0-9]'
-
-" Vim quirk: [0-9]* and [0-9]\+ 
-" Let's use * to keep our metalangauge simple
+" ${12}
+" Vim quirk: it's [0-9]\+ versus [0-9]*.  Use * to keep our metalangauge simple
 syn match varSubBracedNumber '\${[0-9][0-9]*}'
 
-" \< word boundary doesn't work because @ is a non-word char
-" So use 2 patterns to avoid
+" @splice - \< word boundary doesn't work because @ is a non-word char
+" Use 2 patterns to avoid complex \z expressions
 syn match varSplice '[ \t]@[a-zA-Z_][a-zA-Z0-9_]*'
 syn match varSplice '^@[a-zA-Z_][a-zA-Z0-9_]*'
 
@@ -105,6 +100,15 @@ syn region nestedBracket matchgroup=nestedPair start='\[' end=']' skip='\\[\[\]]
 syn region nestedBrace matchgroup=nestedPair start='{' end='}' skip='\\[{}]' 
       \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
 
+" Can we do something more accurate?  Space before ( and [
+
+" syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
+" syn region typedArgs start='(' end=')' contains=nestedParen
+" hi def link typedArgs Special
+
+" syn region lazyTypedArgs start=' \[' end=']' 
+"      \ contains=@nested,@quotedStrings,@tripleQuotedStrings
+
 " rhsExpr starts with =
 " and ends with
 " - a comment, with me=s-2 for ending BEFORE the #
@@ -113,6 +117,8 @@ syn region nestedBrace matchgroup=nestedPair start='{' end='}' skip='\\[{}]'
 syn region rhsExpr matchgroup=Normal start='= ' end=' #'me=s-2 end=';'me=s-1 end='$'
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 " note: call is the same as =, but the 'call' keyword also interferes
+
+" Sigil Pairs $[] @[] ^[]
 
 " $[a[i]] contains nestedBracket to match []
 " matchgroup= is necessary for $[] to contain [] correctly
@@ -123,25 +129,19 @@ syn region exprSplice matchgroup=sigilPair start='@\[' end=']'
 syn region caretExpr matchgroup=sigilPair start='\^\[' end=']'
       \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings
 
-syn region commandSub matchgroup=sigilPair start='\$(' end=')'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
-syn region commandSplice matchgroup=sigilPair start='@(' end=')'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
-syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
+" Sigil Pairs $() @() ^()
 
-" [|] is a pipe; somehow \| doesn't work
+syn region commandSub matchgroup=sigilPair start='\$(' end=')'
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted
+syn region commandSplice matchgroup=sigilPair start='@(' end=')'
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted
+syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted
+
+" var x = :| README *.py | 
+" Vim quirk: | is a pipe, and \| is the regex operator
 syn region yshArrayLiteral matchgroup=sigilPair start=':|' end='|'
       \ contains=@quotedStrings,@tripleQuotedStrings,@splice,@dollarSub,backslashQuoted
-
-" pp (f(x))
-" syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
-" syn region typedArgs start='(' end=')' contains=nestedParen
-" hi def link typedArgs Special
-
-" space first
-" syn region lazyTypedArgs start=' \[' end=']' 
-"      \ contains=@nested,@quotedStrings,@tripleQuotedStrings
 
 " Define highlighting
 hi def link yshComment Comment

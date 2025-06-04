@@ -1,11 +1,13 @@
 YSH Syntax Highlighting Checklist
 ====
 
-## Stage 1 - Minimal Lexing
+Let's write a YSH syntax highlighter.  We'll break the problem down into **3
+steps**, to focus on **correctness**.
+
+## Stage 1 - Lexing String Literals and Comments
 
 In this stage, handle:
 
-1. Keywords like `for func`
 1. Comments: `# hi`
 1. Quotes that are Quoted: `\' \"`
 1. String Literals 
@@ -55,25 +57,29 @@ backslash escapes.  (Related article: <https://research.swtch.com/pcdata>).
 - Make sure that `echo not#comment` is not a comment.
   - In shell, a comment is a separate "word".
 
-### Optional Stage 1a
+### Optional: Make The Simple Highlighter More Usable
 
-To make the minimal stage 1 more useful, you add support for:
+Some minor enhancements that don't affect the overall structure:
 
-- `$1` and `${12}`, but not `$12`
-- `$x` and `${x}` 
-  - But not double-quoted `"$foo"` or `"${foo}"`, because that requires
-    `contains=`, which not all syntax metalanguages support (e.g. Treesitter)
-  - TODO: ysh `${x|html}` `${x .%3d}`
-- `@myarray`
+1. Keywords like `for func` (`ysh-minimal` does this)
+1. `$name` and `${name}` (when unquoted, not within double quotes)
+1. `@myarray`
 
-## Stage 2 - Mutually Recursive Commands, Strings, and Expressions
+See "Stage 3" for more ideas.
 
-TODO
+## Stage 2 - Switching Between Three Lexer Modes
 
-This requires **lexer modes**.
+[A Tour of YSH](https://oils.pub/release/latest/doc/ysh-tour.html) describes
+these three mutually recursive **sublanguages**, which are lexed differently.
 
-- In Vim, we use "regions".
-- TextMate may be similar.
+1. Commands
+1. Words/Strings
+1. Expressions
+
+It's done with **Vim Regions**.
+
+- In Vim, we use **regions**.
+- TextMate and SublimeText may be similar.
 - It's harder in TreeSitter, because stateful / modal lexers require external
   scanners in C, which have an awkward interface constrained by incremental
   parsing.
@@ -84,22 +90,30 @@ See:
 
 ## Stage 3 - Detailed Highlighting
 
-TODO
+### Shell Keywords
+
+Keywords like `for func` (`ysh-minimal` does this)
+
+### Var Subs
+
+- `$1` and `${12}`, but not `$12`
+- `$x` and `${x}` 
+  - Recognizing double-quoted `"$foo"` or `"${foo}"` requires stage 2, e.g. with Vim
+    `contains=`.  Not all syntax metalanguages support lexer modes (e.g.
+    Treesitter).
+  - TODO: ysh `${x|html}` `${x .%3d}`
+
+### Expressions
 
 - atoms: true false null - only in expressions
   - shell builtins?  not sure if we want that
 - numeric constants 42, 99.0, 1.1e-100
 
-Backslashes mean different things in different modes:
-
-- `\;` in the unquoted lexer mode, but not `\n`
-- `\$` in double quoted strings, but not `\n`
-- `\n` and `\yff` and `\u{3bc}` in J8 strings
-  - as well as unquoted in expressions
-
-Expressions:
+An eggex is an expression.
 
 - `/[a-z]/` in Eggex are somewhat special
+
+### Redirects
 
 Redirects appear in commands, and don't affect lexer modes.  They have their
 own little lexical language:
@@ -109,21 +123,40 @@ own little lexical language:
 - `>> <<`
 - `<<<`
 
-Commands and YSH array literals `:| a b|`:
+Note that YSH array literals liek `:| a b |` don't have redirects.
+
+### Word Sequence Language
+
+These appear in both commands an array literals:
 
 - Brace expansion: `{a,b}@example.com`
 - Globs: `*.py` and `?.[ch]`
+- Splice array: `@myarray`
+
+### Word Language
 
 History expansion?
 
 - `!!` and `!$` and ...
 
-## Problems / Syntax to Change?
+### Backslashes mean different things in different modes
+
+- `\;` in the unquoted lexer mode, but not `\n`
+- `\$` in double quoted strings, but not `\n`
+- `\n` and `\yff` and `\u{3bc}` in J8 strings
+  - as well as unquoted in expressions
+
+## TODO
+
+### YSH Syntax to Change?
 
 - `echo foo = bar` - we might want to make `=` special
 - `pp [ch]` vs `pp *.[ch]` - is a leading space enough to distinguish the two?
 
-Also fiddly:
+### `ysh.vim` issues
 
-- leading space rule for `pp (x)`
-- space rule for `= f(x)`
+- `{}` is not highlighted the same as `() []`.  This is cosmetic.  The key
+  point is that the nesting is correct.
+- leading space rule for `pp (x)` and `pp [x]`
+- highlighting `=` keyword
+  - space rule for `= f(x)`
