@@ -29,6 +29,8 @@ if test --file / {
 
 case (42) {
   (42)   { echo 'match' }
+  /d+/   { echo 'pattern' }
+  'str'  { echo 'str' }
   (else) { echo 'other' }
 }
 
@@ -208,3 +210,15 @@ echo $base_dir/file /tmp/$file-suffix
 
 # Inside double quotes - require modes, Vim regions
 echo "$base_dir/file /tmp/$file-suffix"
+
+var name42 = x
+var name42x = x
+var _x = x
+
+echo $name42 $name42x
+echo ${name42} ${name42x}
+echo $_x ${_x}
+
+set -- {0..11}
+echo $0 ${11}
+echo bad $00 $1a

@@ -6,6 +6,7 @@ if exists("b:current_syntax")
 endif
 
 " This avoids problems with long multiline strings
+
 :syntax sync minlines=200
 
 syn keyword shellKeyword if elif else case for while
@@ -29,12 +30,14 @@ syn cluster quotedStrings
 syn cluster tripleQuotedStrings 
       \ contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
 
-" $(echo hi) and $[42 + a[i]] are allowed in all kinds of double quoted strings
-syn cluster dqSub
-      \ contains=simpleVarSub,exprSub,commandSub
+syn cluster dollarSub
+      \ contains=varSubName,varSubBracedName,varSubNumber,varSubBracedNumber,commandSub,exprSub
+" note: expressions can't have varSubName, only the other 5
+syn cluster dollarSubInExpr
+      \ contains=varSubBracedName,varSubNumber,varSubBracedNumber,commandSub,exprSub
 
-syn cluster subSplice
-      \ contains=exprSub,exprSplice,commandSub,commandSplice
+syn cluster splice
+      \ contains=exprSplice,commandSplice
 
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
@@ -48,29 +51,37 @@ syn region sqString start="'" end="'"
 
 " Double-quoted strings
 syn region dqString start='"' skip='\\.' end='"' 
-      \ contains=@dqSub
+      \ contains=@dollarSub
 
 " Explicit with $
 syn region dollarDqString start='\$"' skip='\\.' end='"' 
-      \ contains=@dqSub
+      \ contains=@dollarSub
 
 syn cluster expr 
-      \ contains=@subSplice,caretDqString,caretCommand,caretExpr,yshArrayLiteral
+      \ contains=@dollarSubInExpr,@splice,caretDqString,caretCommand,caretExpr,yshArrayLiteral
  
 syn region caretDqString matchgroup=sigilPair start='\^"' skip='\\.' end='"' 
-      \ contains=@dqSub
+      \ contains=@dollarSub
 
 " Python-like triple-quoted strings
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' end='"""' 
-      \ contains=@dqSub
+      \ contains=@dollarSub
 syn region tripleDollarDqString start='$"""' end='"""' 
-      \ contains=@dqSub
+      \ contains=@dollarSub
 
 " String interpolation within double quotes
-syn match simpleVarSub '\$\w\+'
+syn match varSubName '\$[a-zA-Z_][a-zA-Z0-9_]*'
+
+syn match varSubBracedName '\${[a-zA-Z_][a-zA-Z0-9_]*}'
+
+" $1 is valid, but not $11.  Should be ${11}
+syn match varSubNumber '\$[0-9]'
+
+" [0-9]+ isn't a valid regex?
+syn match varSubBracedNumber '\${[0-9][0-9]*}'
 
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
@@ -115,7 +126,7 @@ syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
 
 " [|] is a pipe; somehow \| doesn't work
 syn region yshArrayLiteral matchgroup=sigilPair start=':[|]' end='[|]'
-      \ contains=@quotedStrings,@tripleQuotedStrings,@subSplice,simpleVarSub,backslashQuoted
+      \ contains=@quotedStrings,@tripleQuotedStrings,@splice,@dollarSub,backslashQuoted
 
 " pp (f(x))
 " syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
@@ -150,7 +161,10 @@ hi def link tripleSqString String
 hi def link tripleDqString String
 hi def link tripleDollarDqString String
 
-hi def link simpleVarSub Identifier
+hi def link varSubName Identifier
+hi def link varSubBracedName Identifier
+hi def link varSubNumber Identifier
+hi def link varSubBracedNumber Identifier
 
 hi def link backslashQuoted Character
 

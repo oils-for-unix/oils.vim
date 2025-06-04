@@ -13,6 +13,11 @@ But maybe that is too minimal.  I also like to highlight:
   - `${myvar}`
   - `$[myvar]`
 
+- do multi-line commands `...` need anything special?
+  - I don't think so, it could be just an operator though
+  - It's similar to redirects
+- `if ! test` ?
+
 ### Command vs. Expression Mode
 
 Users do have problems with this distinction.
@@ -84,3 +89,4 @@ Inconsequential sigil pairs:
     diff <(sort left.txt) <(sort right.txt) 
 
     var x = ^[42 + i]  # never changes the mode
+

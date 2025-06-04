@@ -11,8 +11,6 @@ In this stage, handle:
 1. String Literals 
    - 3 kinds, 5 styles - `r' u' $"`
    - And the corresponding multi-line string literals - `r''' u''' $"""`
-1. Unquoted `$foo`
-   - But not `"$foo"` or `${foo}`
 
 Key idea: once we **understand** comments and string literals, then we know
 that nested delimiters like `() [] {} $() $[]` are **real code**.
@@ -56,6 +54,17 @@ backslash escapes.  (Related article: <https://research.swtch.com/pcdata>).
   - e.g. `"\""` and `b'\''`
 - Make sure that `echo not#comment` is not a comment.
   - In shell, a comment is a separate "word".
+
+### Optional Stage 1a
+
+To make the minimal stage 1 more useful, you add support for:
+
+- `$1` and `${12}`, but not `$12`
+- `$x` and `${x}` 
+  - But not double-quoted `"$foo"` or `"${foo}"`, because that requires
+    `contains=`, which not all syntax metalanguages support (e.g. Treesitter)
+  - TODO: ysh `${x|html}` `${x .%3d}`
+- `@myarray`
 
 ## Stage 2 - Mutually Recursive Commands, Strings, and Expressions
 
