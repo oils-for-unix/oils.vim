@@ -1,10 +1,5 @@
-" Vim syntax file
-" Language: YSH
-"
-" Claude AI helped a lot here, because vim config confuses me
-" But I've kept this initial version very bare-bones.  We can iterate on it.
-"
-" Larger version, with a few issues: https://github.com/sj2tpgk/vim-oil
+" Vim syntax definition for YSH
+" This is stage 1 - MINIMAL lexing.  See checklist.md.
 
 if exists("b:current_syntax")
   finish

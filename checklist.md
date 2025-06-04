@@ -77,6 +77,10 @@ See:
 
 TODO
 
+- atoms: true false null - only in expressions
+  - shell builtins?  not sure if we want that
+- numeric constants 42, 99.0, 1.1e-100
+
 Backslashes mean different things in different modes:
 
 - `\;` in the unquoted lexer mode, but not `\n`

@@ -38,6 +38,7 @@ for i, item in (a) {
 
 pp [a]
 
+# todo: this isn't an expression!
 echo *.[ch]
 
 : '''
@@ -86,7 +87,9 @@ echo *.[ch]
 
 # Expression mode -> Command
 
-    = :| foo.txt *.py |   # note: no redirects here though
+    = :| foo.txt *.py "$x" |   # note: no redirects here though
+    = :| $x $(echo hi) @(echo hi) $[42+1] @[a] |   # note: no redirects here though
+
     = $(echo command sub)
     = @(echo spliced command sub)
     = ^(echo unevaluated)

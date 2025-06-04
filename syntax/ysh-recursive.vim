@@ -1,10 +1,5 @@
-" Vim syntax file
-" Language: YSH
-"
-" Claude AI helped a lot here, because vim config confuses me
-" But I've kept this initial version very bare-bones.  We can iterate on it.
-"
-" Larger version, with a few issues: https://github.com/sj2tpgk/vim-oil
+" Vim syntax definition for YSH
+" This is stage 2 - mutually recursive commands, strings, and expressions.  See checklist.md.
 
 if exists("b:current_syntax")
   finish
@@ -40,6 +35,9 @@ syn cluster tripleQuotedStrings
 syn cluster dqSub
       \ contains=simpleVarSub,exprSub,commandSub
 
+syn cluster subSplice
+      \ contains=exprSub,exprSplice,commandSub,commandSplice
+
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
 syn region rawString start="\<r'" end="'"
@@ -59,7 +57,7 @@ syn region dollarDqString start='\$"' skip='\\.' end='"'
       \ contains=@dqSub
 
 syn cluster expr 
-      \ contains=exprSub,exprSplice,commandSub,commandSplice,caretDqString,caretCommand,caretExpr
+      \ contains=@subSplice,caretDqString,caretCommand,caretExpr,yshArrayLiteral
  
 syn region caretDqString matchgroup=sigilPair start='\^"' skip='\\.' end='"' 
       \ contains=@dqSub
@@ -117,6 +115,10 @@ syn region commandSplice matchgroup=sigilPair start='@(' end=')'
 syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
 
+" [|] is a pipe; somehow \| doesn't work
+syn region yshArrayLiteral matchgroup=sigilPair start=':[|]' end='[|]'
+      \ contains=@quotedStrings,@tripleQuotedStrings,@subSplice,simpleVarSub
+
 " pp (f(x))
 " syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
 " syn region typedArgs start='(' end=')' contains=nestedParen
@@ -157,19 +159,24 @@ hi def link backslashSq Character
 hi def link backslashDollar Character
 hi def link backslashAt Character
 
-hi def link exprSub Special
-hi def link exprSplice Special
+hi def link exprSub yshExpr
+hi def link exprSplice yshExpr
 
-" these are expressions
-hi def link nestedParen Special
-hi def link nestedBracket Special
-hi def link nestedBrace Special
+hi def link nestedParen yshExpr
+hi def link nestedBracket yshExpr
+hi def link nestedBrace yshExpr
 
 " TODO: highlight this differently?
-hi def link rhsExpr String
+hi def link rhsExpr yshExpr
 
 hi def link nestedPair Normal
 hi def link sigilPair Special
+
+" highlighted like a command
+hi def link yshArrayLiteral Normal
+
+hi def link yshExpr Function
+" highlight yshExpr ctermfg=green guifg=green
 
 let b:current_syntax = "ysh"
 
