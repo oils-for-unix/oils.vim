@@ -16,6 +16,9 @@ var b = [a[2], a[1], a[0]]
 var c = (f(2), f(1), f(0))
 
 pp (1 + (a[1] + 3)); echo next
+
+pp (1 + 
+    (a[1] + 3)); echo next
 # f(x)
 
 pp ('hi' ++ "hi $x" ++ r'c:\' ++ b'\n')
@@ -56,6 +59,8 @@ echo *.[ch]
 # Command mode -> Expression
 
     var y = f(42)
+    var y = f('str' ++ "hi $x")
+
     = f(42)
     call f(42)
     pp (f(42))
@@ -118,4 +123,4 @@ echo *.[ch]
       bracket: [
         1, 2, 3
       ],
-    }
+    } ++ a

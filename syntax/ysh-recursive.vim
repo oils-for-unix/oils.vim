@@ -67,14 +67,16 @@ syn match simpleVarSub "\$\w\+"
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
 syn region nestedParen start='(' end=')' skip='\\[()]'
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings contained
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings "contained
+      "\ contains=nestedParen,@quotedStrings,@tripleQuotedStrings contained
 syn region nestedBracket start='\[' end=']' skip='\\[\[\]]'
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings contained
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings "contained
+
 syn region nestedBrace start='{' end='}' skip='\\[{}]' 
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings contained
 
 " a rhsExpr starts with = and ends with
-" - a comment, with a special me=s-1 for ending before the ''
+" - a comment, with a special me=s-1 for ending BEFORE the #
 " - semicolon ;
 " - end of line
 syn region rhsExpr start='= ' end=' #'me=s-1 end=';' end='$' 
@@ -83,6 +85,9 @@ syn region rhsExpr start='= ' end=' #'me=s-1 end=';' end='$'
 
 " pp (f(x))
 " syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
+" syn region typedArgs start='(' end=')' contains=nestedParen
+" hi def link typedArgs Special
+
 " space first
 " syn region lazyTypedArgs start=' \[' end=']' 
 "      \ contains=@nested,@quotedStrings,@tripleQuotedStrings
