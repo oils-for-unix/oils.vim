@@ -33,23 +33,20 @@ syn region j8String start="\<[bu]'" skip='\\.' end="'"
 syn region sqString start="'" end="'"
 
 " Double-quoted strings
-" minimal style omits 'contains=yshInterpolation'
 syn region dqString start='"' skip='\\.' end='"' 
 
 " Explicit with $
-" minimal style omits 'contains=yshInterpolation'
 syn region dollarDqString start='$"' skip='\\.' end='"'
 
 " Python-like triple-quoted strings
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
-" minimal style omits 'contains=yshInterpolation'
 syn region tripleDqString start='"""' end='"""'
 syn region tripleDollarDqString start='$"""' end='"""'
 
 " String interpolation within double quotes
-syn match yshInterpolation "\$\w\+"
+syn match simpleVarSub '\$\w\+'
 
 " Define highlighting
 hi def link yshComment Comment
@@ -70,9 +67,9 @@ hi def link tripleSqString String
 hi def link tripleDqString String
 hi def link tripleDollarDqString String
 
-hi def link yshInterpolation Special
-
 hi def link backslashDq Character
 hi def link backslashSq Character
+
+hi def link simpleVarSub Identifier
 
 let b:current_syntax = "ysh"

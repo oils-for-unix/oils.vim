@@ -21,10 +21,8 @@ syn keyword yshKeyword proc func const var setvar setglobal call break continue 
 syn match yshComment '^#.*$'
 syn match yshComment '[ \t]#.*$'
 
-syn match backslashSq "\\'"
-syn match backslashDq '\\"'
-syn match backslashDollar '\\\$'
-syn match backslashAt '\\@'
+" TODO: could add more here
+syn match backslashQuoted /\\['"$@()\[\]]/
 
 syn cluster quotedStrings 
       \ contains=rawString,j8String,sqString,dqString,dollarDqString
@@ -117,7 +115,7 @@ syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
 
 " [|] is a pipe; somehow \| doesn't work
 syn region yshArrayLiteral matchgroup=sigilPair start=':[|]' end='[|]'
-      \ contains=@quotedStrings,@tripleQuotedStrings,@subSplice,simpleVarSub
+      \ contains=@quotedStrings,@tripleQuotedStrings,@subSplice,simpleVarSub,backslashQuoted
 
 " pp (f(x))
 " syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
@@ -154,10 +152,7 @@ hi def link tripleDollarDqString String
 
 hi def link simpleVarSub Identifier
 
-hi def link backslashDq Character
-hi def link backslashSq Character
-hi def link backslashDollar Character
-hi def link backslashAt Character
+hi def link backslashQuoted Character
 
 hi def link exprSub yshExpr
 hi def link exprSplice yshExpr
