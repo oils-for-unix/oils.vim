@@ -71,18 +71,14 @@ echo *.[ch]
     pp (f(42))
     pp [f(42)]
 
-    echo ls --flag=$[x + 1]; echo next
-    echo ls --flag=$[x +
-                     1]; echo next
+    echo ls --flag=$[x + 1]; echo next   # newline not allowed in $[]?
     # escape dollar
     echo ls --flag=\$[x + 1]  
 
-    echo @[glob('*.py')]; echo next
-    echo @[
-           glob('*.py')]; echo next
+    echo @[glob('*.py')]; echo next  # newline not allowed in @[]
 
     # escape
-    echo \@[glob('*.py')]
+    echo \@[glob]
 
 # Command mode -> Double quoted
 
@@ -101,6 +97,7 @@ echo *.[ch]
     = "hi $x"
     = $"explicit $x"
     = ^"unevaluated $x"
+    = f(^"unevaluated $x")
 
 # Double-Quoted mode ->
 

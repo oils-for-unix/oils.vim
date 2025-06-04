@@ -51,7 +51,12 @@ syn region dqString start='"' skip='\\.' end='"'
       \ contains=simpleVarSub
 
 " Explicit with $
-syn region dollarDqString start='$"' skip='\\.' end='"' 
+syn region dollarDqString start='\$"' skip='\\.' end='"' 
+      \ contains=simpleVarSub
+
+syn cluster expr contains=caretDqString
+ 
+syn region caretDqString start='\^"' skip='\\.' end='"' 
       \ contains=simpleVarSub
 
 " Python-like triple-quoted strings
@@ -69,25 +74,25 @@ syn match simpleVarSub "\$\w\+"
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
 syn region nestedParen start='(' end=')' skip='\\[()]'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings "contained
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr "contained
       "\ contains=nestedParen,@quotedStrings,@tripleQuotedStrings contained
 syn region nestedBracket start='\[' end=']' skip='\\[\[\]]'
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings "contained
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr "contained
 
 syn region nestedBrace start='{' end='}' skip='\\[{}]' 
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings contained
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr contained
 
 " a rhsExpr starts with = and ends with
 " - a comment, with a special me=s-2 for ending BEFORE the #
 " - semicolon ;
 " - end of line
 syn region rhsExpr start='= ' end=' #'me=s-2 end=';'me=s-1 end='$' 
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 " note: call is the same as =, but the 'call' keyword also interferes
 
 " $[a[i]] contains nestedBracket to match []
 syn region exprSub start='\$\[' end=']'
-      \ contains=@nestedBracket,@quotedStrings,@tripleQuotedStrings
+      \ contains=@nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
 syn region exprSplice start='@\[' end=']'
       \ contains=@nestedBracket,@quotedStrings,@tripleQuotedStrings
 
@@ -108,6 +113,9 @@ hi def link yshKeyword Keyword
 " hi def link equalsKeyword Keyword
 
 hi def link @quotedStrings String
+
+" expression only
+hi def link caretDqString String
 
 hi def link @tripleQuotedStrings String
 
