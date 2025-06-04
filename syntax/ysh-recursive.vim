@@ -91,13 +91,15 @@ syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 "   pp (x)  # nestedParen not contained
 "   pp [x]  # nestedBracket not contained
 " Could improve this
-syn region nestedParen matchgroup=nestedPair start='(' end=')' skip='\\[()]'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr "contained
-syn region nestedBracket matchgroup=nestedPair start='\[' end=']' skip='\\[\[\]]'
-      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr "contained
+syn region nestedParen matchgroup=nestedPair start='(' end=')'
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr
+syn region nestedBracket matchgroup=nestedPair start='\[' end=']'
+      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
 
 " TODO: why is {} colored Special, when the nestedPair should be Normal?
-syn region nestedBrace matchgroup=nestedPair start='{' end='}' skip='\\[{}]' 
+" This is only used for expressions, not for command blocks { }
+" skip='\\[{}]' could be useful
+syn region nestedBrace matchgroup=nestedPair start='{' end='}'
       \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
 
 " Can we do something more accurate?  Space before ( and [

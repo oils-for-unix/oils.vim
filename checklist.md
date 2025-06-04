@@ -4,7 +4,7 @@ YSH Syntax Highlighting Checklist
 Let's write a YSH syntax highlighter.  We'll break the problem down into **3
 steps**, to focus on **correctness**.
 
-## Stage 1 - Lexing String Literals and Comments
+## Stage 1 - Lex String Literals and Comments
 
 In this stage, handle:
 
@@ -57,7 +57,7 @@ backslash escapes.  (Related article: <https://research.swtch.com/pcdata>).
 - Make sure that `echo not#comment` is not a comment.
   - In shell, a comment is a separate "word".
 
-### Optional: Make The Simple Highlighter More Usable
+### Optional: Make this minimal "flat" highlighter more usable
 
 Some minor enhancements that don't affect the overall structure:
 
@@ -67,7 +67,7 @@ Some minor enhancements that don't affect the overall structure:
 
 See "Stage 3" for more ideas.
 
-## Stage 2 - Switching Between Three Lexer Modes
+## Stage 2 - Correctly Switch Between Three Lexer Modes
 
 [A Tour of YSH](https://oils.pub/release/latest/doc/ysh-tour.html) describes
 these three mutually recursive **sublanguages**, which are lexed differently.
@@ -88,7 +88,7 @@ See:
 
 - [testdata/lexer-modes.ysh](testdata/lexer-modes.ysh)
 
-## Stage 3 - Detailed Highlighting
+## Stage 3 - Recognize Details Within Each Mode
 
 ### Shell Keywords
 
