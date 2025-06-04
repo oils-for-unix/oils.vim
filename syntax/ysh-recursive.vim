@@ -48,28 +48,28 @@ syn region sqString start="'" end="'"
 
 " Double-quoted strings
 syn region dqString start='"' skip='\\.' end='"' 
-      \ contains=simpleVarSub
+      \ contains=simpleVarSub,exprSub
 
 " Explicit with $
 syn region dollarDqString start='\$"' skip='\\.' end='"' 
-      \ contains=simpleVarSub
+      \ contains=simpleVarSub,exprSub
 
 syn cluster expr contains=caretDqString
  
 syn region caretDqString start='\^"' skip='\\.' end='"' 
-      \ contains=simpleVarSub
+      \ contains=simpleVarSub,exprSub
 
 " Python-like triple-quoted strings
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' end='"""' 
-      \ contains=simpleVarSub
+      \ contains=simpleVarSub,exprSub
 syn region tripleDollarDqString start='$"""' end='"""' 
-      \ contains=simpleVarSub
+      \ contains=simpleVarSub,exprSub
 
 " String interpolation within double quotes
-syn match simpleVarSub "\$\w\+"
+syn match simpleVarSub '\$\w\+'
 
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
