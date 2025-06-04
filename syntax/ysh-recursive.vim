@@ -73,8 +73,11 @@ syn region nestedBracket start='\[' end=']' skip='\\[\[\]]'
 syn region nestedBrace start='{' end='}' skip='\\[{}]' 
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings contained
 
-" a rhsExpr can end with ; or the line
-syn region rhsExpr start='= ' end=';' end='$' 
+" a rhsExpr starts with = and ends with
+" - a comment, with a special me=s-1 for ending before the ''
+" - semicolon ;
+" - end of line
+syn region rhsExpr start='= ' end=' #'me=s-1 end=';' end='$' 
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings
 " note: call is the same as =, but the 'call' keyword also interferes
 

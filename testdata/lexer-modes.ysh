@@ -1,7 +1,9 @@
-func f(x) { return (x) }
+func f(x; offset=0) { return (x) }
 
-var x = 42
+var x = 42  # comment
 var x = f(42)
+
+var x = f(42; offset=5)  # semi-colon
 
 # comment afterward
 var r2 = r'C:\Program # Files\' # r'' prefix is allowed
