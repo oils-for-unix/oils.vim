@@ -1,9 +1,12 @@
+var x = 42  # integer
+
 func f(x; offset=0) { return (x) }
 
-var x = 42  # comment
-var x = f(42)
+func z(x; delimiter=r'\', other="hi $x") { return (x) }
 
-var x = f(42; offset=5)  # semi-colon
+var y = f(42)  # function call
+
+var z = f(42; offset=5)  # semi-colon doesn't end the expression
 
 # comment afterward
 var r2 = r'C:\Program # Files\' # r'' prefix is allowed
