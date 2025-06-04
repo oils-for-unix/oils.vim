@@ -46,23 +46,23 @@ syn region sqString start="'" end="'"
 
 " Double-quoted strings
 syn region dqString start='"' skip='\\.' end='"' 
-      \ contains=yshInterpolation
+      \ contains=simpleVarSub
 
 " Explicit with $
 syn region dollarDqString start='$"' skip='\\.' end='"' 
-      \ contains=yshInterpolation
+      \ contains=simpleVarSub
 
 " Python-like triple-quoted strings
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' end='"""' 
-      \ contains=yshInterpolation
+      \ contains=simpleVarSub
 syn region tripleDollarDqString start='$"""' end='"""' 
-      \ contains=yshInterpolation
+      \ contains=simpleVarSub
 
 " String interpolation within double quotes
-syn match yshInterpolation "\$\w\+"
+syn match simpleVarSub "\$\w\+"
 
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
@@ -95,7 +95,7 @@ hi def link @quotedStrings String
 
 hi def link @tripleQuotedStrings String
 
-hi def link yshInterpolation Identifier
+hi def link simpleVarSub Identifier
 
 hi def link backslashDq Character
 hi def link backslashSq Character
