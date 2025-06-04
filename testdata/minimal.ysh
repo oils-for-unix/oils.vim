@@ -61,6 +61,7 @@ echo \'single \'single \"double \"double
 echo '/usr/bin'
 echo r'C:\Program Files\'  # r'' prefix is allowed
 
+
 # expression mode
 var r1 = '/usr/bin/'
 var r2 = r'C:\Program Files\' # r'' prefix is allowed
@@ -71,6 +72,12 @@ echo ls --foo=r'bar'
 echo ls bar'bar'
 echo ls -r'bar' 
 
+# beginning of line
+'echo'
+r'echo'
+u'echo'
+$"echo"
+
 #
 # Double-quoted strings support interpolation (and a few \ escapes)
 #
@@ -80,6 +87,8 @@ var dq = "hi $r2 \$ \" \\"
 
 echo $"hi $r1 \$ \" \\"
 var dq = $"hi $r2 \$ \" \\"
+
+echo --foo=$"bar"
 
 #
 # J8 strings have \ escapes
@@ -218,6 +227,14 @@ var _x = x
 echo $name42 $name42x
 echo ${name42} ${name42x}
 echo $_x ${_x}
+
+echo foo@example.com  foo@example  # should not be highlighted as a splice
+
+var my_array = :| echo b c |
+echo x @my_array
+setvar myarray = :| a b c @my_array |
+
+@my_array
 
 set -- {0..11}
 echo $0 ${11}

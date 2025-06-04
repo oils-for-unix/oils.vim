@@ -37,7 +37,7 @@ syn cluster dollarSubInExpr
       \ contains=varSubBracedName,varSubNumber,varSubBracedNumber,commandSub,exprSub
 
 syn cluster splice
-      \ contains=exprSplice,commandSplice
+      \ contains=varSplice,exprSplice,commandSplice
 
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
@@ -80,8 +80,14 @@ syn match varSubBracedName '\${[a-zA-Z_][a-zA-Z0-9_]*}'
 " $1 is valid, but not $11.  Should be ${11}
 syn match varSubNumber '\$[0-9]'
 
-" [0-9]+ isn't a valid regex?
+" Vim quirk: [0-9]* and [0-9]\+ 
+" Let's use * to keep our metalangauge simple
 syn match varSubBracedNumber '\${[0-9][0-9]*}'
+
+" \< word boundary doesn't work because @ is a non-word char
+" So use 2 patterns to avoid
+syn match varSplice '[ \t]@[a-zA-Z_][a-zA-Z0-9_]*'
+syn match varSplice '^@[a-zA-Z_][a-zA-Z0-9_]*'
 
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
@@ -125,7 +131,7 @@ syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
 
 " [|] is a pipe; somehow \| doesn't work
-syn region yshArrayLiteral matchgroup=sigilPair start=':[|]' end='[|]'
+syn region yshArrayLiteral matchgroup=sigilPair start=':|' end='|'
       \ contains=@quotedStrings,@tripleQuotedStrings,@splice,@dollarSub,backslashQuoted
 
 " pp (f(x))
@@ -143,6 +149,8 @@ hi def link yshComment Comment
 hi def link shellKeyword Keyword
 hi def link yshKeyword Keyword
 " hi def link equalsKeyword Keyword
+
+hi def link backslashQuoted Character
 
 " expression only
 hi def link caretDqString String
@@ -166,7 +174,7 @@ hi def link varSubBracedName Identifier
 hi def link varSubNumber Identifier
 hi def link varSubBracedNumber Identifier
 
-hi def link backslashQuoted Character
+hi def link varSplice Identifier
 
 hi def link exprSub yshExpr
 hi def link exprSplice yshExpr
@@ -175,7 +183,6 @@ hi def link nestedParen yshExpr
 hi def link nestedBracket yshExpr
 hi def link nestedBrace yshExpr
 
-" TODO: highlight this differently?
 hi def link rhsExpr yshExpr
 
 hi def link nestedPair Normal

@@ -1,0 +1,5 @@
+echo foo@example.com  foo@example  # should not be highlighted as a splice
+
+var my_array = :| a b c |
+echo x @my_array
+setvar myarray = :| a b c @my_array |
