@@ -77,10 +77,10 @@ syn region nestedParen start='(' end=')' skip='\\[()]'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr "contained
       "\ contains=nestedParen,@quotedStrings,@tripleQuotedStrings contained
 syn region nestedBracket start='\[' end=']' skip='\\[\[\]]'
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr "contained
+      \ contains=@nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr "contained
 
 syn region nestedBrace start='{' end='}' skip='\\[{}]' 
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr contained
+      \ contains=@nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
 
 " a rhsExpr starts with = and ends with
 " - a comment, with a special me=s-2 for ending BEFORE the #
@@ -112,12 +112,22 @@ hi def link shellKeyword Keyword
 hi def link yshKeyword Keyword
 " hi def link equalsKeyword Keyword
 
-hi def link @quotedStrings String
-
 " expression only
 hi def link caretDqString String
 
-hi def link @tripleQuotedStrings String
+" @quotedStrings
+hi def link rawString String
+hi def link j8String String
+hi def link sqString String
+hi def link dqString String
+hi def link dollarDqString String
+
+" @tripleQuotedStrings
+hi def link tripleRawString String
+hi def link tripleJ8String String
+hi def link tripleSqString String
+hi def link tripleDqString String
+hi def link tripleDollarDqString String
 
 hi def link simpleVarSub Identifier
 
@@ -129,7 +139,9 @@ hi def link backslashAt Character
 hi def link exprSub Special
 hi def link exprSplice Special
 
-hi def link @nested Special
+hi def link nestedParen Special
+hi def link nestedBracket Special
+hi def link nestedBrace Special
 hi def link rhsExpr String
 
 let b:current_syntax = "ysh"
