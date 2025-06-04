@@ -71,11 +71,16 @@ echo *.[ch]
     pp (f(42))
     pp [f(42)]
 
-    echo ls --flag=$[x + 1]  
+    echo ls --flag=$[x + 1]; echo next
+    echo ls --flag=$[x +
+                     1]; echo next
     # escape dollar
     echo ls --flag=\$[x + 1]  
 
-    echo @[glob('*.py')]
+    echo @[glob('*.py')]; echo next
+    echo @[
+           glob('*.py')]; echo next
+
     # escape
     echo \@[glob('*.py')]
 
