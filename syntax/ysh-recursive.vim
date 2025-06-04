@@ -59,9 +59,9 @@ syn region dollarDqString start='\$"' skip='\\.' end='"'
       \ contains=@dqSub
 
 syn cluster expr 
-      \ contains=caretDqString,exprSub,exprSplice,commandSub,commandSplice,caretCommand
+      \ contains=exprSub,exprSplice,commandSub,commandSplice,caretDqString,caretCommand,caretExpr
  
-syn region caretDqString start='\^"' skip='\\.' end='"' 
+syn region caretDqString matchgroup=sigilPair start='\^"' skip='\\.' end='"' 
       \ contains=@dqSub
 
 " Python-like triple-quoted strings
@@ -80,15 +80,16 @@ syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
 " nested () [] {}
 " used for
-"   pp (x)  # nestedParen contained
-"   pp [x]  # nestedBracket contained
+"   pp (x)  # nestedParen not contained
+"   pp [x]  # nestedBracket not contained
 " Could improve this
-syn region nestedParen start='(' end=')' skip='\\[()]'
+syn region nestedParen matchgroup=nestedPair start='(' end=')' skip='\\[()]'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr "contained
-syn region nestedBracket start='\[' end=']' skip='\\[\[\]]'
+syn region nestedBracket matchgroup=nestedPair start='\[' end=']' skip='\\[\[\]]'
       \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr "contained
 
-syn region nestedBrace start='{' end='}' skip='\\[{}]' 
+" TODO: why is {} colored Special, when the nestedPair should be Normal?
+syn region nestedBrace matchgroup=nestedPair start='{' end='}' skip='\\[{}]' 
       \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
 
 " rhsExpr starts with =
@@ -96,22 +97,24 @@ syn region nestedBrace start='{' end='}' skip='\\[{}]'
 " - a comment, with me=s-2 for ending BEFORE the #
 " - semicolon ; with me=s-1
 " - end of line
-syn region rhsExpr start='= ' end=' #'me=s-2 end=';'me=s-1 end='$' 
+syn region rhsExpr start='= ' end=' #'me=s-2 end=';'me=s-1 end='$'
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 " note: call is the same as =, but the 'call' keyword also interferes
 
 " $[a[i]] contains nestedBracket to match []
 " matchgroup= is necessary for $[] to contain [] correctly
-syn region exprSub matchgroup=Identifier start='\$\[' end=']'
+syn region exprSub matchgroup=sigilPair start='\$\[' end=']'
       \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
-syn region exprSplice matchgroup=Identifier start='@\[' end=']'
+syn region exprSplice matchgroup=sigilPair start='@\[' end=']'
+      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings
+syn region caretExpr matchgroup=sigilPair start='\^\[' end=']'
       \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings
 
-syn region commandSub matchgroup=Identifier start='\$(' end=')'
+syn region commandSub matchgroup=sigilPair start='\$(' end=')'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
-syn region commandSplice matchgroup=Identifier start='@(' end=')'
+syn region commandSplice matchgroup=sigilPair start='@(' end=')'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
-syn region caretCommand matchgroup=Identifier start='\^(' end=')'
+syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
 
 " pp (f(x))
@@ -157,10 +160,16 @@ hi def link backslashAt Character
 hi def link exprSub Special
 hi def link exprSplice Special
 
+" these are expressions
 hi def link nestedParen Special
 hi def link nestedBracket Special
 hi def link nestedBrace Special
+
+" TODO: highlight this differently?
 hi def link rhsExpr String
+
+hi def link nestedPair Normal
+hi def link sigilPair Special
 
 let b:current_syntax = "ysh"
 

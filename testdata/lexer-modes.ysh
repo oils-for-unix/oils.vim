@@ -16,7 +16,7 @@ var a = [0, 1, 2]
 # nested
 var b = [a[2], a[1], a[0]]
 
-var c = (f(2), f(1), f(0))
+var c = (f(2), f(1), f(0), {})
 
 pp (1 + (a[1] + 3)); echo next
 
@@ -71,12 +71,11 @@ echo *.[ch]
     pp (f(42))
     pp [f(42)]
 
-    echo ls --flag=$[x + 1]; echo next   # newline not allowed in $[]?
+    echo ls --flag=$[x + 1]; echo next   # newline not allowed in $[]
     # escape dollar
     echo ls --flag=\$[x + 1]  
 
     echo @[glob('*.py')]; echo next  # newline not allowed in @[]
-
     # escape
     echo \@[glob]
 
@@ -102,17 +101,17 @@ echo *.[ch]
 # Double-Quoted mode ->
 
     echo "greeting = $(echo hi)"  # Command
-    echo "sum = $[x + 99]"         # Expression
+    echo "sum = $[x + 99]"        # Expression
 
 # No change
 
     echo $(echo hi)
     echo @(echo hi)
 
-    = $[42 + a[i]]
-    = @[a]
+    # TODO: should implement these two in YSH!
+    #= $[42 + a[i]]
+    #= @[a]
     = ^[42 + a[i]]
-
 
 # Multi-line versions
 
