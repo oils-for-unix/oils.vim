@@ -53,8 +53,8 @@ echo *.[ch]
     var y = f(42)
     = f(42)
     call f(42)
-    pp ('hi')
-    pp ['hi']              
+    pp (f(42))
+    pp [f(42)]
 
     echo ls --flag=$[x + 1]  
     echo @[glob('*.py')]

@@ -29,8 +29,10 @@ syn match yshComment '[ \t]#.*$'
 syn match backslashSq "\\'"
 syn match backslashDq '\\"'
 
-syn cluster quotedStrings contains=rawString,j8String,sqString,dqString,dollarDqString
-syn cluster tripleQuotedStrings contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
+syn cluster quotedStrings 
+      \ contains=rawString,j8String,sqString,dqString,dollarDqString
+syn cluster tripleQuotedStrings 
+      \ contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
 
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
@@ -43,37 +45,44 @@ syn region j8String start="\<[bu]'" skip='\\.' end="'"
 syn region sqString start="'" end="'"
 
 " Double-quoted strings
-syn region dqString start='"' skip='\\.' end='"' contains=yshInterpolation
+syn region dqString start='"' skip='\\.' end='"' 
+      \ contains=yshInterpolation
 
 " Explicit with $
-syn region dollarDqString start='$"' skip='\\.' end='"' contains=yshInterpolation
+syn region dollarDqString start='$"' skip='\\.' end='"' 
+      \ contains=yshInterpolation
 
 " Python-like triple-quoted strings
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
-syn region tripleDqString start='"""' end='"""' contains=yshInterpolation
-syn region tripleDollarDqString start='$"""' end='"""' contains=yshInterpolation
+syn region tripleDqString start='"""' end='"""' 
+      \ contains=yshInterpolation
+syn region tripleDollarDqString start='$"""' end='"""' 
+      \ contains=yshInterpolation
 
 " String interpolation within double quotes
 syn match yshInterpolation "\$\w\+"
 
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
-" pp (x)
-" space required - pp(x) is illegal - it would be call pp(x)
-" syn region exprParen start='[ \t](' end=')' skip='\\[()]' contains=exprParen,@quotedStrings,@tripleQuotedStrings
-syn region nestedParen start='(' end=')' skip='\\[()]' contains=@nested,@quotedStrings,@tripleQuotedStrings contained
-
-" space required before pp [x], it is different than *.[ch]
-" is the right syntax for \[ or \]?
-" syn region exprBracket start='[ \t]\[' end=']' skip='\\[\[\]]' contains=exprBracket,@quotedStrings,@tripleQuotedStrings
-syn region nestedBracket start='\[' end=']' skip='\\[\[\]]' contains=@nested,@quotedStrings,@tripleQuotedStrings contained
-
-syn region nestedBrace start='{' end='}' skip='\\[{}]' contains=@nested,@quotedStrings,@tripleQuotedStrings contained
+syn region nestedParen start='(' end=')' skip='\\[()]'
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings contained
+syn region nestedBracket start='\[' end=']' skip='\\[\[\]]'
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings contained
+syn region nestedBrace start='{' end='}' skip='\\[{}]' 
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings contained
 
 " a rhsExpr can end with ; or the line
-syn region rhsExpr start='= ' end=';' end='$' contains=@nested,@quotedStrings,@tripleQuotedStrings
+syn region rhsExpr start='= ' end=';' end='$' 
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings
+" note: call is the same as =, but the 'call' keyword also interferes
+
+" pp (f(x))
+" syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
+" space first
+syn region lazyTypedArgs start=' \[' end='\]' 
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings
 
 " Define highlighting
 hi def link yshComment Comment
