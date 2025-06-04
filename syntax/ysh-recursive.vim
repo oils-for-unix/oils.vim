@@ -91,12 +91,12 @@ syn region rhsExpr start='= ' end=' #'me=s-2 end=';'me=s-1 end='$'
 " note: call is the same as =, but the 'call' keyword also interferes
 
 " $[a[i]] contains nestedBracket to match []
-syn region exprSub start='\$\[' end=']'
-      \ contains=@quotedStrings,@tripleQuotedStrings,@expr
-      "\ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
-syn region exprSplice start='@\[' end=']'
-      \ contains=@quotedStrings,@tripleQuotedStrings
-      "\ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings
+" matchgroup= is necessary for $[] and []
+syn region exprSub matchgroup=Identifier start='\$\[' end=']'
+      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
+      "\ contains=@quotedStrings,@tripleQuotedStrings,@expr
+syn region exprSplice matchgroup=Identifier start='@\[' end=']'
+      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings
 
 " pp (f(x))
 " syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
