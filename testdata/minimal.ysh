@@ -61,7 +61,7 @@ echo r'C:\Program Files\'  # r'' prefix is allowed
 
 # expression mode
 var r1 = '/usr/bin/'
-var r2 = r'C:\Program Files'  # r'' prrefix is allowed
+var r2 = r'C:\Program Files\' # r'' prefix is allowed
 
 # corner cases for r''
 echo ls --foo='bar'

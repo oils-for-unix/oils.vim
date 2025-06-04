@@ -3,6 +3,9 @@ func f(x) { return (x) }
 var x = 42
 var x = f(42)
 
+# comment afterward
+var r2 = r'C:\Program # Files\' # r'' prefix is allowed
+
 var a = [0, 1, 2]
 
 # nested

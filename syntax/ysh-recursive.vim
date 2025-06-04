@@ -81,8 +81,8 @@ syn region rhsExpr start='= ' end=';' end='$'
 " pp (f(x))
 " syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
 " space first
-syn region lazyTypedArgs start=' \[' end='\]' 
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings
+" syn region lazyTypedArgs start=' \[' end=']' 
+"      \ contains=@nested,@quotedStrings,@tripleQuotedStrings
 
 " Define highlighting
 hi def link yshComment Comment
