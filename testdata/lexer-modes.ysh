@@ -23,6 +23,8 @@ pp (1 +
 
 pp ('hi' ++ "hi $x" ++ r'c:\' ++ b'\n')
 
+echo {a,b}@example.com
+
 if (42 > a[0]) {
   echo 'yes'
 }
@@ -90,7 +92,7 @@ echo *.[ch]
 # Double-Quoted mode ->
 
     echo "greeting = $(echo hi)"  # Command
-    echo "sum = $[x + y]"         # Expression
+    echo "sum = $[x + 99]"         # Expression
 
 
 # Multi-line versions
@@ -103,7 +105,7 @@ echo *.[ch]
 
     # hard cases with ;
     var z = f(1); echo hi
-    var z = g(1, 2
+    var z = g(1, 2,
               3); echo hi
 
     setvar a[0 + 0] = 42
@@ -116,11 +118,11 @@ echo *.[ch]
            43,
            f(5))
 
-    var d = {
+    var d = len({
       k1: 'value',
       k2: g(5,
             6, 7),
       bracket: [
         1, 2, 3
       ],
-    } ++ a
+    }) + 42
