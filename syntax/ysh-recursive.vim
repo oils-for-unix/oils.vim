@@ -36,6 +36,10 @@ syn cluster quotedStrings
 syn cluster tripleQuotedStrings 
       \ contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
 
+" $(echo hi) and $[42 + a[i]] are allowed in all kinds of double quoted strings
+syn cluster dqSub
+      \ contains=simpleVarSub,exprSub,commandSub
+
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
 syn region rawString start="\<r'" end="'"
@@ -48,55 +52,67 @@ syn region sqString start="'" end="'"
 
 " Double-quoted strings
 syn region dqString start='"' skip='\\.' end='"' 
-      \ contains=simpleVarSub,exprSub
+      \ contains=@dqSub
 
 " Explicit with $
 syn region dollarDqString start='\$"' skip='\\.' end='"' 
-      \ contains=simpleVarSub,exprSub
+      \ contains=@dqSub
 
-syn cluster expr contains=caretDqString
+syn cluster expr 
+      \ contains=caretDqString,exprSub,exprSplice,commandSub,commandSplice,caretCommand
  
 syn region caretDqString start='\^"' skip='\\.' end='"' 
-      \ contains=simpleVarSub,exprSub
+      \ contains=@dqSub
 
 " Python-like triple-quoted strings
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' end='"""' 
-      \ contains=simpleVarSub,exprSub
+      \ contains=@dqSub
 syn region tripleDollarDqString start='$"""' end='"""' 
-      \ contains=simpleVarSub,exprSub
+      \ contains=@dqSub
 
 " String interpolation within double quotes
 syn match simpleVarSub '\$\w\+'
 
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
+" nested () [] {}
+" used for
+"   pp (x)  # nestedParen contained
+"   pp [x]  # nestedBracket contained
+" Could improve this
 syn region nestedParen start='(' end=')' skip='\\[()]'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr "contained
-      "\ contains=nestedParen,@quotedStrings,@tripleQuotedStrings contained
 syn region nestedBracket start='\[' end=']' skip='\\[\[\]]'
       \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr "contained
 
 syn region nestedBrace start='{' end='}' skip='\\[{}]' 
       \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
 
-" a rhsExpr starts with = and ends with
-" - a comment, with a special me=s-2 for ending BEFORE the #
-" - semicolon ;
+" rhsExpr starts with =
+" and ends with
+" - a comment, with me=s-2 for ending BEFORE the #
+" - semicolon ; with me=s-1
 " - end of line
 syn region rhsExpr start='= ' end=' #'me=s-2 end=';'me=s-1 end='$' 
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 " note: call is the same as =, but the 'call' keyword also interferes
 
 " $[a[i]] contains nestedBracket to match []
-" matchgroup= is necessary for $[] and []
+" matchgroup= is necessary for $[] to contain [] correctly
 syn region exprSub matchgroup=Identifier start='\$\[' end=']'
       \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
-      "\ contains=@quotedStrings,@tripleQuotedStrings,@expr
 syn region exprSplice matchgroup=Identifier start='@\[' end=']'
       \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings
+
+syn region commandSub matchgroup=Identifier start='\$(' end=')'
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
+syn region commandSplice matchgroup=Identifier start='@(' end=')'
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
+syn region caretCommand matchgroup=Identifier start='\^(' end=')'
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings
 
 " pp (f(x))
 " syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings

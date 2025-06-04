@@ -104,6 +104,15 @@ echo *.[ch]
     echo "greeting = $(echo hi)"  # Command
     echo "sum = $[x + 99]"         # Expression
 
+# No change
+
+    echo $(echo hi)
+    echo @(echo hi)
+
+    = $[42 + a[i]]
+    = @[a]
+    = ^[42 + a[i]]
+
 
 # Multi-line versions
 
