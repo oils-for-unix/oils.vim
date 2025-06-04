@@ -77,10 +77,10 @@ syn region nestedParen start='(' end=')' skip='\\[()]'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr "contained
       "\ contains=nestedParen,@quotedStrings,@tripleQuotedStrings contained
 syn region nestedBracket start='\[' end=']' skip='\\[\[\]]'
-      \ contains=@nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr "contained
+      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr "contained
 
 syn region nestedBrace start='{' end='}' skip='\\[{}]' 
-      \ contains=@nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
+      \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
 
 " a rhsExpr starts with = and ends with
 " - a comment, with a special me=s-2 for ending BEFORE the #
