@@ -72,7 +72,12 @@ echo *.[ch]
     pp [f(42)]
 
     echo ls --flag=$[x + 1]  
+    # escape dollar
+    echo ls --flag=\$[x + 1]  
+
     echo @[glob('*.py')]
+    # escape
+    echo \@[glob('*.py')]
 
 # Command mode -> Double quoted
 

@@ -28,6 +28,8 @@ syn match yshComment '[ \t]#.*$'
 
 syn match backslashSq "\\'"
 syn match backslashDq '\\"'
+syn match backslashDollar '\\\$'
+syn match backslashAt '\\@'
 
 syn cluster quotedStrings 
       \ contains=rawString,j8String,sqString,dqString,dollarDqString
@@ -83,6 +85,12 @@ syn region rhsExpr start='= ' end=' #'me=s-2 end=';'me=s-1 end='$'
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings
 " note: call is the same as =, but the 'call' keyword also interferes
 
+" $[a[i]] contains nestedBracket to match []
+syn region exprSub start='\$\[' end=']'
+      \ contains=@nestedBracket,@quotedStrings,@tripleQuotedStrings
+syn region exprSplice start='@\[' end=']'
+      \ contains=@nestedBracket,@quotedStrings,@tripleQuotedStrings
+
 " pp (f(x))
 " syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
 " syn region typedArgs start='(' end=')' contains=nestedParen
@@ -107,6 +115,11 @@ hi def link simpleVarSub Identifier
 
 hi def link backslashDq Character
 hi def link backslashSq Character
+hi def link backslashDollar Character
+hi def link backslashAt Character
+
+hi def link exprSub Special
+hi def link exprSplice Special
 
 hi def link @nested Special
 hi def link rhsExpr String
