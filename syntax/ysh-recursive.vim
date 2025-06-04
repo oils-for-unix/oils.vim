@@ -92,9 +92,11 @@ syn region rhsExpr start='= ' end=' #'me=s-2 end=';'me=s-1 end='$'
 
 " $[a[i]] contains nestedBracket to match []
 syn region exprSub start='\$\[' end=']'
-      \ contains=@nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
+      \ contains=@quotedStrings,@tripleQuotedStrings,@expr
+      "\ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
 syn region exprSplice start='@\[' end=']'
-      \ contains=@nestedBracket,@quotedStrings,@tripleQuotedStrings
+      \ contains=@quotedStrings,@tripleQuotedStrings
+      "\ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings
 
 " pp (f(x))
 " syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
