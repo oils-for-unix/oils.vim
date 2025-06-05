@@ -18,9 +18,9 @@ syn keyword shellKeyword if elif else case for while
 syn keyword yshKeyword proc func const var setvar setglobal break continue return
 
 " The call and = keywords are followed by an expression
-syn keyword callKeyword call nextgroup=exprAfterKeyword skipwhite
+syn keyword callKeyword call nextgroup=exprAfterKeyword 
 " The = keyword occurs at the beginning of a line (different than rhsExpr)
-syn match equalsKeyword '^[ \t]*=' nextgroup=exprAfterKeyword skipwhite
+syn match equalsKeyword '^[ \t]*=' nextgroup=exprAfterKeyword
 
 " End-of-line comments
 syn match yshComment '^#.*$'
@@ -110,9 +110,7 @@ syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']'
 " matchgroup=Normal prevents = from being highlighted
 syn region rhsExpr matchgroup=Normal start=' = ' end=' #'me=s-2 end=';'me=s-1 end='$'
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
-
-" matchgroup=NONE means that the first character is not special
-syn region exprAfterKeyword matchgroup=NONE start='\S' end=' #'me=s-2 end=';'me=s-1 end='$' contained
+syn region exprAfterKeyword start='\s' end=' #'me=s-2 end=';'me=s-1 end='$' contained
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 " note: call is the same as =, but the 'call' keyword also interferes
 

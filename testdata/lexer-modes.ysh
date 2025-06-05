@@ -79,8 +79,8 @@ echo \( hi \) \[ hi \]
     var y = f(42)
     var y = f('str' ++ "hi $x")
 
-    = f(42)
-    call f(42)
+    =  f(42)
+    call  f(42)
     pp (f(42))
     pp [f(42)]
 

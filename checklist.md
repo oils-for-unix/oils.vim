@@ -146,10 +146,9 @@ Vim regions (`syn region`) do all the heavy lifting of lexer modes:
 
 Region parameters:
 
-- `nextgroup= skipwhite` - for `call` and `=` keywords
+- `nextgroup=` - for `call` and `=` keywords
 - `matchgroup=`
   - `matchgroup=Normal` is necessary for nesting of delimiters, like `()` within `$()`
-  - `matchgroup=NONE` for `call` and `=` keywords
 - `end=' #'me=s-2` to say that the end of the match is before the delimiter ` #`, not after
 
 ## Stage 3 - Recognize Details Within Each Mode
