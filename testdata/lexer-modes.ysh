@@ -154,6 +154,7 @@ echo \( hi \) \[ hi \]
       ],
     }) + 42
 
+    = len({ k: [x, x] }) + 42
 
 # Backslash esacped \( \) \[ \] \{ \}
 
@@ -181,3 +182,4 @@ echo $(echo \{ \})
 = { k: $(echo \( \)) }
 = { k: $(echo \[ \]) }
 = { k: $(echo \{ \}) }
+

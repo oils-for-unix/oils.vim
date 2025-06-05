@@ -1,5 +1,11 @@
 " Vim syntax definition for YSH
 " This is stage 2 - mutually recursive commands, strings, and expressions.  See checklist.md.
+"
+" Note: my vimrc overrides the colors:
+"
+" let g:ysh_expr_color = 18        " blue  
+" let g:ysh_sigil_pair_color = 55  " purple
+" let g:ysh_var_sub_color = 88     " red   
 
 if exists("b:current_syntax")
   finish
@@ -19,7 +25,7 @@ syn keyword yshKeyword proc func const var setvar setglobal call break continue 
 syn match yshComment '^#.*$'
 syn match yshComment '[ \t]#.*$'
 
-" TODO: could refine this, but it is enough for segmentation / nested pairs / sigil pairs
+" TODO: could refine this, but it's enough for segmentation / nested pairs / sigil pairs
 syn match backslashQuoted /\\['"$@()\[\]]/
 
 syn cluster quotedStrings
@@ -68,21 +74,6 @@ syn region tripleDqString start='"""' end='"""'
       \ contains=@dollarSub
 syn region tripleDollarDqString start='$"""' end='"""' 
       \ contains=@dollarSub
-
-" $name
-syn match varSubName '\$[a-zA-Z_][a-zA-Z0-9_]*'
-" ${name}
-syn match varSubBracedName '\${[a-zA-Z_][a-zA-Z0-9_]*}'
-" $1 is valid, but not $11.  Should be ${11}
-syn match varSubNumber '\$[0-9]'
-" ${12}
-" Vim quirk: it's [0-9]\+ versus [0-9]*.  Use * to keep our metalangauge simple
-syn match varSubBracedNumber '\${[0-9][0-9]*}'
-
-" @splice - \< word boundary doesn't work because @ is a non-word char
-" Use 2 patterns to avoid complex \z expressions
-syn match varSplice '[ \t]@[a-zA-Z_][a-zA-Z0-9_]*'
-syn match varSplice '^@[a-zA-Z_][a-zA-Z0-9_]*'
 
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
@@ -145,7 +136,30 @@ syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
 syn region yshArrayLiteral matchgroup=sigilPair start=':|' end='|'
       \ contains=@quotedStrings,@tripleQuotedStrings,@splice,@dollarSub,backslashQuoted
 
-" Define highlighting
+"
+" Step 3: Highlight Details
+"
+
+" $name
+syn match varSubName '\$[a-zA-Z_][a-zA-Z0-9_]*'
+" ${name}
+syn match varSubBracedName '\${[a-zA-Z_][a-zA-Z0-9_]*}'
+" $1 is valid, but not $11.  Should be ${11}
+syn match varSubNumber '\$[0-9]'
+" ${12}
+" Vim quirk: it's [0-9]\+ versus [0-9]*.  Use * to keep our metalangauge simple
+syn match varSubBracedNumber '\${[0-9][0-9]*}'
+
+" @splice - \< word boundary doesn't work because @ is a non-word char
+" Use 2 patterns to avoid complex \z expressions
+syn match varSplice '[ \t]@[a-zA-Z_][a-zA-Z0-9_]*'
+syn match varSplice '^@[a-zA-Z_][a-zA-Z0-9_]*'
+
+"
+" Define Standard Syntax Groups
+"   Normal Comment Keyword Character String Identifier
+"
+
 hi def link yshComment Comment
 
 hi def link shellKeyword Keyword
@@ -171,15 +185,25 @@ hi def link tripleSqString String
 hi def link tripleDqString String
 hi def link tripleDollarDqString String
 
-hi def link varSubName Identifier
-hi def link varSubBracedName Identifier
-hi def link varSubNumber Identifier
-hi def link varSubBracedNumber Identifier
+hi def link yshArrayLiteral Normal
 
-hi def link varSplice Identifier
+" I might change nestedPair, so not allow overriding it
+hi def link nestedPair Normal
+
+
+" Define Custom Syntax Groups
+"   yshVarSub yshExpr
+
+hi def link varSubName yshVarSub
+hi def link varSubBracedName yshVarSub
+hi def link varSubNumber yshVarSub
+hi def link varSubBracedNumber yshVarSub
+" @array_splice is considered var sub
+hi def link varSplice yshVarSub
 
 hi def link exprSub yshExpr
 hi def link exprSplice yshExpr
+hi def link caretExpr yshExpr
 
 hi def link nestedParen yshExpr
 hi def link nestedBracket yshExpr
@@ -187,14 +211,31 @@ hi def link nestedBrace yshExpr
 
 hi def link rhsExpr yshExpr
 
-hi def link nestedPair Normal
-hi def link sigilPair Special
+" These groups can be assigned custom colors:
+"   yshVarSub yshExpr sigilPair
 
-" highlighted like a command
-hi def link yshArrayLiteral Normal
+" yshExpr:  f(x, a[i])
+if exists('g:ysh_expr_color')
+  execute 'highlight yshExpr ctermfg=' . g:ysh_expr_color
+else
+  hi def link yshExpr Function
+endif
 
-hi def link yshExpr Function
-" highlight yshExpr ctermfg=green guifg=green
+" yshVarSub:  "hi $x"
+if exists('g:ysh_var_sub_color')
+  execute 'highlight yshVarSub ctermfg=' . g:ysh_var_sub_color
+else
+  hi def link yshVarSub Identifier
+endif
+
+" sigilPair:  $(echo hi)
+if exists('g:ysh_sigil_pair_color')
+  execute 'highlight sigilPair ctermfg=' . g:ysh_sigil_pair_color
+else
+  hi def link sigilPair Special
+endif
+
+" highlight yshExpr ctermfg=darkgreen guifg=darkgreen
 
 let b:current_syntax = "ysh"
 

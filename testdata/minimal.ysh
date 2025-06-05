@@ -61,7 +61,6 @@ echo \'single \'single \"double \"double
 echo '/usr/bin'
 echo r'C:\Program Files\'  # r'' prefix is allowed
 
-
 # expression mode
 var r1 = '/usr/bin/'
 var r2 = r'C:\Program Files\' # r'' prefix is allowed
@@ -196,7 +195,6 @@ echo "sum = $[42 + d['hi']]"
 var ch = 'i'
 echo $[42 + d["h$[ch]"]]
 
-
 #
 # Bug -  nested double quotes don't work correctly
 #
@@ -205,8 +203,6 @@ echo $[42 + d["h$[ch]"]]
 
 echo "$[42 + d["h$[ch]"]]"
 echo "hi $["inner"]"
-
-echo done
 
 #
 # Interpolation

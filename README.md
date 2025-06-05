@@ -15,6 +15,14 @@ I use [vim-plug][], which is configured in your `~/.vimrc` like this:
 
 [vim-plug]: https://github.com/junegunn/vim-plug
 
+## Configuration
+
+My vimrc overrides the colors:
+
+    let g:ysh_expr_color = 18        " blue  
+    let g:ysh_sigil_pair_color = 55  " purple
+    let g:ysh_var_sub_color = 88     " red   
+
 ## Local Testing
 
 Temporarily change the line to point at a local copy:
