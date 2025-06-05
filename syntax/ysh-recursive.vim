@@ -129,13 +129,14 @@ syn region caretExpr matchgroup=sigilPair start='\^\[' end=']'
 
 " Sigil Pairs $() @() ^()
 
-" note: could contain typedArgs,lazyTypedArgs,callKeyword, etc.  But nestedParen is enough.
+" note: could contain typedArgs,lazyTypedArgs, all keywords etc.  But
+" nestedParen,backslashQuoted,yshComment is enough to match parens.
 syn region commandSub matchgroup=sigilPair start='\$(' end=')'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted,yshComment
 syn region commandSplice matchgroup=sigilPair start='@(' end=')'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted,yshComment
 syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted
+      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted,yshComment
 
 " var x = :| README *.py | 
 " Vim quirk: | is a pipe, and \| is the regex operator

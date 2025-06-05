@@ -154,6 +154,24 @@ Region parameters:
 
 ## Stage 3 - Recognize Details Within Each Mode
 
+### Multi-Line
+
+These constructs have no effect on the command lexer mode.
+
+```
+echo \
+    multi- \
+    line # shell style
+
+... echo
+    multi-
+    line
+    ;  # YSH style
+```
+
+In contrast, balanced delimiters `() [] {}` in expressions allow them to span
+multiple lines.
+
 ### More on Expressions
 
 - atoms: true false null - only in expressions

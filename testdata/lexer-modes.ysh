@@ -4,6 +4,9 @@ func f(x; offset=0) { return (x) }
 
 func z(x; delimiter=r'\', other="hi $x") { return (x) }
 
+proc p(x, y; d=$(echo hi)) { echo hi }
+proc p (x, y; d=$(echo 2)) { echo hi }
+
 var y = f(42)  # function call
 
 var z = f(42; offset=5)  # semi-colon doesn't end the expression
@@ -41,7 +44,8 @@ pp [a]
   pp  (${x} ++ $(echo hi) ++ 'hi')
   pp  [${x} ++ $(echo hi) ++ 'hi']
 
-# todo: this isn't an expression!
+# Note: this isn't confused for a lazy typed arg, because there's no leading
+# space
 echo *.[ch]
 
 # Backslash escapes
@@ -152,6 +156,11 @@ echo \( hi \) \[ hi \]
     call g(3, 4, 5); echo hi
     call g(3, 4, 5)  # comment
 
+    var d = {
+      k: 1,
+      k: 2,
+    }; echo next
+
     var d = len({
       k1: 'value',
       k2: g(5,
@@ -192,4 +201,4 @@ echo $(echo \{ \})
 
 = $(pp (42))
 = $(pp [42])
-= $(call f(x))
+#= $(call f(x))

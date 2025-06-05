@@ -244,3 +244,28 @@ echo bad $00 $1a
 
 echo "hi $0 x ${11}"
 echo "bad $00 $1a"
+
+
+#
+# Multi-Line
+#
+
+... echo
+    multi-
+    line ;
+
+# not valid
+# var x = (...)
+
+echo \
+  multi- \
+  line \
+  $(echo next)
+
+
+echo $(
+  echo 1
+  echo 2
+  # no highlighting here, but we don't encourage complex code
+  for x in 3 4 { echo $x }
+  )
