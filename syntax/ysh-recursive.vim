@@ -3,9 +3,9 @@
 "
 " Note: my vimrc overrides the colors:
 "
-" let g:ysh_expr_color = 18        " blue  
+" let g:ysh_expr_color = 20        " blue  
 " let g:ysh_sigil_pair_color = 55  " purple
-" let g:ysh_var_sub_color = 88     " red   
+" let g:ysh_var_sub_color = 89     " lighter purple
 
 if exists("b:current_syntax")
   finish
@@ -15,11 +15,12 @@ endif
 :syntax sync minlines=200
 
 syn keyword shellKeyword if elif else case for while
-syn keyword yshKeyword proc func const var setvar setglobal call break continue return
+syn keyword yshKeyword proc func const var setvar setglobal break continue return
 
-" = keyword occurs at the beginning of a line
-" disabled since it interfers with rhsExpr
-" syn match equalsKeyword '^[ \t]*=[ ]'
+" The call and = keywords are followed by an expression
+syn keyword callKeyword call nextgroup=exprAfterKeyword skipwhite
+" The = keyword occurs at the beginning of a line (different than rhsExpr)
+syn match equalsKeyword '^[ \t]*=' nextgroup=exprAfterKeyword skipwhite
 
 " End-of-line comments
 syn match yshComment '^#.*$'
@@ -82,32 +83,36 @@ syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 "   pp (x)  # nestedParen not contained
 "   pp [x]  # nestedBracket not contained
 " Could improve this
-syn region nestedParen matchgroup=nestedPair start='(' end=')'
+syn region nestedParen matchgroup=nestedPair start='(' end=')' transparent
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr
-syn region nestedBracket matchgroup=nestedPair start='\[' end=']'
+syn region nestedBracket matchgroup=nestedPair start='\[' end=']' transparent
       \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
 
 " TODO: why is {} colored Special, when the nestedPair should be Normal?
 " This is only used for expressions, not for command blocks { }
 " skip='\\[{}]' could be useful
-syn region nestedBrace matchgroup=nestedPair start='{' end='}'
+syn region nestedBrace matchgroup=nestedPair start='{' end='}' transparent
       \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
 
-" Can we do something more accurate?  Space before ( and [
+" pp (x) space before (
+syn region typedArgs matchgroup=Normal start=' (' end=')' 
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 
-" syn region typedArgs start=' (' end=')' contains=@nested,@quotedStrings,@tripleQuotedStrings
-" syn region typedArgs start='(' end=')' contains=nestedParen
-" hi def link typedArgs Special
+" pp [x] space before [
+syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']' 
+     \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 
-" syn region lazyTypedArgs start=' \[' end=']' 
-"      \ contains=@nested,@quotedStrings,@tripleQuotedStrings
-
-" rhsExpr starts with =
+" rhsExpr starts with ' = ' (leading space distinguishes from = keyword)
 " and ends with
 " - a comment, with me=s-2 for ending BEFORE the #
 " - semicolon ; with me=s-1
 " - end of line
-syn region rhsExpr matchgroup=Normal start='= ' end=' #'me=s-2 end=';'me=s-1 end='$'
+" matchgroup=Normal prevents = from being highlighted
+syn region rhsExpr matchgroup=Normal start=' = ' end=' #'me=s-2 end=';'me=s-1 end='$'
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
+
+" matchgroup=NONE means that the first character is not special
+syn region exprAfterKeyword matchgroup=NONE start='\S' end=' #'me=s-2 end=';'me=s-1 end='$' contained
       \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 " note: call is the same as =, but the 'call' keyword also interferes
 
@@ -164,7 +169,8 @@ hi def link yshComment Comment
 
 hi def link shellKeyword Keyword
 hi def link yshKeyword Keyword
-" hi def link equalsKeyword Keyword
+hi def link callKeyword Keyword
+hi def link equalsKeyword Keyword
 
 hi def link backslashQuoted Character
 
@@ -205,11 +211,15 @@ hi def link exprSub yshExpr
 hi def link exprSplice yshExpr
 hi def link caretExpr yshExpr
 
-hi def link nestedParen yshExpr
-hi def link nestedBracket yshExpr
-hi def link nestedBrace yshExpr
+"hi def link nestedParen yshExpr
+"hi def link nestedBracket yshExpr
+"hi def link nestedBrace yshExpr
 
 hi def link rhsExpr yshExpr
+hi def link exprAfterKeyword yshExpr
+
+hi def link typedArgs yshExpr
+hi def link lazyTypedArgs yshExpr
 
 " These groups can be assigned custom colors:
 "   yshVarSub yshExpr sigilPair

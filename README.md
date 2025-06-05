@@ -19,9 +19,9 @@ I use [vim-plug][], which is configured in your `~/.vimrc` like this:
 
 My vimrc overrides the colors:
 
-    let g:ysh_expr_color = 18        " blue  
+    let g:ysh_expr_color = 20        " blue  
     let g:ysh_sigil_pair_color = 55  " purple
-    let g:ysh_var_sub_color = 88     " red   
+    let g:ysh_var_sub_color = 89     " lighter purple
 
 ## Local Testing
 

@@ -38,6 +38,9 @@ for i, item in (a) {
 
 pp [a]
 
+  pp  (${x} ++ $(echo hi) ++ 'hi')
+  pp  [${x} ++ $(echo hi) ++ 'hi']
+
 # todo: this isn't an expression!
 echo *.[ch]
 
@@ -125,8 +128,9 @@ echo \( hi \) \[ hi \]
 # Multi-line versions
 
     func g(...args) { return (args[0]) }
+    func myfunc(...args) { return (args[0]) }
 
-    var y = g(42,
+    var y = (42,
               43,
               f(5))
 
@@ -141,9 +145,12 @@ echo \( hi \) \[ hi \]
         43,
         f(5))
 
-    call g(42,
-           43,
-           f(5))
+    call myfunc(42,
+                43,
+                f(5)); echo next
+
+    call g(3, 4, 5); echo hi
+    call g(3, 4, 5)  # comment
 
     var d = len({
       k1: 'value',
@@ -156,7 +163,7 @@ echo \( hi \) \[ hi \]
 
     = len({ k: [x, x] }) + 42
 
-# Backslash esacped \( \) \[ \] \{ \}
+# Backslash escaped \( \) \[ \] \{ \}
 
 echo $(echo \( \))
 echo $(echo \[ \])

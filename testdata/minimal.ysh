@@ -3,17 +3,19 @@
 #
 
 # YSH keywords
-var v = 42
-const c = 99
+var v = 42; echo next
+const c = 99  # comment
 setvar dq = 'zz'
 setglobal g = "yy"
 
 proc p { echo hi }
 func f(x) { return (x) }
 
-call len('str')
+call len('str'); echo next
+call len('str')  # comment
 
-= len(g)  # = keyword
+= len(g); echo next
+  = len(g)  # = keyword
 
 #=foo
 #echo =foo
@@ -188,21 +190,24 @@ var x = u'''
 # Expression Work Fine, Without Color
 #
 
-var d = {hi: 42}
-echo $[42 + d['hi']]
-echo "sum = $[42 + d['hi']]"
+var mydict = {hi: 42}
+
+echo $[42 + mydict['hi']]
+echo "sum = $[42 + mydict['hi']]"
+
+#
+# Bug in the MINIMAL style: nested double quotes aren't matched correctly.
+#
+# This is a limitation of NON-recursive lexing.
+#
+
+echo  "$[42 + mydict["hi"]]"
+echo "hi $["inner"]"
+
 
 var ch = 'i'
-echo $[42 + d["h$[ch]"]]
-
-#
-# Bug -  nested double quotes don't work correctly
-#
-# This is Limitation of the MINIMAL style - lexing is non-recursive
-#
-
-echo "$[42 + d["h$[ch]"]]"
-echo "hi $["inner"]"
+echo  $[42 + mydict["h$[ch]"]]
+echo "$[42 + mydict["h$[ch]"]]"
 
 #
 # Interpolation
@@ -233,5 +238,9 @@ setvar myarray = :| a b c @my_array |
 @my_array
 
 set -- {0..11}
+
 echo $0 ${11}
 echo bad $00 $1a
+
+echo "hi $0 x ${11}"
+echo "bad $00 $1a"
