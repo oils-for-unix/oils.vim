@@ -2,10 +2,10 @@ var x = 42  # integer
 
 func f(x; offset=0) { return (x) }
 
-func z(x; delimiter=r'\', other="hi $x") { return (x) }
+func myFunc(x; delimiter=r'\', other="hi $x") { return (x) }
 
-proc p(x, y; d=$(echo hi)) { echo hi }
-proc p (x, y; d=$(echo 2)) { echo hi }
+proc my-proc(x, y; d=$(echo hi)) { echo hi }
+proc my-proc(x, y; d=$(echo 2)) { echo hi }
 
 var y = f(42)  # function call
 

@@ -17,11 +17,14 @@ I use [vim-plug][], which is configured in your `~/.vimrc` like this:
 
 ## Configuration
 
-My vimrc overrides the colors:
+My vimrc overrides these colors:
 
     let g:ysh_expr_color = 20        " blue  
     let g:ysh_sigil_pair_color = 55  " purple
     let g:ysh_var_sub_color = 89     " lighter purple
+
+    let g:ysh_proc_name_color = 55   " purple
+    let g:ysh_func_name_color = 89   " lighter purple
 
 ## Local Testing
 

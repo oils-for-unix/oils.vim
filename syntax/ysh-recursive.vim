@@ -1,26 +1,46 @@
 " Vim syntax definition for YSH
 " This is stage 2 - mutually recursive commands, strings, and expressions.  See checklist.md.
 "
-" Note: my vimrc overrides the colors:
+" Note: my vimrc overrides these colors:
 "
 " let g:ysh_expr_color = 20        " blue  
 " let g:ysh_sigil_pair_color = 55  " purple
 " let g:ysh_var_sub_color = 89     " lighter purple
 
+" let g:ysh_proc_name_color = 55   " purple
+" let g:ysh_func_name_color = 89   " lighter purple
+
 if exists("b:current_syntax")
   finish
 endif
+
+" :call SynStack()
+" Debug function that displays the stack of lexer modes under the cursor
+function! SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 " This avoids problems with long multiline strings
 :syntax sync minlines=200
 
 syn keyword shellKeyword if elif else case for while
-syn keyword yshKeyword proc func const var setvar setglobal break continue return
+syn keyword yshKeyword const var setvar setglobal break continue return
 
 " The call and = keywords are followed by an expression
 syn keyword callKeyword call nextgroup=exprAfterKeyword 
 " The = keyword occurs at the beginning of a line (different than rhsExpr)
 syn match equalsKeyword '^[ \t]*=' nextgroup=exprAfterKeyword
+
+syn keyword funcKeyword func nextgroup=funcName skipwhite
+syn keyword procKeyword proc nextgroup=procName skipwhite
+
+" skipwhite seems necessary to avoid conflict with typedArgs start=' ('
+syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramList
+" also allow hyphens
+syn match procName '[a-zA-Z_-][a-zA-Z0-9_-]*' contained skipwhite nextgroup=paramList
 
 " End-of-line comments
 syn match yshComment '^#.*$'
@@ -93,6 +113,10 @@ syn region nestedBracket matchgroup=nestedPair start='\[' end=']' transparent
 " skip='\\[{}]' could be useful
 syn region nestedBrace matchgroup=nestedPair start='{' end='}' transparent
       \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
+
+" for func and proc signatures
+syn region paramList matchgroup=Normal start='(' end=')' contained
+      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
 
 " pp (x) space before (
 syn region typedArgs matchgroup=Normal start=' (' end=')' 
@@ -172,6 +196,9 @@ hi def link yshKeyword Keyword
 hi def link callKeyword Keyword
 hi def link equalsKeyword Keyword
 
+hi def link funcKeyword Keyword
+hi def link procKeyword Keyword
+
 hi def link backslashQuoted Character
 
 " expression only
@@ -221,14 +248,30 @@ hi def link exprAfterKeyword yshExpr
 hi def link typedArgs yshExpr
 hi def link lazyTypedArgs yshExpr
 
+hi def link paramList Normal
+
 " These groups can be assigned custom colors:
 "   yshVarSub yshExpr sigilPair
+
+if exists('g:ysh_func_name_color')
+  execute 'highlight funcName ctermfg=' . g:ysh_func_name_color
+else
+  hi def link funcName Function
+endif
+
+if exists('g:ysh_proc_name_color')
+  execute 'highlight procName ctermfg=' . g:ysh_proc_name_color
+else
+  hi def link procName Function
+endif
 
 " yshExpr:  f(x, a[i])
 if exists('g:ysh_expr_color')
   execute 'highlight yshExpr ctermfg=' . g:ysh_expr_color
 else
-  hi def link yshExpr Function
+  " an expression is like typed data
+  hi def link yshExpr Type
+  " hi def link yshExpr Function
 endif
 
 " yshVarSub:  "hi $x"
@@ -245,15 +288,4 @@ else
   hi def link sigilPair Special
 endif
 
-" highlight yshExpr ctermfg=darkgreen guifg=darkgreen
-
 let b:current_syntax = "ysh"
-
-" Function that displays the stack of lexer modes under the cursor
-" :call SynStack()
-function! SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
