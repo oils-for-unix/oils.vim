@@ -99,9 +99,9 @@ echo \( hi \) \[ hi \]
     = :| $x $(echo hi) @(echo hi) $[42+1] @[a] |   # note: no redirects here though
     = :| \' \" \$ \@ \( \) \[ \] |   # backslash quoting
 
-    = $(echo command sub)
-    = @(echo spliced command sub)
-    = ^(echo unevaluated)
+    = $(echo 'command sub')
+    = @(echo u'spliced command sub')
+    = ^(echo "unevaluated")
 
 # Expression mode -> Double Quoted
 
@@ -190,3 +190,6 @@ echo $(echo \{ \})
 = { k: $(echo \[ \]) }
 = { k: $(echo \{ \}) }
 
+= $(pp (42))
+= $(pp [42])
+= $(call f(x))

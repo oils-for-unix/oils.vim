@@ -129,6 +129,7 @@ syn region caretExpr matchgroup=sigilPair start='\^\[' end=']'
 
 " Sigil Pairs $() @() ^()
 
+" note: could contain typedArgs,lazyTypedArgs,callKeyword, etc.  But nestedParen is enough.
 syn region commandSub matchgroup=sigilPair start='\$(' end=')'
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted
 syn region commandSplice matchgroup=sigilPair start='@(' end=')'

@@ -4,7 +4,7 @@ YSH Syntax Highlighting Checklist
 Let's write a YSH syntax highlighter.  We'll break the problem down into **3
 steps**, to focus on **correctness**.
 
-## Stage 1 - Lex String Literals and Comments
+## Stage 1 - Lex Comments and String Literals - `# \ ' "`
 
 In this stage, handle:
 
@@ -57,6 +57,13 @@ backslash escapes.  (Related article: <https://research.swtch.com/pcdata>).
 - Make sure that `echo not#comment` is not a comment.
   - In shell, a comment is a separate "word".
 
+### Vim Mechanisms Used
+
+- Regions
+  - Why do we skip `\.` and not `\'`?  So that when matching a string
+    `'foo\\'`, the `\\` is skipped, and we properly see the ending quote.
+- TODO: more
+
 ### Optional: Make this minimal "flat" highlighter more usable
 
 Some minor enhancements that don't affect the overall structure:
@@ -67,7 +74,7 @@ Some minor enhancements that don't affect the overall structure:
 
 See "Stage 3" for more ideas.
 
-## Stage 2 - Correctly Switch Between Three Lexer Modes
+## Stage 2 - Correctly Switch Between Three Lexer Modes - `\ $ @ () [] call =`
 
 [A Tour of YSH](https://oils.pub/release/latest/doc/ysh-tour.html) describes
 these three mutually recursive **sublanguages**, which are lexed differently.
@@ -88,13 +95,23 @@ See:
 
 - [testdata/lexer-modes.ysh](testdata/lexer-modes.ysh)
 
-## Stage 3 - Recognize Details Within Each Mode
+### Switching to Expression Mode
 
-### Shell Keywords
+- `typedArgs` - `pp (f(x))`
+- `lazyTypedArgs` - `pp [f(x)]`
+- `rhsExpr` - `var x = f(x)`
+- `exprAfterKeyword` - `call f(x)` and `= f(x)`
+- `exprSub exprSplice caretExpr` - `$[f(x)] @[f(x)] ^[f(x)]`
 
-Keywords like `for func` (`ysh-minimal` does this)
+### Switching to Command Mode
+
+- `commandSub commandSplice caretCommand` - `$(echo hi) @(echo hi) ^(echo hi)`
+- `yshArrayLiteral` - `:| a b |`
 
 ### Var Subs
+
+In YSH, yar subs **non-recursive** leaves.  But we add them here to show off
+the DQ-string lexer mode.
 
 - `$1` and `${12}`, but not `$12`
 - `$x` and `${x}` 
@@ -103,7 +120,41 @@ Keywords like `for func` (`ysh-minimal` does this)
     Treesitter).
   - TODO: ysh `${x|html}` `${x .%3d}`
 
-### Expressions
+### YSH Keywords
+
+We define that the `call` and `=` keywords are followed by expressions.
+
+So we might as well do all the keywords, like `for func`.
+
+### Issues
+
+- `rhsExpr` and `exprAfterKeyword` - they can end after `;` or ` #`
+  - `var x = f(42); echo next'
+  - `var x = f(42)  # comment
+- `nestedParen nestedBracket nestedBrace` - used to match multi-line
+  expressions within nested delimiters (a rule borrowed from Python)
+
+### Vim Mechanisms Used
+
+Vim regions (`syn region`) do all the heavy lifting of lexer modes:
+
+- `contains=` for defining what's valid in each mode.  For example:
+  - in DQ strings, `$[sub]` is allowed
+  - in commands, `$[sub]` and `@[splice]` are allowed
+  - in expressions, `^[lazy]` is allowed (`$[sub]` and `@[splice]` may come later)
+- `syn cluster` so you can refer to sets of regions like `@quotedStrings`
+
+Region parameters:
+
+- `nextgroup= skipwhite` - for `call` and `=` keywords
+- `matchgroup=`
+  - `matchgroup=Normal` is necessary for nesting of delimiters, like `()` within `$()`
+  - `matchgroup=NONE` for `call` and `=` keywords
+- `end=' #'me=s-2` to say that the end of the match is before the delimiter ` #`, not after
+
+## Stage 3 - Recognize Details Within Each Mode
+
+### More on Expressions
 
 - atoms: true false null - only in expressions
   - shell builtins?  not sure if we want that
@@ -157,6 +208,3 @@ History expansion?
 
 - `{}` is not highlighted the same as `() []`.  This is cosmetic.  The key
   point is that the nesting is correct.
-- leading space rule for `pp (x)` and `pp [x]`
-- highlighting `=` keyword
-  - space rule for `= f(x)`
