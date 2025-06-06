@@ -172,6 +172,19 @@ echo \( hi \) \[ hi \]
 
     = len({ k: [x, x] }) + 42
 
+# Expression keywords
+
+= 42 if true else 41
+
+var mydict = {}
+if ('key' not in mydict) { 
+  echo nope
+}
+
+if (true and false or null) {
+  echo nope
+}
+
 # Backslash escaped \( \) \[ \] \{ \}
 
 echo $(echo \( \))

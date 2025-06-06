@@ -47,7 +47,7 @@ syn match yshComment '^#.*$'
 syn match yshComment '[ \t]#.*$'
 
 " TODO: could refine this, but it's enough for segmentation / nested pairs / sigil pairs
-syn match backslashQuoted /\\['"$@()\[\]]/
+syn match backslashQuoted /\\[#'"$@()\[\]]/
 
 syn cluster quotedStrings
       \ contains=rawString,j8String,sqString,dqString,dollarDqString

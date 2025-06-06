@@ -20,6 +20,8 @@ call len('str')  # comment
 #=foo
 #echo =foo
 
+echo \# not a comment
+
 # Shell keywords
 if test --file / {
   echo 'exists'

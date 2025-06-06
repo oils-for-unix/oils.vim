@@ -19,8 +19,7 @@ syn match equalsKeyword '^[ \t]*=[ ]'
 syn match yshComment '^#.*$'
 syn match yshComment '[ \t]#.*$'
 
-syn match backslashSq "\\'"
-syn match backslashDq '\\"'
+syn match backslashQuoted /\\[#'"]/
 
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
@@ -67,8 +66,7 @@ hi def link tripleSqString String
 hi def link tripleDqString String
 hi def link tripleDollarDqString String
 
-hi def link backslashDq Character
-hi def link backslashSq Character
+hi def link backslashQuoted Character
 
 hi def link simpleVarSub Identifier
 
