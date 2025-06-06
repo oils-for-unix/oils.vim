@@ -18,6 +18,10 @@ syn match backslashQuoted /\\[#'"$@()\[\]]/
 syn match yshComment '^#.*$'
 syn match yshComment '[ \t]#.*$'
 
+"
+" Keywords
+"
+
 syn keyword shellKeyword if elif else case for while
 syn keyword yshKeyword const var setvar setglobal break continue return
 
@@ -34,22 +38,51 @@ syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramL
 " also allow hyphens
 syn match procName '[a-zA-Z_-][a-zA-Z0-9_-]*' contained skipwhite nextgroup=paramList
 
+"
+" Cluster definitions
+"
+
 syn cluster quotedStrings
       \ contains=rawString,j8String,sqString,dqString,dollarDqString
 syn cluster tripleQuotedStrings 
       \ contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
+" note: could expand this
+syn cluster strings
+      \ contains=@quotedStrings,@tripleQuotedStrings
 
-" note: expressions can't have varSubName
-syn cluster dollarSubInExpr
-      \ contains=varSubBracedName,varSubNumber,varSubBracedNumber,commandSub,exprSub
-syn cluster dollarSub
-      \ contains=varSubName,@dollarSubInExpr
-
+" @array @[array] @(seq 3)
 syn cluster splice
       \ contains=varSplice,exprSplice,commandSplice
+" ^"" ^() ^[]
+syn cluster caret
+      \ contains=caretDqString,caretCommand,caretExpr
 
-syn cluster expr 
-      \ contains=@dollarSubInExpr,@splice,caretDqString,caretCommand,caretExpr,yshArrayLiteral
+" special case: expressions can't have varSubName
+syn cluster dollarSubInExpr
+      \ contains=varSubBracedName,varSubNumber,varSubBracedNumber,commandSub,exprSub
+
+"
+" Main lexer modes (clusters): DQ, array, command, expr
+"
+
+syn cluster dqMode
+      \ contains=varSubName,@dollarSubInExpr
+
+" arrayMode/commandMode contain everything in @dqMode
+" arrayMode may also have {a,b}@example.com
+syn cluster arrayMode
+      \ contains=@dqMode,@splice,@strings,backslashQuoted,yshComment
+
+" TODO: commandMode can also have operators like ; | < <<
+syn cluster commandMode
+      \ contains=@arrayMode
+
+syn cluster exprMode
+      \ contains=@dollarSubInExpr,@splice,@strings,@caret,yshArrayLiteral
+
+"
+" Regions
+"
 
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
@@ -63,23 +96,23 @@ syn region sqString start="'" end="'"
 
 " Double-quoted strings
 syn region dqString start='"' skip='\\.' end='"' 
-      \ contains=@dollarSub
+      \ contains=@dqMode
 
 " Explicit with $
 syn region dollarDqString start='\$"' skip='\\.' end='"' 
-      \ contains=@dollarSub
+      \ contains=@dqMode
 
 syn region caretDqString matchgroup=sigilPair start='\^"' skip='\\.' end='"' 
-      \ contains=@dollarSub
+      \ contains=@dqMode
 
 " 5 triple-quoted variants of the above (Python-like)
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' end='"""' 
-      \ contains=@dollarSub
+      \ contains=@dqMode
 syn region tripleDollarDqString start='$"""' end='"""' 
-      \ contains=@dollarSub
+      \ contains=@dqMode
 
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
@@ -89,27 +122,27 @@ syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 "   pp [x]  # nestedBracket not contained
 " Could improve this
 syn region nestedParen matchgroup=nestedPair start='(' end=')' transparent contained
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr
+      \ contains=nestedParen,@exprMode
 syn region nestedBracket matchgroup=nestedPair start='\[' end=']' transparent contained
-      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
+      \ contains=nestedBracket,@exprMode
 
 " TODO: why is {} colored Special, when the nestedPair should be Normal?
 " This is only used for expressions, not for command blocks { }
 " skip='\\[{}]' could be useful
 syn region nestedBrace matchgroup=nestedPair start='{' end='}' transparent contained
-      \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr
+      \ contains=nestedBrace,@exprMode
 
 " for func and proc signatures
 syn region paramList matchgroup=Normal start='(' end=')' contained
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
+      \ contains=@nested,@exprMode
 
 " pp (x) space before (
 syn region typedArgs matchgroup=Normal start=' (' end=')' 
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
+      \ contains=@nested,@exprMode
 
 " pp [x] space before [
 syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']' 
-     \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
+     \ contains=@nested,@exprMode
 
 " rhsExpr starts with ' = ' (leading space distinguishes from = keyword)
 " and ends with
@@ -118,9 +151,9 @@ syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']'
 " - end of line
 " matchgroup=Normal prevents = from being highlighted
 syn region rhsExpr matchgroup=Normal start=' = ' end=' #'me=s-2 end=';'me=s-1 end='$'
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
+      \ contains=@nested,@exprMode
 syn region exprAfterKeyword start='\s' end=' #'me=s-2 end=';'me=s-1 end='$' contained
-      \ contains=@nested,@quotedStrings,@tripleQuotedStrings,@expr
+      \ contains=@nested,@exprMode
 " note: call is the same as =, but the 'call' keyword also interferes
 
 " Sigil Pairs $[] @[] ^[]
@@ -128,30 +161,30 @@ syn region exprAfterKeyword start='\s' end=' #'me=s-2 end=';'me=s-1 end='$' cont
 " $[a[i]] contains nestedBracket to match []
 " matchgroup= is necessary for $[] to contain [] correctly
 syn region exprSub matchgroup=sigilPair start='\$\[' end=']'
-      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
+      \ contains=nestedBracket,@exprMode
 syn region exprSplice matchgroup=sigilPair start='@\[' end=']'
-      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings
+      \ contains=nestedBracket,@exprMode
 syn region caretExpr matchgroup=sigilPair start='\^\[' end=']'
-      \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings
+      \ contains=nestedBracket,@exprMode
 
 " Sigil Pairs $() @() ^()
 
 " note: could contain typedArgs,lazyTypedArgs, all keywords etc.  But
 " nestedParen,backslashQuoted,yshComment is enough to match parens.
 syn region commandSub matchgroup=sigilPair start='\$(' end=')'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted,yshComment
+      \ contains=nestedParen,@commandMode
 syn region commandSplice matchgroup=sigilPair start='@(' end=')'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted,yshComment
+      \ contains=nestedParen,@commandMode
 syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
-      \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,backslashQuoted,yshComment
+      \ contains=nestedParen,@commandMode
 
 " var x = :| README *.py | 
 " Vim quirk: | is a pipe, and \| is the regex operator
 syn region yshArrayLiteral matchgroup=sigilPair start=':|' end='|'
-      \ contains=@quotedStrings,@tripleQuotedStrings,@splice,@dollarSub,backslashQuoted
+      \ contains=@arrayMode
 
 "
-" Step 3: Highlight Details
+" Stage 3: Highlight Details
 "
 
 " $name

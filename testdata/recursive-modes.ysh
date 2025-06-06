@@ -72,10 +72,16 @@ echo \( hi \) \[ hi \]
 " - Here docs?  They are hard, could leave them out of YSH
 '''
 
+var foods = :| 
+  pea nut 
+  # comment
+  other
+  \(
+|
+
 #
 # Copied from notes.md
 #
-
 
 # Command mode -> Expression
 
@@ -106,9 +112,9 @@ echo \( hi \) \[ hi \]
     = :| $x $(echo hi) @(echo hi) $[42+1] @[a] |   # note: no redirects here though
     = :| \' \" \$ \@ \( \) \[ \] |   # backslash quoting
 
-    = $(echo 'command sub')
-    = @(echo u'spliced command sub')
-    = ^(echo "unevaluated")
+    = $(echo 'command sub' $(echo hi) )
+    = @(echo u'spliced command sub' @foods )
+    = ^(echo "unevaluated" $hi $[y + 1])
 
 # Expression mode -> Double Quoted
 
