@@ -11,6 +11,13 @@
 " let g:ysh_proc_name_color = 55   " purple
 " let g:ysh_func_name_color = 89   " lighter purple
 
+" TODO: could refine this, but it's enough for segmentation / nested pairs / sigil pairs
+syn match backslashQuoted /\\[#'"$@()\[\]]/
+
+" End-of-line comments
+syn match yshComment '^#.*$'
+syn match yshComment '[ \t]#.*$'
+
 syn keyword shellKeyword if elif else case for while
 syn keyword yshKeyword const var setvar setglobal break continue return
 
@@ -26,13 +33,6 @@ syn keyword procKeyword proc nextgroup=procName skipwhite
 syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramList
 " also allow hyphens
 syn match procName '[a-zA-Z_-][a-zA-Z0-9_-]*' contained skipwhite nextgroup=paramList
-
-" End-of-line comments
-syn match yshComment '^#.*$'
-syn match yshComment '[ \t]#.*$'
-
-" TODO: could refine this, but it's enough for segmentation / nested pairs / sigil pairs
-syn match backslashQuoted /\\[#'"$@()\[\]]/
 
 syn cluster quotedStrings
       \ contains=rawString,j8String,sqString,dqString,dollarDqString

@@ -20,7 +20,7 @@ that nested delimiters like `() [] {} $() $[]` are **real code**.
 See:
 
 - [testdata/minimal.ysh](testdata/minimal.ysh)
-- [syntax/ysh-minimal.vim](syntax/ysh-minimal.vim)
+- [syntax/stage1-minimal.vim](syntax/stage1-minimal.vim)
 
 Install this Vim syntax definition with the instructions in
 [README.md](README.md), and see what it looks like:
@@ -93,7 +93,8 @@ It's done with **Vim Regions**.
 
 See:
 
-- [testdata/lexer-modes.ysh](testdata/lexer-modes.ysh)
+- [testdata/recursive-modes.ysh](testdata/recursive-modes.ysh)
+- [syntax/stage2-recursive-modes.ysh](stage2-recursive-modes.ysh)
 
 ### Switching to Expression Mode
 

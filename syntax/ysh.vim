@@ -18,8 +18,8 @@ endfunc
 
 " Only ONE of these should be active
 
-"source <sfile>:h/ysh-debug.vim
-"source <sfile>:h/ysh-minimal.vim
-source <sfile>:h/ysh-recursive.vim
+"source <sfile>:h/debug.vim
+"source <sfile>:h/stage1-minimal.vim
+source <sfile>:h/stage2-recursive-modes.vim
 
 let b:current_syntax = "ysh"
