@@ -1,5 +1,6 @@
 " Vim syntax definition for YSH
-" This is stage 2 - mutually recursive commands, strings, and expressions.  See checklist.md.
+" This is stage 2 - mutually recursive commands, strings, and expressions.
+" See checklist.md.
 "
 " Note: my vimrc overrides these colors:
 "
@@ -9,22 +10,6 @@
 
 " let g:ysh_proc_name_color = 55   " purple
 " let g:ysh_func_name_color = 89   " lighter purple
-
-if exists("b:current_syntax")
-  finish
-endif
-
-" :call SynStack()
-" Debug function that displays the stack of lexer modes under the cursor
-function! SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
-
-" This avoids problems with long multiline strings
-:syntax sync minlines=200
 
 syn keyword shellKeyword if elif else case for while
 syn keyword yshKeyword const var setvar setglobal break continue return
@@ -287,5 +272,3 @@ if exists('g:ysh_sigil_pair_color')
 else
   hi def link sigilPair Special
 endif
-
-let b:current_syntax = "ysh"

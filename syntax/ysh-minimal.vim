@@ -1,25 +1,16 @@
 " Vim syntax definition for YSH
-" This is stage 1 - MINIMAL lexing.  See checklist.md.
+" This is stage 1 - Lex Comments and String Literals.  See checklist.md.
 
-if exists("b:current_syntax")
-  finish
-endif
-
-" This avoids problems with long multiline strings
-:syntax sync minlines=200
-
-syn keyword shellKeyword if elif else case for while
-
-" YSH keywords
-syn keyword yshKeyword proc func const var setvar setglobal call break continue return
-" = keyword occurs at the beginning of a line
-syn match equalsKeyword '^[ \t]*=[ ]'
+" You can quote the special characters for comments and string literals
+syn match backslashQuoted /\\[#'"]/
 
 " End-of-line comments
 syn match yshComment '^#.*$'
 syn match yshComment '[ \t]#.*$'
 
-syn match backslashQuoted /\\[#'"]/
+"
+" 5 kinds of string literal
+"
 
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
@@ -37,17 +28,22 @@ syn region dqString start='"' skip='\\.' end='"'
 " Explicit with $
 syn region dollarDqString start='$"' skip='\\.' end='"'
 
-" Python-like triple-quoted strings
+"
+" 5 multi-line variants (triple-quoted like Python)
+"
+
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' end='"""'
 syn region tripleDollarDqString start='$"""' end='"""'
 
-" String interpolation within double quotes
-syn match simpleVarSub '\$\w\+'
-
+"
 " Define highlighting
+"
+
+hi def link backslashQuoted Character
+
 hi def link yshComment Comment
 
 hi def link shellKeyword Keyword
@@ -65,9 +61,3 @@ hi def link tripleJ8String String
 hi def link tripleSqString String
 hi def link tripleDqString String
 hi def link tripleDollarDqString String
-
-hi def link backslashQuoted Character
-
-hi def link simpleVarSub Identifier
-
-let b:current_syntax = "ysh"
