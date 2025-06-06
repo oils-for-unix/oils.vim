@@ -21,6 +21,13 @@ var b = [a[2], a[1], a[0], f(1)]
 
 var c = (f(2), f(1), f(0), a[0], {})
 
+# bare assignment
+hay define Package
+Package foo {
+  x = 42    
+  y = ['foo', "$y"]
+}
+
 pp (1 + (a[1] + 3)); echo next
 
 pp (1 + 
@@ -143,6 +150,13 @@ var foods = :|
     func g(...args) { return (args[0]) }
     func myfunc(...args) { return (args[0]) }
 
+    = $(echo 1
+        echo $x 2)
+    = @(echo 3
+        echo 'yo' 4)
+    = ^(echo 5
+        echo "hi $x" 6)
+
     var y = (42,
               43,
               f(5))
@@ -178,6 +192,14 @@ var foods = :|
         1, 2, 3
       ],
     }) + 42
+
+    var mylist = [
+      1,
+      2,
+      f(3),
+      foods[0],
+      {k: 'value'},
+    ]    
 
     = len({ k: [x, x] }) + 42
 

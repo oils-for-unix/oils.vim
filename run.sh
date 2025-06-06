@@ -16,4 +16,9 @@ test-files() {
   done
 }
 
+modes() {
+  # summarize
+  grep -B 1 'contains=' syntax/stage2-*.vim
+}
+
 "$@"

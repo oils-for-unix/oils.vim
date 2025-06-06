@@ -11,45 +11,17 @@
 " let g:ysh_proc_name_color = 55   " purple
 " let g:ysh_func_name_color = 89   " lighter purple
 
-" TODO: could refine this, but it's enough for segmentation / nested pairs / sigil pairs
-syn match backslashQuoted /\\[#'"$@()\\]/
-" For clarity, denote \[ \] separately
-syn match backslashQuoted '\\\['
-syn match backslashQuoted '\\]'
-
-" End-of-line comments
-syn match yshComment '^#.*$'
-syn match yshComment '[ \t]#.*$'
-
-"
-" Keywords
-"
-
-syn keyword shellKeyword if elif else case for while
-syn keyword yshKeyword const var setvar setglobal break continue return
-
-" The call and = keywords are followed by an expression
-syn keyword callKeyword call nextgroup=exprAfterKeyword 
-" The = keyword occurs at the beginning of a line (different than rhsExpr)
-syn match equalsKeyword '^[ \t]*=' nextgroup=exprAfterKeyword
-
-syn keyword funcKeyword func nextgroup=funcName skipwhite
-syn keyword procKeyword proc nextgroup=procName skipwhite
-
-" skipwhite seems necessary to avoid conflict with typedArgs start=' ('
-syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramList
-" also allow hyphens
-syn match procName '[a-zA-Z_-][a-zA-Z0-9_-]*' contained skipwhite nextgroup=paramList
-
 "
 " Cluster definitions
 "
+
+" For multi-line expressions
+syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
 syn cluster quotedStrings
       \ contains=rawString,j8String,sqString,dqString,dollarDqString
 syn cluster tripleQuotedStrings 
       \ contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
-" note: could expand this
 syn cluster strings
       \ contains=@quotedStrings,@tripleQuotedStrings
 
@@ -84,7 +56,40 @@ syn cluster exprMode
       \ contains=@dollarSubInExpr,@splice,@strings,@caret,yshArrayLiteral
 
 "
-" Regions
+" Backslashes and Comments
+"
+
+syn match backslashQuoted /\\[#'"$@()\\]/
+" For clarity, denote \[ \] separately
+syn match backslashQuoted '\\\['
+syn match backslashQuoted '\\]'
+
+" End-of-line comments
+syn match yshComment '^#.*$'
+syn match yshComment '[ \t]#.*$'
+
+"
+" Keywords
+"
+
+syn keyword shellKeyword if elif else case for while
+syn keyword yshKeyword const var setvar setglobal break continue return
+
+" The call and = keywords are followed by an expression
+syn keyword callKeyword call nextgroup=exprAfterKeyword 
+" The = keyword occurs at the beginning of a line (different than rhsExpr)
+syn match equalsKeyword '^[ \t]*=' nextgroup=exprAfterKeyword
+
+syn keyword funcKeyword func nextgroup=funcName skipwhite
+syn keyword procKeyword proc nextgroup=procName skipwhite
+
+" skipwhite seems necessary to avoid conflict with typedArgs start=' ('
+syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramList
+" also allow hyphens
+syn match procName '[a-zA-Z_-][a-zA-Z0-9_-]*' contained skipwhite nextgroup=paramList
+
+"
+" 5 Kinds of string literal
 "
 
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
@@ -117,13 +122,10 @@ syn region tripleDqString start='"""' end='"""'
 syn region tripleDollarDqString start='$"""' end='"""' 
       \ contains=@dqMode
 
-syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
+" 
+" Nested () [] {} for multi-line expressions
+"
 
-" nested () [] {}
-" used for
-"   pp (x)  # nestedParen not contained
-"   pp [x]  # nestedBracket not contained
-" Could improve this
 syn region nestedParen matchgroup=nestedPair start='(' end=')' transparent contained
       \ contains=nestedParen,@exprMode
 syn region nestedBracket matchgroup=nestedPair start='\[' end=']' transparent contained
@@ -135,7 +137,11 @@ syn region nestedBracket matchgroup=nestedPair start='\[' end=']' transparent co
 syn region nestedBrace matchgroup=nestedPair start='{' end='}' transparent contained
       \ contains=nestedBrace,@exprMode
 
-" for func and proc signatures
+"
+" Command Mode --> Expression (and Params)
+"
+
+" params to func and proc signatures
 syn region paramList matchgroup=Normal start='(' end=')' contained
       \ contains=@nested,@exprMode
 
@@ -147,6 +153,7 @@ syn region typedArgs matchgroup=Normal start=' (' end=')'
 syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']' 
      \ contains=@nested,@exprMode
 
+" var x = f(42, a[i])
 " rhsExpr starts with ' = ' (leading space distinguishes from = keyword)
 " and ends with
 " - a comment, with me=s-2 for ending BEFORE the #
@@ -155,10 +162,15 @@ syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']'
 " matchgroup=Normal prevents = from being highlighted
 syn region rhsExpr matchgroup=Normal start=' = ' end=' #'me=s-2 end=';'me=s-1 end='$'
       \ contains=@nested,@exprMode
+
+" call f(42, a[i])
 syn region exprAfterKeyword start='\s' end=' #'me=s-2 end=';'me=s-1 end='$' contained
       \ contains=@nested,@exprMode
 " note: call is the same as =, but the 'call' keyword also interferes
 
+"
+" --> Expression Mode
+"
 " Sigil Pairs $[] @[] ^[]
 
 " $[a[i]] contains nestedBracket to match []
@@ -170,16 +182,23 @@ syn region exprSplice matchgroup=sigilPair start='@\[' end=']'
 syn region caretExpr matchgroup=sigilPair start='\^\[' end=']'
       \ contains=nestedBracket,@exprMode
 
+"
+" --> Command Mode
+"
 " Sigil Pairs $() @() ^()
 
 " note: could contain typedArgs,lazyTypedArgs, all keywords etc.  But
 " nestedParen,backslashQuoted,yshComment is enough to match parens.
 syn region commandSub matchgroup=sigilPair start='\$(' end=')'
-      \ contains=nestedParen,@commandMode
+      \ contains=@commandMode
 syn region commandSplice matchgroup=sigilPair start='@(' end=')'
-      \ contains=nestedParen,@commandMode
+      \ contains=@commandMode
 syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
-      \ contains=nestedParen,@commandMode
+      \ contains=@commandMode
+
+"
+" Expression Mode -> Array Mode
+"
 
 " var x = :| README *.py | 
 " Vim quirk: | is a pipe, and \| is the regex operator
@@ -187,7 +206,7 @@ syn region yshArrayLiteral matchgroup=sigilPair start=':|' end='|'
       \ contains=@arrayMode
 
 "
-" Stage 3: Highlight Details
+" Highlight Details
 "
 
 " $name
@@ -247,7 +266,6 @@ hi def link yshArrayLiteral Normal
 
 " I might change nestedPair, so not allow overriding it
 hi def link nestedPair Normal
-
 
 " Define Custom Syntax Groups
 "   yshVarSub yshExpr
