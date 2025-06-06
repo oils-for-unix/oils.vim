@@ -2,9 +2,7 @@
 " This is stage 1 - Lex Comments and String Literals.  See checklist.md.
 
 " You can quote the special characters for comments and string literals
-syn match backslashQuoted /\\[#'"]/
-" For clarity, denote \\ separately
-syn match backslashQuoted /\\\\/
+syn match backslashQuoted /\\[#'"\\]/
 
 " End-of-line comments
 syn match yshComment '^#.*$'
@@ -16,6 +14,7 @@ syn match yshComment '[ \t]#.*$'
 
 " Raw strings - \< means word boundary, which isn't exactly right, but it's
 " better than not including it 
+" The problem is --foo=r'bar' -- TODO: document this quirk
 syn region rawString start="\<r'" end="'"
 
 " J8-style b'' or u''
