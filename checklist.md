@@ -94,7 +94,7 @@ It's done with **Vim Regions**.
 See:
 
 - [testdata/recursive-modes.ysh](testdata/recursive-modes.ysh)
-- [syntax/stage2-recursive-modes.ysh](stage2-recursive-modes.ysh)
+- [syntax/stage2-recursive-modes.vim](stage2-recursive-modes.vim)
 
 ### Switching to Expression Mode
 
@@ -205,9 +205,9 @@ These appear in both commands an array literals:
 
 ### Word Language
 
-History expansion?
 
-- `!!` and `!$` and ...
+- `~/src` and `~bob/src`
+- History expansion?  `!!` and `!$` and ...
 
 ### Backslashes mean different things in different modes
 
@@ -216,14 +216,15 @@ History expansion?
 - `\n` and `\yff` and `\u{3bc}` in J8 strings
   - as well as unquoted in expressions
 
+## Notes
+
+- `pp [ch]` vs `pp *.[ch]` - the leading space distinguishes the two?
+
 ## TODO
 
 ### YSH Syntax to Change?
 
 - `echo foo = bar` - we might want to make `=` special
-- `pp [ch]` vs `pp *.[ch]` - is a leading space enough to distinguish the two?
-
-### `ysh.vim` issues
-
-- `{}` is not highlighted the same as `() []`.  This is cosmetic.  The key
-  point is that the nesting is correct.
+- `$[x] @[array] @array` not available in expression mode
+  - it's ok if `$x` is not there - that is a gentle nudge
+- Commands that end with expression: `$(call 42)` and `$(= 42)`

@@ -17,9 +17,9 @@ var r2 = r'C:\Program # Files\' # r'' prefix is allowed
 var a = [0, 1, 2]
 
 # nested
-var b = [a[2], a[1], a[0]]
+var b = [a[2], a[1], a[0], f(1)]
 
-var c = (f(2), f(1), f(0), {})
+var c = (f(2), f(1), f(0), a[0], {})
 
 pp (1 + (a[1] + 3)); echo next
 
@@ -30,6 +30,9 @@ pp (1 +
 pp ('hi' ++ "hi $x" ++ r'c:\' ++ b'\n')
 
 echo {a,b}@example.com
+
+# we need a space to highlight, but that's OK for now
+if(42) { echo yes }
 
 if (42 > a[0]) {
   echo 'yes'
@@ -215,3 +218,40 @@ echo $(echo \{ \})
 = $(pp (42))
 = $(pp [42])
 #= $(call f(x))
+
+# Command Keywords
+
+# Should disallow the command keywords in YSH expressions?
+
+# Or the syntax highlighter can match beginning of line
+
+var const = 42
+setvar const = const + 1
+echo $const
+
+var setvar = 42
+setvar setvar = setvar + 1
+echo $setvar
+
+var call  = 42
+setvar call = call + 1
+echo $call
+
+# proc is reserved
+# var proc = 42
+# setvar proc = const + 1
+# echo $setvar
+
+# Builtins can be highlighted?
+# Maybe use a different color
+#
+# Export from YSH
+# - list of builtins - compgen -A builtin?
+#   - this contains deprecated shell builtins like [ . : though
+#   - alias unalias
+#   - I think it's better to have reflection on __builtin_proc__
+# - list of backslash chars
+
+pushd /tmp
+cd /
+popd

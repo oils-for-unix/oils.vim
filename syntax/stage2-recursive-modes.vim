@@ -88,16 +88,16 @@ syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 "   pp (x)  # nestedParen not contained
 "   pp [x]  # nestedBracket not contained
 " Could improve this
-syn region nestedParen matchgroup=nestedPair start='(' end=')' transparent
+syn region nestedParen matchgroup=nestedPair start='(' end=')' transparent contained
       \ contains=nestedParen,@quotedStrings,@tripleQuotedStrings,@expr
-syn region nestedBracket matchgroup=nestedPair start='\[' end=']' transparent
+syn region nestedBracket matchgroup=nestedPair start='\[' end=']' transparent contained
       \ contains=nestedBracket,@quotedStrings,@tripleQuotedStrings,@expr
 
 " TODO: why is {} colored Special, when the nestedPair should be Normal?
 " This is only used for expressions, not for command blocks { }
 " skip='\\[{}]' could be useful
-syn region nestedBrace matchgroup=nestedPair start='{' end='}' transparent
-      \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr contained
+syn region nestedBrace matchgroup=nestedPair start='{' end='}' transparent contained
+      \ contains=nestedBrace,@quotedStrings,@tripleQuotedStrings,@expr
 
 " for func and proc signatures
 syn region paramList matchgroup=Normal start='(' end=')' contained
@@ -164,6 +164,10 @@ syn match varSubNumber '\$[0-9]'
 " Vim quirk: it's [0-9]\+ versus [0-9]*.  Use * to keep our metalangauge simple
 syn match varSubBracedNumber '\${[0-9][0-9]*}'
 
+" TODO:
+" - ${x %03d} and %{12 %03d}
+" - think about $$ $- etc.
+
 " @splice - \< word boundary doesn't work because @ is a non-word char
 " Use 2 patterns to avoid complex \z expressions
 syn match varSplice '[ \t]@[a-zA-Z_][a-zA-Z0-9_]*'
@@ -222,10 +226,6 @@ hi def link varSplice yshVarSub
 hi def link exprSub yshExpr
 hi def link exprSplice yshExpr
 hi def link caretExpr yshExpr
-
-"hi def link nestedParen yshExpr
-"hi def link nestedBracket yshExpr
-"hi def link nestedBrace yshExpr
 
 hi def link rhsExpr yshExpr
 hi def link exprAfterKeyword yshExpr
