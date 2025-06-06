@@ -12,7 +12,12 @@
 " let g:ysh_func_name_color = 89   " lighter purple
 
 " TODO: could refine this, but it's enough for segmentation / nested pairs / sigil pairs
-syn match backslashQuoted /\\[#'"$@()\[\]]/
+syn match backslashQuoted /\\[#'"$@()]/
+" For clarity, denote \\ \[ \] separately
+" TODO: consider unit tests
+syn match backslashQuoted '\\\\'
+syn match backslashQuoted '\\\['
+syn match backslashQuoted '\\]'
 
 " End-of-line comments
 syn match yshComment '^#.*$'

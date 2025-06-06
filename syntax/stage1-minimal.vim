@@ -3,6 +3,8 @@
 
 " You can quote the special characters for comments and string literals
 syn match backslashQuoted /\\[#'"]/
+" For clarity, denote \\ separately
+syn match backslashQuoted /\\\\/
 
 " End-of-line comments
 syn match yshComment '^#.*$'

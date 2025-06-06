@@ -21,6 +21,7 @@ call len('str')  # comment
 #echo =foo
 
 echo \# not a comment
+echo \\ backslash
 
 # Shell keywords
 if test --file / {
