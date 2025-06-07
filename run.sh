@@ -16,9 +16,19 @@ test-files() {
   done
 }
 
-modes() {
+show-modes() {
   # summarize
   grep -B 1 'contains=' syntax/stage2-*.vim
+}
+
+count-stages() {
+  echo 'STAGE 1'
+  wc -l syntax/stage1-* syntax/lib-comment-string.vim
+  echo
+
+  echo 'STAGE 2'
+  wc -l syntax/stage2-* syntax/lib-comment-string.vim
+  echo
 }
 
 "$@"

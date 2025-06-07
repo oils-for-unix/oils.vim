@@ -3,61 +3,9 @@
 
 " You can quote the special characters for comments and string literals
 syn match backslashQuoted /\\[#'"\\]/
-
-" End-of-line comments
-syn match yshComment '^#.*$'
-syn match yshComment '[ \t]#.*$'
-
-"
-" 5 kinds of string literal
-"
-
-" \< means word boundary, which isn't right for
-" --foo=r'bar'
-" --foo=u'bar'
-
-" J8-style b'' or u''
-syn region j8String start="\<[bu]'" skip='\\.' end="'"
-
-syn region rawString start="\<r'" end="'"
-
-" Single-quoted string
-syn region sqString start="'" end="'"
-
-" Double-quoted strings
-syn region dqString start='"' skip='\\.' end='"' 
-
-" Explicit with $
-syn region dollarDqString start='$"' skip='\\.' end='"'
-
-"
-" 5 multi-line variants (triple-quoted like Python)
-"
-syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
-syn region tripleRawString start="\<r'''" end="'''"
-syn region tripleSqString start="'''" end="'''"
-syn region tripleDqString start='"""' skip='\\.' end='"""'
-syn region tripleDollarDqString start='$"""' skip='\\.' end='"""'
-
-"
-" Define highlighting
-"
 hi def link backslashQuoted Character
 
-hi def link yshComment Comment
+" Empty cluster.  In stage 1, it's ignored.
+syn cluster dqMode contains=NONE
 
-hi def link shellKeyword Keyword
-hi def link yshKeyword Keyword
-hi def link equalsKeyword Keyword
-
-hi def link rawString String
-hi def link j8String String
-hi def link sqString String
-hi def link dqString String
-hi def link dollarDqString String
-
-hi def link tripleRawString String
-hi def link tripleJ8String String
-hi def link tripleSqString String
-hi def link tripleDqString String
-hi def link tripleDollarDqString String
+source <sfile>:h/lib-comment-string.vim

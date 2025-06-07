@@ -60,6 +60,12 @@ syn cluster exprMode
       \ contains=@dollarSubInExpr,@splice,@strings,@caret,yshArrayLiteral
 
 "
+" Libraries
+"
+
+source <sfile>:h/lib-comment-string.vim
+
+"
 " Backslashes and Comments
 "
 
@@ -67,10 +73,6 @@ syn match backslashQuoted /\\[#'"$@()\\]/
 " For clarity, denote \[ \] separately
 syn match backslashQuoted '\\\['
 syn match backslashQuoted '\\]'
-
-" End-of-line comments
-syn match yshComment '^#.*$'
-syn match yshComment '[ \t]#.*$'
 
 "
 " Keywords
@@ -92,34 +94,8 @@ syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramL
 " also allow hyphens
 syn match procName '[a-zA-Z_-][a-zA-Z0-9_-]*' contained skipwhite nextgroup=paramList
 
-"
-" 5 Kinds of string literal
-"
-
-" J8-style b'' or u''
-syn region j8String start="\<[bu]'" skip='\\.' end="'"
-
-" Single-quoted string
-syn region rawString start="\<r'" end="'"
-syn region sqString start="'" end="'"
-
-" Double-quoted strings
-syn region dqString start='"' skip='\\.' end='"' 
-      \ contains=@dqMode
-" Explicit with $
-syn region dollarDqString start='\$"' skip='\\.' end='"' 
-      \ contains=@dqMode
-
+" ^"" - string literal that only appears in expression mode
 syn region caretDqString matchgroup=sigilPair start='\^"' skip='\\.' end='"' 
-      \ contains=@dqMode
-
-" 5 triple-quoted variants of the above (Python-like)
-syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
-syn region tripleRawString start="\<r'''" end="'''"
-syn region tripleSqString start="'''" end="'''"
-syn region tripleDqString start='"""' skip='\\.' end='"""'
-      \ contains=@dqMode
-syn region tripleDollarDqString start='$"""' skip='\\.' end='"""'
       \ contains=@dqMode
 
 " 
@@ -234,8 +210,6 @@ syn match varSplice '^@[a-zA-Z_][a-zA-Z0-9_]*'
 "   Normal Comment Keyword Character String Identifier
 "
 
-hi def link yshComment Comment
-
 hi def link shellKeyword Keyword
 hi def link yshKeyword Keyword
 hi def link callKeyword Keyword
@@ -248,20 +222,6 @@ hi def link backslashQuoted Character
 
 " expression only
 hi def link caretDqString String
-
-" @quotedStrings
-hi def link rawString String
-hi def link j8String String
-hi def link sqString String
-hi def link dqString String
-hi def link dollarDqString String
-
-" @tripleQuotedStrings
-hi def link tripleRawString String
-hi def link tripleJ8String String
-hi def link tripleSqString String
-hi def link tripleDqString String
-hi def link tripleDollarDqString String
 
 hi def link yshArrayLiteral Normal
 
