@@ -22,7 +22,7 @@ syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 " r' u' $"
 syn cluster quotedStrings
       \ contains=rawString,j8String,sqString,dqString,dollarDqString
-# r''' u""" $"""
+" r''' u""" $"""
 syn cluster tripleQuotedStrings 
       \ contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
 syn cluster strings
