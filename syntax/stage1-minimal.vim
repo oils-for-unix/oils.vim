@@ -12,13 +12,14 @@ syn match yshComment '[ \t]#.*$'
 " 5 kinds of string literal
 "
 
-" Raw strings - \< means word boundary, which isn't exactly right, but it's
-" better than not including it 
-" The problem is --foo=r'bar' -- TODO: document this quirk
-syn region rawString start="\<r'" end="'"
+" \< means word boundary, which isn't right for
+" --foo=r'bar'
+" --foo=u'bar'
 
 " J8-style b'' or u''
 syn region j8String start="\<[bu]'" skip='\\.' end="'"
+
+syn region rawString start="\<r'" end="'"
 
 " Single-quoted string
 syn region sqString start="'" end="'"
@@ -32,11 +33,11 @@ syn region dollarDqString start='$"' skip='\\.' end='"'
 "
 " 5 multi-line variants (triple-quoted like Python)
 "
-syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
+syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleSqString start="'''" end="'''"
-syn region tripleDqString start='"""' end='"""'
-syn region tripleDollarDqString start='$"""' end='"""'
+syn region tripleDqString start='"""' skip='\\.' end='"""'
+syn region tripleDollarDqString start='$"""' skip='\\.' end='"""'
 
 "
 " Define highlighting

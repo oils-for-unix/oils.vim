@@ -96,20 +96,16 @@ syn match procName '[a-zA-Z_-][a-zA-Z0-9_-]*' contained skipwhite nextgroup=para
 " 5 Kinds of string literal
 "
 
-" Raw strings - \< means word boundary, which isn't exactly right, but it's
-" better than not including it 
-syn region rawString start="\<r'" end="'"
-
 " J8-style b'' or u''
 syn region j8String start="\<[bu]'" skip='\\.' end="'"
 
 " Single-quoted string
+syn region rawString start="\<r'" end="'"
 syn region sqString start="'" end="'"
 
 " Double-quoted strings
 syn region dqString start='"' skip='\\.' end='"' 
       \ contains=@dqMode
-
 " Explicit with $
 syn region dollarDqString start='\$"' skip='\\.' end='"' 
       \ contains=@dqMode
@@ -118,12 +114,12 @@ syn region caretDqString matchgroup=sigilPair start='\^"' skip='\\.' end='"'
       \ contains=@dqMode
 
 " 5 triple-quoted variants of the above (Python-like)
-syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
+syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleSqString start="'''" end="'''"
-syn region tripleDqString start='"""' end='"""' 
+syn region tripleDqString start='"""' skip='\\.' end='"""'
       \ contains=@dqMode
-syn region tripleDollarDqString start='$"""' end='"""' 
+syn region tripleDollarDqString start='$"""' skip='\\.' end='"""'
       \ contains=@dqMode
 
 " 

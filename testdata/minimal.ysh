@@ -149,17 +149,17 @@ echo """
 var x = """
   one "
   two ""
-  """
+  \""""
 
 echo $"""
   \$ one "
   \$ two ""
-  """
+  \"""" other
 
 var x = $"""
   \$ one "
   \$ two ""
-  """
+  """ ++ 'other'
 
 # j8
 
