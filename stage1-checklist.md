@@ -1,7 +1,5 @@
-YSH Syntax Highlighting - Stage 1 Checklist
+Stage 1: Lex Comments and String Literals - `# \ ' "`
 =====
-
-- Lex Comments and String Literals - `# \ ' "`
 
 In this stage, handle:
 

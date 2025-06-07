@@ -1,7 +1,5 @@
-YSH Syntax Highlighting - Stage 2 Checklist
+Stage 2: Correctly Switch Between Three Lexer Modes - `\ () [] $ @ =`
 ====
-
-Let's Correctly Switch Between Three Lexer Modes - `\ $ @ () [] call =`
 
 [A Tour of YSH](https://oils.pub/release/latest/doc/ysh-tour.html) describes
 these three mutually recursive **sublanguages**, which are lexed differently.

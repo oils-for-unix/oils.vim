@@ -1,7 +1,5 @@
-YSH Syntax Highlighting - Stage 3 Checklist
+Stage 3: Recgonize Details Within Each Mode
 ====
-
-Recognize Details Within Each Mode
 
 ### Multi-Line
 
