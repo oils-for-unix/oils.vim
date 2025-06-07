@@ -15,11 +15,14 @@
 " Cluster definitions
 "
 
-" For multi-line expressions
+" Multi-line expressions: var x = f(42,
+"                                   [99], {})
 syn cluster nested contains=nestedParen,nestedBracket,nestedBrace
 
+" r' u' $"
 syn cluster quotedStrings
       \ contains=rawString,j8String,sqString,dqString,dollarDqString
+# r''' u""" $"""
 syn cluster tripleQuotedStrings 
       \ contains=tripleRawString,tripleJ8String,tripleSqString,tripleDqString,tripleDollarDqString
 syn cluster strings
@@ -32,7 +35,8 @@ syn cluster splice
 syn cluster caret
       \ contains=caretDqString,caretCommand,caretExpr
 
-" special case: expressions can't have varSubName
+" ${name} $0 ${12} $(echo hi) $[42 + a[i]]
+" note: expressions can't have varSubName
 syn cluster dollarSubInExpr
       \ contains=varSubBracedName,varSubNumber,varSubBracedNumber,commandSub,exprSub
 
@@ -127,15 +131,15 @@ syn region tripleDollarDqString start='$"""' end='"""'
 "
 
 syn region nestedParen matchgroup=nestedPair start='(' end=')' transparent contained
-      \ contains=nestedParen,@exprMode
+      \ contains=@nested,@exprMode
 syn region nestedBracket matchgroup=nestedPair start='\[' end=']' transparent contained
-      \ contains=nestedBracket,@exprMode
+      \ contains=@nested,@exprMode
 
 " TODO: why is {} colored Special, when the nestedPair should be Normal?
 " This is only used for expressions, not for command blocks { }
 " skip='\\[{}]' could be useful
 syn region nestedBrace matchgroup=nestedPair start='{' end='}' transparent contained
-      \ contains=nestedBrace,@exprMode
+      \ contains=@nested,@exprMode
 
 "
 " Command Mode --> Expression (and Params)
@@ -187,14 +191,13 @@ syn region caretExpr matchgroup=sigilPair start='\^\[' end=']'
 "
 " Sigil Pairs $() @() ^()
 
-" note: could contain typedArgs,lazyTypedArgs, all keywords etc.  But
-" nestedParen,backslashQuoted,yshComment is enough to match parens.
+" $(pp (42)) requires contains=nestedParen
 syn region commandSub matchgroup=sigilPair start='\$(' end=')'
-      \ contains=@commandMode
+      \ contains=nestedParen,@commandMode
 syn region commandSplice matchgroup=sigilPair start='@(' end=')'
-      \ contains=@commandMode
+      \ contains=nestedParen,@commandMode
 syn region caretCommand matchgroup=sigilPair start='\^(' end=')'
-      \ contains=@commandMode
+      \ contains=nestedParen,@commandMode
 
 "
 " Expression Mode -> Array Mode
@@ -206,7 +209,11 @@ syn region yshArrayLiteral matchgroup=sigilPair start=':|' end='|'
       \ contains=@arrayMode
 
 "
-" Highlight Details
+" $name ${name} $0 ${12} @array
+"
+" TODO:
+" - ${x %03d} and %{12 %03d}
+" - $$ $- ...
 "
 
 " $name
@@ -218,10 +225,6 @@ syn match varSubNumber '\$[0-9]'
 " ${12}
 " Vim quirk: it's [0-9]\+ versus [0-9]*.  Use * to keep our metalangauge simple
 syn match varSubBracedNumber '\${[0-9][0-9]*}'
-
-" TODO:
-" - ${x %03d} and %{12 %03d}
-" - think about $$ $- etc.
 
 " @splice - \< word boundary doesn't work because @ is a non-word char
 " Use 2 patterns to avoid complex \z expressions
@@ -264,7 +267,7 @@ hi def link tripleDollarDqString String
 
 hi def link yshArrayLiteral Normal
 
-" I might change nestedPair, so not allow overriding it
+" Could allow overriding this
 hi def link nestedPair Normal
 
 " Define Custom Syntax Groups
@@ -290,7 +293,7 @@ hi def link lazyTypedArgs yshExpr
 hi def link paramList Normal
 
 " These groups can be assigned custom colors:
-"   yshVarSub yshExpr sigilPair
+"   funcName procName yshVarSub yshExpr sigilPair
 
 if exists('g:ysh_func_name_color')
   execute 'highlight funcName ctermfg=' . g:ysh_func_name_color

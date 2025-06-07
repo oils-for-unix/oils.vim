@@ -87,7 +87,9 @@ Tree-sitter, I recommend starting with stage 1.
 ### Comparison
 
 - Vim's [sh.vim](https://github.com/vim/vim/blob/master/runtime/syntax/sh.vim) is 1009 lines
-- Emac's [sh-script.el](https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/sh-script.el) is 3400 lines.
+- Emac's
+  [sh-script.el](https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/sh-script.el)
+  is 3400 lines
 
 These plugins also do navigation and smart indenting, not just syntax
 highlighting.
@@ -113,9 +115,9 @@ interleave them.
 
 ## Notes
 
-- `pp [ch]` vs `pp *.[ch]` - the leading space distinguishes the two?
+- `pp [ch]` vs `pp *.[ch]` - the leading space distinguishes the two
 
-### YSH Syntax to Change?
+### YSH Syntax to Change
 
 - `echo foo = bar` - we might want to make `=` special
 - `a = 42` should work, regardless of context
@@ -123,5 +125,5 @@ interleave them.
   - it's ok if `$x` is not there - that is a gentle nudge
 - Commands that end with expression: `$(call 42)` and `$(= 42)`
 - `--foo=r'raw'` is misleading, and same with `u'' b''`
-  - we are also highlighting it in a misleading way now, since `\<` marks a
-    word boundary
+  - We should fix the YSH quirk.  Then using the `\<` word boundary will not
+    misunderstand any correct code.
