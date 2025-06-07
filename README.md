@@ -44,8 +44,10 @@ Though I found an issue where it incorrectly highlighted single quotes within
 
 So I am trying something simpler.
 
----
+### Writing Your Own YSH Syntax Highlighter
 
+- [Two Algorithms for YSH Syntax Highlighting](algorithms.md)
+  - Coarse Parsing - four steps, with **screenshots**
+  - Full Parsing
 - [notes.md](notes.md)
-- [checklist.md](checklist.md)
 

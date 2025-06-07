@@ -1,4 +1,4 @@
-Stage 4: Smart Errors by "Over-Lexing"
+Stage 4: Smart Errors by "Over-Lexing" - `\n`
 ====
 
 TODO

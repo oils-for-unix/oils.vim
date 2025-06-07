@@ -1,4 +1,4 @@
-Stage 3: Recgonize Details Within Each Mode
+Stage 3: Recgonize Details Within Each Mode - `and or`
 ====
 
 ### Multi-Line

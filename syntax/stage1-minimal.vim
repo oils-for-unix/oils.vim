@@ -32,7 +32,6 @@ syn region dollarDqString start='$"' skip='\\.' end='"'
 "
 " 5 multi-line variants (triple-quoted like Python)
 "
-
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
 syn region tripleSqString start="'''" end="'''"
@@ -42,7 +41,6 @@ syn region tripleDollarDqString start='$"""' end='"""'
 "
 " Define highlighting
 "
-
 hi def link backslashQuoted Character
 
 hi def link yshComment Comment

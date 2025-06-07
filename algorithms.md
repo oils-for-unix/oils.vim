@@ -5,14 +5,13 @@ I started this doc after writing a Vim syntax highlighter for YSH.  In Vim, we
 do what I call **"coarse parsing"**.
 
 We also want a Tree-sitter highlighter.  Tree-sitter has the philosophy of
-**full parsing**, so I also outline how we can support this style.
+**full parsing**, so I outline how we can support this style.
 
 ---
 
-But it's important to realize that `coarse != incorrect`!
-
-Coarse parsing can actually be **more correct** than full parsing.  Look at the
-changelog of `tree-sitter-bash` for evidence of that:
+But it's important to realize that `coarse != incorrect`!  Coarse parsing can
+actually be **more correct** than full parsing.  Look at the changelog of
+`tree-sitter-bash` for evidence of that:
 
 - <https://github.com/tree-sitter/tree-sitter-bash/commits/master/>
 
@@ -37,23 +36,22 @@ shell-like when they added string interpolation, in the 2010's:
 ## Algorithm 1: Coarse Parsing - Vim, TextMate
 
 With coarse parsing, we break the problem down into **4 steps**.  Refer to
-these docs for details:
+these docs with **screenshots** for details:
 
 - [Stage 1: Lex Comments and String Literals - `# \ ' "`](stage1-checklist.md)
-  - [syntax/stage1-minimal.vim](syntax/stage1-minimal.vim)
+  - [syntax/stage1-minimal.vim](syntax/stage1-minimal.vim) - ~60 lines
   - [testdata/minimal.ysh](testdata/minimal.ysh)
   - Vim features: regex matches, regex regions (without `contains=`)
 - [Stage 2: Correctly Switch Between Three Lexer Modes - `\ () [] $ @ =`](stage2-checklist.md)
-  - [syntax/stage2-recursive-modes.vim](stage2-recursive-modes.vim)
+  - [syntax/stage2-recursive-modes.vim](stage2-recursive-modes.vim) - ~330 lines
   - [testdata/recursive-modes.ysh](testdata/recursive-modes.ysh)
   - Vim features: `syn cluster`, `contains=@cluster`, `matchgroup=`
   - YSH features: nested pairs, sigil pairs
-  - Highlighting issues: `echo for` - `for` is not a keyword
-- [Stage 3: Recognize Details Within Each Mode](stage3-checklist.md)
+- [Stage 3: Recognize Details Within Each Mode - `and or`](stage3-checklist.md)
   - YSH features: expression keywords, redirects
-- [Stage 4: Smart Errors by "Over-Lexing"](stage4-checklist.md)
+- [Stage 4: Smart Errors by "Over-Lexing" - `\n`](stage4-checklist.md)
 
-This approach should work with:
+The coarse parsing approach should work with:
 
 1. Vim
 1. TextMate (used by VSCode)
@@ -62,16 +60,39 @@ This approach should work with:
    - I'm not sure if `font-lock` can do it, but Emacs also supports arbitrary
      Lisp code.
 
+### Highlighting issues
+
+As mentioned, coarse parsing can be **more correct** than full parsing.  (In
+the real world, parsing is not declarative.)
+
+But let's be honest, and keep track of the caveats:
+
+- stage 1
+  - `r''` with word boundary `\<` - requires YSH change
+- stage 2
+  - `echo for` - `for` is not a keyword
+
+Although highlighting YSH is easier than highlighting bash, this is many fewer
+issues than `tree-sitter-bash` has!
+
 ### Tree-sitter Can Express Stage 1
 
-Stage 2 is **hard** because recursive lexer modes require an **external**
-Tree-sitter scanner, written in C.  The C API is unusual because it must
-support incremental lexing and parsing.
+In Tree-sitter, Stage 2 is **hard** because recursive lexer modes require an
+external scanner, written in C.  The C API is unusual because of incremental
+lexing and parsing.
 
-But stage 1 is **easy** to express in Tree-sitter.  If you're interested in
-Tree-sitter, I recommend **starting** with stage 1.
+On the other hand, stage 1 is **easy** to express.  If you're interested in
+Tree-sitter, I recommend starting with stage 1.
 
-Caveat: Emacs-like navigation and indentation requires stage 2.
+### Comparison
+
+- Vim's [sh.vim](https://github.com/vim/vim/blob/master/runtime/syntax/sh.vim) is 1009 lines
+- Emac's [sh-script.el](https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/sh-script.el) is 3400 lines.
+
+These plugins also do navigation and smart indenting, not just syntax
+highlighting.
+
+And shell syntax is harder to understand than YSH syntax.
 
 ## Algorithm 2: Full Parsing - TreeSitter
 
