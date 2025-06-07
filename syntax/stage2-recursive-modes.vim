@@ -76,7 +76,7 @@ syn match yshComment '[ \t]#.*$'
 " Keywords
 "
 
-syn keyword shellKeyword if elif else case for while
+syn keyword shellKeyword if elif else case while for in
 syn keyword yshKeyword const var setvar setglobal break continue return
 
 " The call and = keywords are followed by an expression
@@ -145,15 +145,16 @@ syn region nestedBrace matchgroup=nestedPair start='{' end='}' transparent conta
 " Command Mode --> Expression (and Params)
 "
 
-" params to func and proc signatures
+" func myFunc(x, y) { return (x) }
+" proc my-proc (x, y) { echo }
 syn region paramList matchgroup=Normal start='(' end=')' contained
       \ contains=@nested,@exprMode
 
-" pp (x) space before (
+" pp (x) - space before (
 syn region typedArgs matchgroup=Normal start=' (' end=')' 
       \ contains=@nested,@exprMode
 
-" pp [x] space before [
+" pp [x] - space before [
 syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']' 
      \ contains=@nested,@exprMode
 
@@ -167,7 +168,8 @@ syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']'
 syn region rhsExpr matchgroup=Normal start=' = ' end=' #'me=s-2 end=';'me=s-1 end='$'
       \ contains=@nested,@exprMode
 
-" call f(42, a[i])
+" call f(x)
+" = f(x)
 syn region exprAfterKeyword start='\s' end=' #'me=s-2 end=';'me=s-1 end='$' contained
       \ contains=@nested,@exprMode
 " note: call is the same as =, but the 'call' keyword also interferes

@@ -39,7 +39,7 @@ own little lexical language:
 - `>> <<`
 - `<<<`
 
-Note that YSH array literals liek `:| a b |` don't have redirects.
+Note that YSH array literals like `:| a b |` don't have redirects.
 
 ### Word Sequence Language
 
@@ -53,13 +53,6 @@ These appear in both commands an array literals:
 
 - `~/src` and `~bob/src`
 - History expansion?  `!!` and `!$` and ...
-
-### Backslashes mean different things in different modes
-
-- `\;` in the unquoted lexer mode, but not `\n`
-- `\$` in double quoted strings, but not `\n`
-- `\n` and `\yff` and `\u{3bc}` in J8 strings
-  - as well as unquoted in expressions
 
 ### Builtin Procs
 
