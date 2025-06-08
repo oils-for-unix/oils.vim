@@ -13,6 +13,14 @@ syn match equalsKeyword '^[ \t]*=' nextgroup=exprAfterKeyword
 syn keyword funcKeyword func nextgroup=funcName skipwhite
 syn keyword procKeyword proc nextgroup=procName skipwhite
 
+hi def link shellKeyword Keyword
+hi def link yshKeyword Keyword
+hi def link callKeyword Keyword
+hi def link equalsKeyword Keyword
+
+hi def link funcKeyword Keyword
+hi def link procKeyword Keyword
+
 " skipwhite seems necessary to avoid conflict with typedArgs start=' ('
 syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramList
 " also allow hyphens
@@ -113,14 +121,6 @@ syn region yshArrayLiteral matchgroup=sigilPair start=':|' end='|'
 " Define Standard Syntax Groups
 "   Normal Comment Keyword Character String Identifier
 "
-
-hi def link shellKeyword Keyword
-hi def link yshKeyword Keyword
-hi def link callKeyword Keyword
-hi def link equalsKeyword Keyword
-
-hi def link funcKeyword Keyword
-hi def link procKeyword Keyword
 
 hi def link yshArrayLiteral Normal
 

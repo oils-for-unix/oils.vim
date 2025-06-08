@@ -1,9 +1,5 @@
 "
-" $name ${name} $0 ${12} @array
-"
-" TODO:
-" - ${x %03d} and %{12 %03d}
-" - $$ $- ...
+" Substitutions, splicing
 "
 
 " $name
@@ -21,10 +17,26 @@ syn match varSubBracedNumber '\${[0-9][0-9]*}'
 syn match varSplice '[ \t]@[a-zA-Z_][a-zA-Z0-9_]*'
 syn match varSplice '^@[a-zA-Z_][a-zA-Z0-9_]*'
 
-
 hi def link varSubName yshVarSub
 hi def link varSubBracedName yshVarSub
 hi def link varSubNumber yshVarSub
 hi def link varSubBracedNumber yshVarSub
 " @array_splice is considered var sub
 hi def link varSplice yshVarSub
+
+" TODO:
+" - ${x %03d} and %{12 %03d}
+" - $$ $- ...
+"
+
+
+"
+" Expression Keywords
+"
+
+" consult frontend/lexer_def.py
+syn keyword exprAtom contained null true false
+syn keyword exprKeyword contained and or not for is in if else func proc capture as
+
+hi def link exprAtom Constant
+hi def link exprKeyword Keyword

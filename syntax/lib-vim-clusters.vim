@@ -48,4 +48,4 @@ syn cluster commandMode
       \ contains=@arrayMode
 
 syn cluster exprMode
-      \ contains=@dollarSubInExpr,@splice,@strings,@caret,yshArrayLiteral
+      \ contains=@dollarSubInExpr,@splice,@strings,@caret,yshArrayLiteral,exprAtom,exprKeyword
