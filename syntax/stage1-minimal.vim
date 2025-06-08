@@ -1,11 +1,11 @@
 " Vim syntax definition for YSH
-" This is stage 1 - Lex Comments and String Literals.  See checklist.md.
+" Stage 1 - Lex Comments and String Literals
 
 " You can quote the special characters for comments and string literals
 syn match backslashQuoted /\\[#'"\\]/
 hi def link backslashQuoted Character
 
-" Empty cluster.  In stage 1, it's ignored.
-syn cluster dqMode contains=NONE
+" Note: this file reference the @dqMode cluster, which we don't define.  But
+" it's OK because Vim ignores it, and everything else still works.
 
 source <sfile>:h/lib-comment-string.vim

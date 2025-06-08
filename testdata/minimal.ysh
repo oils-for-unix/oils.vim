@@ -116,6 +116,7 @@ var empty = ''
 # raw
 
 echo '''
+  $r1
   C:\Program Files\
   one ' 
   two ''
@@ -128,6 +129,7 @@ var x = '''
   ''' ++ empty
 
 echo r'''
+  $r1
   C:\Program Files\
   one '
   two ''
@@ -142,21 +144,25 @@ var x = r'''
 # double quoted
 
 echo """
+  $r1
   one "
   two ""
   """
 
 var x = """
+  $r1
   one "
   two ""
   \""""
 
 echo $"""
+  $r1
   \$ one "
   \$ two ""
   \"""" other
 
 var x = $"""
+  $r1
   \$ one "
   \$ two ""
   """ ++ 'other'

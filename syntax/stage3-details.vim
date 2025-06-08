@@ -1,13 +1,23 @@
+" Vim syntax definition for YSH
+" Stage 3 - Recognize Details Within Each Mode
 
-" everything here is valid
-source <sfile>:h/stage2-recursive-modes.vim
+"
+" Libraries
+"
 
-" Problem: needs to be hooked up to @exprMode cluster
+source <sfile>:h/lib-vim-clusters.vim
+source <sfile>:h/lib-comment-string.vim
+" recursive modes
+source <sfile>:h/lib-command-expr-dq.vim  
+source <sfile>:h/lib-sub-splice.vim 
 
-syn keyword exprAtom null true false
-syn keyword exprKeyword and or not for is in if else capture as func proc
+"
+" Backslashes and Comments
+"
 
-hi def link exprAtom Boolean
-hi def link exprKeyword Keyword
+syn match backslashQuoted /\\[#'"$@()\\]/
+" For clarity, denote \[ \] separately
+syn match backslashQuoted '\\\['
+syn match backslashQuoted '\\]'
 
-
+hi def link backslashQuoted Character

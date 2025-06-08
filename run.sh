@@ -22,13 +22,34 @@ show-modes() {
 }
 
 count-stages() {
+  pushd syntax
+
   echo 'STAGE 1'
-  wc -l syntax/stage1-* syntax/lib-comment-string.vim
+  wc -l stage1-* lib-comment-string.vim
   echo
 
   echo 'STAGE 2'
-  wc -l syntax/stage2-* syntax/lib-comment-string.vim
+  wc -l stage2-* \
+    lib-vim-clusters.vim \
+    lib-comment-string.vim \
+    lib-command-expr-dq.vim
   echo
+
+  echo 'STAGE 3'
+  wc -l stage3-* \
+    lib-vim-clusters.vim \
+    lib-comment-string.vim \
+    lib-command-expr-dq.vim \
+    lib-sub-splice.vim 
+  echo
+
+  if false; then
+    echo 'ALL'
+    wc -l *.vim
+    echo
+  fi
+
+  popd
 }
 
 "$@"

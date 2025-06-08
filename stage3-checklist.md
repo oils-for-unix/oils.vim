@@ -1,6 +1,12 @@
 Stage 3: Recgonize Details Within Each Mode - `and or`
 ====
 
+### Substitutions and Splicing
+
+- [lib-sub-splice.vim](syntax/lib-sub-splice.vim)
+
+Var S
+
 ### Multi-Line
 
 These constructs have no effect on the command lexer mode.

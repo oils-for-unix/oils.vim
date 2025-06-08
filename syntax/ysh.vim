@@ -9,9 +9,10 @@ endif
 
 " Only ONE of these should be active
 
-"source <sfile>:h/debug.vim
 "source <sfile>:h/stage1-minimal.vim
-source <sfile>:h/stage2-recursive-modes.vim
-"source <sfile>:h/stage3-details.vim
+"source <sfile>:h/stage2-recursive-modes.vim
+source <sfile>:h/stage3-details.vim
+
+"source <sfile>:h/debug.vim
 
 let b:current_syntax = "ysh"
