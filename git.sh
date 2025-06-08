@@ -13,14 +13,19 @@ merge-to-main() {
   local branch=$(git rev-parse --abbrev-ref HEAD)
 
   if test "$do_push" = T; then
-    git checkout main &&
-    git merge $branch &&
-    git push &&
-    git push codeberg &&
+    git checkout main
+    git merge $branch
+
+    time git push
+    echo
+
+    time git push codeberg
+    echo
+
     git checkout $branch
   else
-    git checkout main &&
-    git merge $branch &&
+    git checkout main
+    git merge $branch
     git checkout $branch
   fi
 }
