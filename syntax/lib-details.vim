@@ -5,12 +5,12 @@
 " $name
 syn match varSubName '\$[a-zA-Z_][a-zA-Z0-9_]*'
 " ${name}
-syn match varSubBracedName '\${[a-zA-Z_][a-zA-Z0-9_]*}'
+syn match varSubBracedName '\v\$\{[a-zA-Z_][a-zA-Z0-9_]*\}'
 " $1 is valid, but not $11.  Should be ${11}
 syn match varSubNumber '\$[0-9]'
 " ${12}
-" Vim quirk: it's [0-9]\+ versus [0-9]*.  Use * to keep our metalangauge simple
-syn match varSubBracedNumber '\${[0-9][0-9]*}'
+" \v means + is an operator
+syn match varSubBracedNumber '\v\$\{[0-9]+\}'
 
 " @splice - \< word boundary doesn't work because @ is a non-word char
 " Use 2 patterns to avoid complex \z expressions
@@ -52,8 +52,10 @@ hi def link j8_Error Error
 " J8 string escapes from frontend/lexer_def.py
 syn match jsonOneChar '\\[\\"/bfnrt]' contained
 syn match j8_OneChar "\\'" contained
-syn match j8_YHex '\\y[0-9a-fA-F]\{2}' contained
-syn match j8_UBraced '\\[uU]{[0-9a-fA-F]\{1,6}}' contained
+
+" \v means that {1,6} is an operator
+syn match j8_YHex '\v\\y[0-9a-fA-F]{2}' contained
+syn match j8_UBraced '\v\\[uU]\{[0-9a-fA-F]{1,6}\}' contained
 
 " Keep it normal, opposite of String
 " hi def link jsonOneChar Character
