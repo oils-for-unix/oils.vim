@@ -14,6 +14,7 @@ hi def link yshComment Comment
 
 " J8-style b'' or u''
 syn region j8String start="\<[bu]'" skip='\\.' end="'"
+      \ contains=@j8Mode
 
 " Raw strings are single quoted, with optional r prefix
 syn region rawString start="\<r'" end="'"
@@ -35,6 +36,7 @@ hi def link dollarDqString String
 " 5 multi-line variants (triple-quoted like Python)
 "
 syn region tripleJ8String start="\<[bu]'''" skip='\\.' end="'''"
+      \ contains=@j8Mode
 syn region tripleRawString start="\<r'''" end="'''"
 syn region tripleSqString start="'''" end="'''"
 syn region tripleDqString start='"""' skip='\\.' end='"""'

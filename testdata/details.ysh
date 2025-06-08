@@ -81,3 +81,27 @@ echo ~root/src
 
 pushd /tmp
 popd
+
+
+# J8 strings
+
+echo u'newline \n backslash \\ double \" single \' tab \t other'
+echo b'byte \yff what'
+echo b'mu = \u{3bc}'
+
+echo '''
+  mu = \u{3bc}
+  '''
+
+echo u'''
+  mu = \u{3bc}
+  '''
+
+var b = b'''
+  mu = \u{3bc}
+  '''
+
+# echo b'\u{badG}'
+# echo b'\y BAD'
+# echo b'\yGG BAD'
+# echo b'\m BAD'

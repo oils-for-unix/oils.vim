@@ -40,3 +40,23 @@ syn keyword exprKeyword contained and or not for is in if else func proc capture
 
 hi def link exprAtom Constant
 hi def link exprKeyword Keyword
+
+"
+" J8 strings
+"
+
+" Bad backslash escape - must come first
+syn match j8_Error '\\.' contained
+hi def link j8_Error Error
+
+" J8 string escapes from frontend/lexer_def.py
+syn match jsonOneChar '\\[\\"/bfnrt]' contained
+syn match j8_OneChar "\\'" contained
+syn match j8_YHex '\\y[0-9a-fA-F]\{2}' contained
+syn match j8_UBraced '\\[uU]{[0-9a-fA-F]\{1,6}}' contained
+
+" Keep it normal, opposite of String
+" hi def link jsonOneChar Character
+" hi def link j8_OneChar Character
+" hi def link j8_YHex Character
+" hi def link j8_UBraced Character

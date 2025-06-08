@@ -49,3 +49,7 @@ syn cluster commandMode
 
 syn cluster exprMode
       \ contains=@dollarSubInExpr,@splice,@strings,@caret,yshArrayLiteral,exprAtom,exprKeyword
+
+syn cluster j8Mode
+      \ contains=j8_Error,jsonOneChar,j8_OneChar,j8_YHex,j8_UBraced
+

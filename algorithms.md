@@ -85,18 +85,6 @@ lexing and parsing.
 On the other hand, stage 1 is **easy** to express.  If you're interested in
 Tree-sitter, I recommend starting with stage 1.
 
-### Comparison
-
-- Vim's [sh.vim](https://github.com/vim/vim/blob/master/runtime/syntax/sh.vim) is 1009 lines
-- Emac's
-  [sh-script.el](https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/sh-script.el)
-  is 3400 lines
-
-These plugins also do navigation and smart indenting, not just syntax
-highlighting.
-
-And shell syntax is harder to understand than YSH syntax.
-
 ## Algorithm 2: Full Parsing - TreeSitter
 
 TODO
@@ -113,6 +101,20 @@ Approach:
 
 Then do the same for YSH commands - add lexer mode, and a parser, and
 interleave them.
+
+## Comparisons
+
+- Vim's [sh.vim](https://github.com/vim/vim/blob/master/runtime/syntax/sh.vim) is 1009 lines
+- Emac's
+  [sh-script.el](https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/sh-script.el)
+  is 3400 lines
+
+These plugins also do navigation and smart indenting, not just syntax
+highlighting.
+
+And shell syntax is harder to understand than YSH syntax.
+
+- TODO: tree-sitter-bash
 
 ## Notes
 
