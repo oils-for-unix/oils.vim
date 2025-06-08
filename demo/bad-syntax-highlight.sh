@@ -28,6 +28,9 @@ command-sub-case() {
   echo $(case foo in foo) echo hi ;; esac)
 
   echo "$(case foo in foo) echo hi ;; esac)"
+
+  # for comparison
+  case foo in foo) echo hi ;; esac
 }
 
 bad-chars() {
