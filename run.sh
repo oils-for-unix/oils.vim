@@ -40,7 +40,7 @@ count-stages() {
     lib-vim-clusters.vim \
     lib-comment-string.vim \
     lib-command-expr-dq.vim \
-    lib-sub-splice.vim 
+    lib-details.vim 
   echo
 
   if false; then

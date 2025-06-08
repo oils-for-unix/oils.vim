@@ -13,6 +13,7 @@ echo \
     | sort
     ;  # YSH style
 
+echo \{ \}
 
 # Expression keywords
 

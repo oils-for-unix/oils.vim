@@ -2,17 +2,7 @@
 " Stage 2 - Correctly Switch Between Three Lexer Modes
 
 "
-" Libraries
-"
-
-source <sfile>:h/lib-vim-clusters.vim
-source <sfile>:h/lib-comment-string.vim
-" recursive modes
-source <sfile>:h/lib-command-expr-dq.vim  
-"source <sfile>:h/lib-sub-splice.vim 
-
-"
-" Backslashes and Comments
+" More Backslash Quotes Than Stage 1
 "
 
 syn match backslashQuoted /\\[#'"$@()\\]/
@@ -21,3 +11,13 @@ syn match backslashQuoted '\\\['
 syn match backslashQuoted '\\]'
 
 hi def link backslashQuoted Character
+
+"
+" Libraries
+"
+
+source <sfile>:h/lib-vim-clusters.vim
+source <sfile>:h/lib-comment-string.vim
+" recursive lexer modes
+source <sfile>:h/lib-command-expr-dq.vim  
+
