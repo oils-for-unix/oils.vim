@@ -46,8 +46,8 @@ So I am trying something simpler.
 
 ### Writing Your Own YSH Syntax Highlighter
 
-- [Two Algorithms for YSH Syntax Highlighting](algorithms.md)
+- [Two Algorithms for YSH Syntax Highlighting](doc/algorithms.md)
   - Coarse Parsing - four steps, with **screenshots**
   - Full Parsing
-- [notes.md](notes.md)
+- [doc/notes.md](doc/notes.md)
 

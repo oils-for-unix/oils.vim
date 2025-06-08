@@ -39,16 +39,17 @@ With coarse parsing, we break the problem down into **4 steps**.  Refer to
 these docs with **screenshots** for details:
 
 - [Stage 1: Lex Comments and String Literals - `# \ ' "`](stage1-checklist.md)
-  - [syntax/stage1-minimal.vim](syntax/stage1-minimal.vim) - ~60 lines
-  - [testdata/minimal.ysh](testdata/minimal.ysh)
+  - [syntax/stage1-minimal.vim](../syntax/stage1-minimal.vim) - ~60 lines
+  - [testdata/minimal.ysh](../testdata/minimal.ysh)
   - Vim features: regex matches, regex regions (without `contains=`)
 - [Stage 2: Correctly Switch Between Three Lexer Modes - `\ () [] $ @ =`](stage2-checklist.md)
   - [syntax/stage2-recursive-modes.vim](syntax/stage2-recursive-modes.vim) - ~260 more lines
-  - [testdata/recursive-modes.ysh](testdata/recursive-modes.ysh)
+  - [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh)
   - Vim features: `syn cluster`, `contains=@cluster`, `matchgroup=`
   - YSH features: nested pairs, sigil pairs
 - [Stage 3: Recognize Details Within Each Mode - `and or`](stage3-checklist.md)
-  - [syntax/stage3-details.vim](syntax/stage3-details.vim) - ~90 more lines
+  - [syntax/stage3-details.vim](../syntax/stage3-details.vim) - ~90 more lines
+  - [testdata/details.vim](../testdata/details.vim) - ~90 more lines
   - YSH features: sub and splice, expression keywords, redirects
   - Smart errors: bad backslash escapes
 
@@ -134,5 +135,5 @@ And shell syntax is harder to understand than YSH syntax.
 ### Links
 
 - Shell-like string interpolation in Python and JS:
-  - [demo/nested.py](demo/nested.py)
-  - [demo/nested.js](demo/nested.js)
+  - [demo/nested.py](../demo/nested.py)
+  - [demo/nested.js](../demo/nested.js)
