@@ -9,6 +9,17 @@ set -o nounset
 set -o pipefail
 set -o errexit
 
+comments() {
+  echo yes # comment
+
+  # Vim does wrong highlighting
+
+  echo not#comment
+
+  # hard case
+  echo yes;#comment
+}
+
 # There is a list of recent bugs in sh.vim
 # https://github.com/vim/vim/blob/master/runtime/syntax/sh.vim
 #

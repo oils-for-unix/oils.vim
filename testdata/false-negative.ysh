@@ -1,0 +1,6 @@
+
+echo yes # comment
+
+# should be highlighted, but isn't
+
+echo yes;#comment
