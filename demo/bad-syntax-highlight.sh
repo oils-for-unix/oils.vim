@@ -12,11 +12,10 @@ set -o errexit
 comments() {
   echo yes # comment
 
-  # Vim does wrong highlighting
-
+  # Vim incorrectly highlights this
   echo not#comment
 
-  # hard case
+  # hard case (github/codeberg correctly highlight it)
   echo yes;#comment
 }
 

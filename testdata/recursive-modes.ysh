@@ -234,23 +234,6 @@ echo $(echo \{ \})
 = $(pp [42])
 #= $(call f(x))
 
-# Command Keywords
-
-# Should disallow the command keywords in YSH expressions?
-
-# Or the syntax highlighter can match beginning of line
-
-var const = 42
-setvar const = const + 1
-echo $const
-
-var setvar = 42
-setvar setvar = setvar + 1
-echo $setvar
-
-var call  = 42
-setvar call = call + 1
-echo $call
 
 # proc is reserved
 # var proc = 42
