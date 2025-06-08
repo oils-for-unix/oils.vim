@@ -43,14 +43,14 @@ these docs with **screenshots** for details:
   - [testdata/minimal.ysh](testdata/minimal.ysh)
   - Vim features: regex matches, regex regions (without `contains=`)
 - [Stage 2: Correctly Switch Between Three Lexer Modes - `\ () [] $ @ =`](stage2-checklist.md)
-  - [syntax/stage2-recursive-modes.vim](syntax/stage2-recursive-modes.vim) - ~300 lines total
+  - [syntax/stage2-recursive-modes.vim](syntax/stage2-recursive-modes.vim) - ~260 more lines
   - [testdata/recursive-modes.ysh](testdata/recursive-modes.ysh)
   - Vim features: `syn cluster`, `contains=@cluster`, `matchgroup=`
   - YSH features: nested pairs, sigil pairs
 - [Stage 3: Recognize Details Within Each Mode - `and or`](stage3-checklist.md)
-  - [syntax/stage3-details.vim](syntax/stage3-details.vim) - ~330 lines total
+  - [syntax/stage3-details.vim](syntax/stage3-details.vim) - ~90 more lines
   - YSH features: sub and splice, expression keywords, redirects
-- [Stage 4: Smart Errors by "Over-Lexing" - `\n`](stage4-checklist.md)
+  - Smart errors: bad backslash escapes
 
 The coarse parsing approach should work with:
 
@@ -130,3 +130,9 @@ And shell syntax is harder to understand than YSH syntax.
 - `--foo=r'raw'` is misleading, and same with `u'' b''`
   - We should fix the YSH quirk.  Then using the `\<` word boundary will not
     misunderstand any correct code.
+
+### Links
+
+- Shell-like string interpolation in Python and JS:
+  - [demo/nested.py](demo/nested.py)
+  - [demo/nested.js](demo/nested.js)
