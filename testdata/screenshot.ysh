@@ -1,0 +1,52 @@
+# YSH syntax demo
+
+use $LIB_YSH/math.ysh --pick min
+
+assert [-5 === min(0, -5)]
+
+func abs(x) {
+  return (x if x > 0 else -x)
+}
+
+assert [42 === abs(-42)]
+
+proc read-write (prefix; ; offset=1) {
+  json read (&message) < $prefix.json
+
+  var next = message.counts[0] + offset
+  echo "Writing new message with $next"
+
+  var new = {next} 
+  json write (new) > $[prefix]_v2.json
+}
+
+if is-main {
+  var prefix = '_tmp/foo'
+
+  echo r'''
+  {
+    "counts": [
+      42, 99
+    ]
+  }
+  ''' > $prefix.json
+
+  read-write $prefix (offset=99)
+  echo
+
+  head $prefix*.json
+  echo
+
+  wc -l $prefix*.json
+}
+
+
+#
+# Nested Double Quotes Bug
+#
+
+json read < _tmp/foo_v2.json
+
+var mydict = {word: 'double'}
+
+echo "nested $[mydict["word"]] quotes"
