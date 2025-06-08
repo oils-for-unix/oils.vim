@@ -15,3 +15,50 @@ echo $setvar
 var call  = 42
 setvar call = call + 1
 echo $call
+
+#
+# These should still be highlighted
+#
+
+echo hi;call 42
+echo hi; call 42
+echo hi;var x =42
+echo hi;  var x =42
+echo
+
+# hard one
+echo pipeline | proc p { echo pipeline }; p | cat
+
+## && ||
+echo hi && var x = 42
+echo hi && call 42
+
+false || var x = 42
+false || call (42)
+
+# Odd but valid?
+true | var x = 42
+true | call (42)
+
+# first word can come after:
+# ; |
+# ;;
+# && ||
+
+#
+# Bugs
+#
+
+proc p (...args; x) {
+  json write (args)
+}
+
+# TODO: Fix all of these
+p proc a b c (42)
+p func x y z (42)
+
+p var x = (42)
+p setvar x = (42)
+p setglobal a[i] = (42)
+
+p call (42)

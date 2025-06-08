@@ -72,4 +72,12 @@ write-html() {
   done
 }
 
+regexp-test-vim() {
+  rm -v _tmp/*.log
+
+  set -x
+  vim -c 'source demo/regexp-test.vim' -c 'qa!'
+  cat _tmp/*.log
+}
+
 "$@"

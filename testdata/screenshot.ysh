@@ -1,6 +1,7 @@
+#!/usr/bin/env ysh
 # YSH syntax demo
 
-use $LIB_YSH/math.ysh --pick min
+use $LIB_YSH/math.ysh --pick min max
 
 assert [-5 === min(0, -5)]
 
@@ -20,7 +21,7 @@ proc read-write (prefix; ; offset=1) {
   json write (new) > $[prefix]_v2.json
 }
 
-if is-main {
+proc demo {
   var prefix = '_tmp/foo'
 
   echo r'''
@@ -40,13 +41,33 @@ if is-main {
   wc -l $prefix*.json
 }
 
-
 #
-# Nested Double Quotes Bug
+# $0 Dispatch Pattern
 #
 
-json read < _tmp/foo_v2.json
+proc make-jobs {
+  for line in (io.stdin) {
+    # 15 ms minimum
+    var milliseconds = max(line, 150)
+    var seconds = milliseconds / 1000
+    echo "$seconds"
+  }
+} 
 
-var mydict = {word: 'double'}
+proc do-one (seconds) {
+  echo "sleep $seconds"
+  sleep $seconds
+}
 
-echo "nested $[mydict["word"]] quotes"
+proc do-all {
+  ... time
+      seq 100 40 300  # 100 milliseconds to 300, by increments of 30
+    | make-jobs
+    #| xargs -n 1 echo
+    | xargs -n 1 -P 3 --verbose -- $0 do-one
+    ;
+}
+
+if is-main {
+  runproc @ARGV
+}

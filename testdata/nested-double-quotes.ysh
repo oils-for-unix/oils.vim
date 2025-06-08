@@ -1,0 +1,8 @@
+# Nested Double Quotes
+#
+# Highlighting this example requires (recursive) coarse parsing, not just
+# lexing.
+
+var mydict = {word: 'double'}
+
+echo "nested $[mydict["word"]] quotes"
