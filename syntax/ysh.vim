@@ -16,11 +16,11 @@ else
 endif
 
 if s:stage == 1
-  source <sfile>:h/stage1-minimal.vim
+  source <sfile>:h/stage1.vim
 elseif s:stage == 2
-  source <sfile>:h/stage2-recursive-modes.vim
+  source <sfile>:h/stage2.vim
 elseif s:stage == 3
-  source <sfile>:h/stage3-details.vim
+  source <sfile>:h/stage3.vim
 else
   echoerr 'Invalid stage ' . s:stage
 endif

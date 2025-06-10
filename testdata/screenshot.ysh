@@ -36,9 +36,6 @@ proc demo {
   echo
 
   head $prefix*.json
-  echo
-
-  wc -l $prefix*.json
 }
 
 #

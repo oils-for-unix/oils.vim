@@ -11,7 +11,8 @@ test-files() {
   ### Run testdata
   for f in testdata/*.ysh; do
     echo "=== $f ==="
-    ysh $f
+    # 'demo' arg for screenshot.ysh
+    ysh $f demo
     echo
   done
 }
