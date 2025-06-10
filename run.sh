@@ -72,12 +72,31 @@ write-html() {
   done
 }
 
-regexp-test-vim() {
-  rm -v _tmp/*.log
+run-test() {
+  local log_file=$1
+  local vim_file=$2
 
-  set -x
-  vim -c 'source demo/regexp-test.vim' -c 'qa!'
-  cat _tmp/*.log
+  rm -v -f "$log_file"
+
+  #set -x
+
+  set +o errexit
+  vim -c "source $vim_file" -c 'qa!'
+  local status=$?
+  set -o errexit
+
+  cat "$log_file"
+  echo
+  echo status=$status
 }
+
+regexp-test-vim() {
+  run-test _tmp/regexp-test.log demo/regexp-test.vim
+}
+
+ysh-test-vim() {
+  run-test _tmp/ysh-test.log syntax/ysh-test.vim
+}
+
 
 "$@"

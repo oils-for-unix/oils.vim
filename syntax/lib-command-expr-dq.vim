@@ -7,8 +7,10 @@ syn keyword yshKeyword const var setvar setglobal break continue return
 
 " The call and = keywords are followed by an expression
 syn keyword callKeyword call nextgroup=exprAfterKeyword 
+
 " The = keyword occurs at the beginning of a line (different than rhsExpr)
-syn match equalsKeyword '^[ \t]*=' nextgroup=exprAfterKeyword
+let equalsRegex = '^[ \t]*='
+execute 'syn match equalsKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
 
 syn keyword funcKeyword func nextgroup=funcName skipwhite
 syn keyword procKeyword proc nextgroup=procName skipwhite
