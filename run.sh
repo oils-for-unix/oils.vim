@@ -49,10 +49,12 @@ count-stages() {
   popd
 }
 
+readonly HTML_DIR=_tmp/oils.vim
+
 write-html-stage() {
   local stage=${1:-3}
 
-  local dir="_tmp/stage${stage}"
+  local dir="$HTML_DIR/stage${stage}"
 
   mkdir -p $dir
 
@@ -71,6 +73,18 @@ write-html() {
   for stage in 1 2 3; do
     write-html-stage $stage
   done
+}
+
+write-index() {
+  tree -H './' --charset=ascii $HTML_DIR > $HTML_DIR/index.html
+}
+
+deploy-html() {
+  write-index
+
+  local dest=../pages/oils.vim/
+  mkdir -p $dest
+  cp -v -r --no-target-directory $HTML_DIR $dest
 }
 
 run-test() {

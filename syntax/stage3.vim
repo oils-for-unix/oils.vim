@@ -16,7 +16,7 @@ hi def link backslashQuoted Character
 " Libraries
 "
 
-source <sfile>:h/lib-vim-clusters.vim
+source <sfile>:h/lexer-modes.vim
 source <sfile>:h/lib-comment-string.vim
 " recursive lexer modes
 source <sfile>:h/lib-command-expr-dq.vim  
