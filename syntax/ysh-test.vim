@@ -17,10 +17,35 @@ call assert_equal(-1, match('foo  = 42', equalsRegex))
 
 call assert_equal(0, match('call', callRegex))
 call assert_equal(0, match('call ', callRegex))
-call assert_equal(0, match('  call ', callRegex))
+call assert_equal(2, match('  call ', callRegex))
+
+call assert_equal(2, match(' ;call ', callRegex))
+call assert_equal(3, match(' ; call ', callRegex))
+
+call assert_equal(3, match('|| call ', callRegex))
+call assert_equal(3, match('&& call ', callRegex))
 
 call assert_equal(-1, match('decall', callRegex))
 call assert_equal(-1, match('calling', callRegex))
+
+let x = 0
+if x
+  echo 'TESTING'
+  call assert_equal(0, match('call', '\vcall'))
+  call assert_equal(0, match('a ', '\v^\s*(a|b)'))
+  call assert_equal(0, match('b', '\v^(a|b)'))
+  call assert_equal(-1, match('c', '\v(a|b)'))
+
+  let callRegex2 = '\v^\s*call'
+  call assert_equal(0, match('call 42', callRegex2))
+
+  " WTF \> breaks here?  \v and \> is problematic?
+  let callRegex2 = '\v(^|;)\s*call'
+  call assert_equal(0, match('; call 42', callRegex2))
+endif
+
+let callRegex2 = '\(^\|;\)\s*call\>'
+call assert_equal(0, match('; call 42', callRegex2))
 
 " Check for failures
 if len(v:errors) > 0

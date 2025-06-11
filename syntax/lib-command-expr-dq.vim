@@ -5,19 +5,25 @@
 syn keyword shellKeyword if elif else case while for in
 syn keyword yshKeyword const var setvar setglobal break continue return
 
-let firstWord = '^\s*'
+" beginning of line or ; 
+" then whitespace
+" Are have to use \( \| \) here as operators, because \v doesn't work with \> " ?
+" On Vim 9, \v seems buggy?
+
+let firstWord = '\(^\|[;|&]\)'  " begin line or ; or | or &
+let space = '\s*'
 let endWord = '\>'
+let startMatch = '\zs'
 
 " The call and = keywords are followed by an expression
 
-" \\> is the word boundary
-let callRegex = $"{firstWord}call{endWord}"
+let callRegex = $"{firstWord}{space}{startMatch}call{endWord}"
 
-"execute 'syn match callKeyword "' . callRegex . '" nextgroup=exprAfterKeyword'
-syn keyword callKeyword call nextgroup=exprAfterKeyword 
+execute 'syn match callKeyword "' . callRegex . '" nextgroup=exprAfterKeyword'
+"syn keyword callKeyword call nextgroup=exprAfterKeyword 
 
 " The = keyword occurs at the beginning of a line (different than rhsExpr)
-let equalsRegex = $"{firstWord}="
+let equalsRegex = $"{firstWord}{space}="
 execute 'syn match equalsKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
 
 syn keyword funcKeyword func nextgroup=funcName skipwhite
