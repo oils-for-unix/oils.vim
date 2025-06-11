@@ -5,11 +5,19 @@
 syn keyword shellKeyword if elif else case while for in
 syn keyword yshKeyword const var setvar setglobal break continue return
 
+let firstWord = '^\s*'
+let endWord = '\>'
+
 " The call and = keywords are followed by an expression
+
+" \\> is the word boundary
+let callRegex = $"{firstWord}call{endWord}"
+
+"execute 'syn match callKeyword "' . callRegex . '" nextgroup=exprAfterKeyword'
 syn keyword callKeyword call nextgroup=exprAfterKeyword 
 
 " The = keyword occurs at the beginning of a line (different than rhsExpr)
-let equalsRegex = '^[ \t]*='
+let equalsRegex = $"{firstWord}="
 execute 'syn match equalsKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
 
 syn keyword funcKeyword func nextgroup=funcName skipwhite

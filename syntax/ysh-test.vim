@@ -15,6 +15,13 @@ call assert_equal(0, match('= 42', equalsRegex))
 call assert_equal(0, match('  = 42', equalsRegex))
 call assert_equal(-1, match('foo  = 42', equalsRegex))
 
+call assert_equal(0, match('call', callRegex))
+call assert_equal(0, match('call ', callRegex))
+call assert_equal(0, match('  call ', callRegex))
+
+call assert_equal(-1, match('decall', callRegex))
+call assert_equal(-1, match('calling', callRegex))
+
 " Check for failures
 if len(v:errors) > 0
   echo 'Tests failed:'

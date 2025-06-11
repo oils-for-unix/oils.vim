@@ -16,6 +16,8 @@ var call  = 42
 setvar call = call + 1
 echo $call
 
+echo calling  # should not match
+
 #
 # These should still be highlighted
 #
