@@ -22,23 +22,28 @@ these three mutually recursive **sublanguages**, which are lexed differently.
 1. Words/Strings
 1. Expressions
 
-Here are some more examples
-
+Here are some more examples:
 
     echo "dq" $[42 + a[i]]
-          ^~   ^~~~~~~~~ -- expression within command
+          ^~   ^~~~~~~~~ expression within command
           |
           + string within command
 
     var x = "dq" ++ $(echo hi)
-             ^~       ^~~~~~~ -- command within expression
+             ^~       ^~~~~~~ command within expression
              |
              + string within expression
 
     echo "dq $(echo hi) $[42 + a[i]]"
-               ^~~~~~~    ^~~~~~~~~ -- expression within string
+               ^~~~~~~    ^~~~~~~~~ expression within string
                |
                + command within string
+
+The nested double quotes example is:
+
+    echo "nested $[mydict["word"]] quotes"
+                   ^~~~~~~|    |~ expression within string
+                          |++++|  string within expression within string
 
 ## Screenshots
 
@@ -49,58 +54,121 @@ Here are some more examples
 - [syntax/stage2.vim](../syntax/stage2.vim)
   - [syntax/lexer-modes.vim](../syntax/lexer-modes.vim) - the high-level structure
   - [syntax/lib-command-expr-dq.vim](../syntax/lib-command-expr-dq.vim)
-- [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh)
+- [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh) - This file
+  has **examples** of what we want to recognize.
+  - The highlighted version is published to <https://pages.oils.pub/oils-vim/>.
 
-## Details
+## Overall Structure in `lexer-modes.vim`
+
+Notice these definitions in `lexer-modes.vim`:
+
+    syn cluster dqMode
+          \ contains=varSubName,@dollarSubInExpr
+
+    syn cluster commandMode
+          \ ...
+
+    syn cluster exprMode
+          \ ...
+
+This is exactly the recursive structure of YSH syntax!  It is defined concisely
+with Vim syntax clusters, which are named sets of regions.
+
+## Prerequisites
+
+Now let's look through `lib-command-expr-dq.vim`.
+
+### Backslash-Quoted Operators
+
+In stage 1, we had to recognize `\'` and `\"` before we recognized `'strings'`.
+
+Likewise, we now have to recognize `\$ \@ \( \) \[ \]` before we recognize
+balanced delimiters `() []` and sigil pairs `$() $[]`.
+
+### YSH Keywords
+
+Our goal is to recognize commands, words, and expressions in YSH code.
+
+To rec expressions, we have to recognize **keywords**:
+
+- The `call` and `=` keywords are followed by expressions.
+- `proc` and `func` are followed by a name, then parameter lists.
+- TODO: `var const setvar setglobal` should also be followed by expressions
+
+## Notes
 
 ### Switching to Expression Mode
 
-- `typedArgs` - `pp (f(x))`
+These rules were the trickiest to develop:
+
+- `spaceParen` - `pp (f(x))` and `if (x) {` and `return (x)` ...
 - `lazyTypedArgs` - `pp [f(x)]`
 - `rhsExpr` - `var x = f(x)`
 - `exprAfterKeyword` - `call f(x)` and `= f(x)`
 - `exprSub exprSplice caretExpr` - `$[f(x)] @[f(x)] ^[f(x)]`
 
+Parameter lists are similar to expressions:
+
+- `paramList` - `proc my-proc (x, y) {`
+
+Sigil pairs:
+
+- `exprSub exprSplice caretExpr` - `$[f(x)] @[f(x)] ^[f(x)]`
+
 ### Switching to Command Mode
 
 - `commandSub commandSplice caretCommand` - `$(echo hi) @(echo hi) ^(echo hi)`
-- `yshArrayLiteral` - `:| a b |`
+- `yshArrayLiteral` - `:| my-array echo "hi" $[42 + a[i]] |`
 
-### YSH Keywords
+### Python-like Rule for Multi-Line Expressions
 
-We define that the `call` and `=` keywords are followed by expressions.
+`nestedParen nestedBracket nestedBrace` are used to match multi-line
+expressions within nested delimiters:
 
-So we might as well do all the keywords, like `for func`.
+    var result = f(x,
+                   42 + a[i])
 
-### Issues
+### Subtle Issues
 
-- `rhsExpr` and `exprAfterKeyword` - they can end after `;` or ` #`
-  - `var x = f(42); echo next'
-  - `var x = f(42)  # comment
-- `nestedParen nestedBracket nestedBrace` - used to match multi-line
-  expressions within nested delimiters (a rule borrowed from Python)
+`rhsExpr` and `exprAfterKeyword` end after a newline, `;` or ` #`.  Examples:
 
-# Vim Mechanisms Used
+    var x = f(42); echo next'
+    var x = f(42)  # comment
 
-Here, we do it with **Vim regions**.
+## Vim Mechanisms Used
 
-- TextMate and SublimeText may be similar.
-- It's harder in TreeSitter, because stateful / modal lexers require external
-  scanners in C, which have an awkward interface constrained by incremental
-  parsing.
+### Regions, Clusters, Keywords
 
-Vim regions (`syn region`) do all the heavy lifting of lexer modes:
+Again, we use **Vim regions**, which can be **recursive**.  TextMate and
+SublimeText may be similar.
 
-- `contains=` for defining what's valid in each mode.  For example:
+We use these region paramters:
+
+- `contains=` to defines what's valid in each mode.  For example:
   - in DQ strings, `$[sub]` is allowed
   - in commands, `$[sub]` and `@[splice]` are allowed
   - in expressions, `^[lazy]` is allowed (`$[sub]` and `@[splice]` may come later)
-- `syn cluster` so you can refer to sets of regions like `@quotedStrings`
-
-Region parameters:
-
 - `nextgroup=` - for `call` and `=` keywords, `func` and `proc`
-  - `skipwhite` for `func` and `proc`, to avoid `typedArgs` matching
 - `matchgroup=`
   - `matchgroup=Normal` is necessary for nesting of delimiters, like `()` within `$()`
 - `end=' #'me=s-2` to say that the end of the match is before the delimiter ` #`, not after
+- `skipwhite` for `func` and `proc`, to avoid `spaceParen` matching
+  - Note: it seems like we should be able to avoid `skipwhite`?  Another
+    "coarse parsing" implementation may illuminate this issue.
+
+We use `syn cluster` to refer to sets of regions like `@dqMode @exprMode
+@commandMode`.
+
+### VimScript
+
+We use Vim 8 string interpolation:
+
+    let name = 'world'
+    let greeting = $"hello {world}"  # like shell, with {} rather than ${}
+
+We use `execute 'syn match "' . callRegex . '"' so that we can test `callRegex`
+in [syntax/ysh-test.vim](../syntax/ysh-test.vim).
+
+## Next
+
+If this all makes sense, move on to [stage 3](stage3.md).
