@@ -70,10 +70,13 @@ string literals with backslash escapes.  Related article:
 
 ## Vim Mechanisms Used
 
-This stage uses Vim regions, with `syn region`.
+This stage uses:
 
-Note: We haven't included `lexer-modes.vim`, so `contains=@dqMode` is
-**ignored**.
+- Vim regions, with `syn region`.
+  - Note: We haven't included `lexer-modes.vim`, so `contains=@dqMode` is
+    **ignored**.
+- The regex feature `\<`, which is a "word boundary".
+  - For matching the `r` in `r'string'`, etc.
 
 ## Optional: Make this minimal highlighter more usable
 

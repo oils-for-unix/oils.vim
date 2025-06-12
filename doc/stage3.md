@@ -121,3 +121,12 @@ TODO
 Could highlight these as errors:
 
     var array = :| hi < ; |
+
+## Vim Mechanisms Used
+
+If a regex starts with `\v`, it's parsed in "very magic" mode.  This makes the
+syntax more like PCRE or POSIX ERE.
+
+For example, `a{3,4}` is repetition, and `\{\}` are literal braces, not the
+other way around!
+

@@ -125,7 +125,9 @@ expressions within nested delimiters:
     var x = f(42); echo next'
     var x = f(42)  # comment
 
-# Vim Mechanisms Used
+## Vim Mechanisms Used
+
+### Regions, Clusters, Keywords
 
 Again, we use **Vim regions**, which can be **recursive**.  TextMate and
 SublimeText may be similar.
@@ -137,13 +139,25 @@ We use these region paramters:
   - in commands, `$[sub]` and `@[splice]` are allowed
   - in expressions, `^[lazy]` is allowed (`$[sub]` and `@[splice]` may come later)
 - `nextgroup=` - for `call` and `=` keywords, `func` and `proc`
-- `skipwhite` for `func` and `proc`, to avoid `typedArgs` matching
 - `matchgroup=`
   - `matchgroup=Normal` is necessary for nesting of delimiters, like `()` within `$()`
 - `end=' #'me=s-2` to say that the end of the match is before the delimiter ` #`, not after
+- `skipwhite` for `func` and `proc`, to avoid `spaceParen` matching
+  - Note: it seems like we should be able to avoid `skipwhite`?  Another
+    "coarse parsing" implementation may illuminate this issue.
 
 We use `syn cluster` to refer to sets of regions like `@dqMode @exprMode
 @commandMode`.
+
+### VimScript
+
+We use Vim 8 string interpolation:
+
+    let name = 'world'
+    let greeting = $"hello {world}"  # like shell, with {} rather than ${}
+
+We use `execute 'syn match "' . callRegex . '"' so that we can test `callRegex`
+in [syntax/ysh-test.vim](../syntax/ysh-test.vim).
 
 ## Next
 
