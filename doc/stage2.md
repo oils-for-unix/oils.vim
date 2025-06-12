@@ -108,7 +108,7 @@ Sigil pairs:
 ### Switching to Command Mode
 
 - `commandSub commandSplice caretCommand` - `$(echo hi) @(echo hi) ^(echo hi)`
-- `yshArrayLiteral` - `:| a b |`
+- `yshArrayLiteral` - `:| my-array echo "hi" $[42 + a[i]] |`
 
 ### Python-like Rule for Multi-Line Expressions
 
@@ -118,30 +118,32 @@ expressions within nested delimiters:
     var result = f(x,
                    42 + a[i])
 
-### Tips
+### More Notes
 
-- `rhsExpr` and `exprAfterKeyword` - they can end after `;` or ` #`
-  - `var x = f(42); echo next'
-  - `var x = f(42)  # comment
+`rhsExpr` and `exprAfterKeyword` end after a newline, `;` or ` #`.  Examples:
+
+    var x = f(42); echo next'
+    var x = f(42)  # comment
 
 # Vim Mechanisms Used
 
 Again, we use **Vim regions**, which can be **recursive**.  TextMate and
 SublimeText may be similar.
 
-- `contains=` for defines what's valid in each mode.  For example:
+We use these region paramters:
+
+- `contains=` to defines what's valid in each mode.  For example:
   - in DQ strings, `$[sub]` is allowed
   - in commands, `$[sub]` and `@[splice]` are allowed
   - in expressions, `^[lazy]` is allowed (`$[sub]` and `@[splice]` may come later)
-- `syn cluster` so you can refer to sets of regions like `@quotedStrings`
-
-Region parameters:
-
 - `nextgroup=` - for `call` and `=` keywords, `func` and `proc`
-  - `skipwhite` for `func` and `proc`, to avoid `typedArgs` matching
+- `skipwhite` for `func` and `proc`, to avoid `typedArgs` matching
 - `matchgroup=`
   - `matchgroup=Normal` is necessary for nesting of delimiters, like `()` within `$()`
 - `end=' #'me=s-2` to say that the end of the match is before the delimiter ` #`, not after
+
+We use `syn cluster` to refer to sets of regions like `@dqMode @exprMode
+@commandMode`.
 
 ## Next
 
