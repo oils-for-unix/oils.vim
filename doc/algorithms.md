@@ -1,13 +1,13 @@
 Three Algorithms for YSH Syntax Highlighting
 ====
 
-On Zulip, I was asked how to write a syntax highlighter for YSH.  Let's
-contrast these ways of doing it:
+On Zulip, I was asked how to write a syntax highlighter for YSH.  Let's compare
+these ways of doing it:
 
 1. **Coarse Parsing**
-   - Editors like Vim and TextMate use the model of "regexes + a context
-     stack".
-   - With this model, we can recognize YSH "lexer modes", producing an
+   - Editors like Vim and TextMate use the model of *regexes + a context
+     stack*.
+   - With this model, we can recognize YSH "lexer modes", and produce an
      **accurate** highlighter.  Coarse does *not* mean inaccurate!
 1. **Context-Free Parsing**
    - Tree-sitter uses the model of resilient, incremental context-free parsing.
@@ -25,22 +25,29 @@ contrast these ways of doing it:
 So, different tools have different computational models, and we have to express
 YSH syntax within those limits.
 
-A **surprise** may be that "coarse parsing" is not only easier than
-context-free parsing, but more accurate.  For evidence of that, see the bugs
-fixed in `tree-sitter-bash`, particularly in the external scanner:
+After writing this Vim plugin for YSH, I wrote docs describing the "coarse
+parsing" algorithm, linked below.
 
-- <https://github.com/tree-sitter/tree-sitter-bash/>
+A **surprise** may be that coarse parsing is not only easier than context-free
+parsing, but more accurate.  For evidence of that, see the bugs fixed in
+[tree-sitter-bash][], particularly in the external scanner:
 
-## Background: YSH Syntax Has Lexer Modes
+- <https://github.com/tree-sitter/tree-sitter-bash/commits/master/src/scanner.c>
+
+[tree-sitter-bash]: https://github.com/tree-sitter/tree-sitter-bash/
+
+## Background on YSH Syntax
 
 YSH syntax is derived from Unix shell syntax, which means that it has [lexer
-modes](https://www.oilshell.org/blog/2017/12/17.html).  The modes are roughly:
+modes][].  The modes are roughly:
+
+[lexer modes]: https://www.oilshell.org/blog/2017/12/17.html
 
 1. Commands - `echo hi`
 1. Double-Quoted Strings - `echo "sum = $[x + 42], today is $(date)"`
 1. Expressions - `var x = 42 + a[i]`
 
-This makes YSH different than C or Java, but the same is true for Python and
+This makes YSH different than C or Java, but the same is true of Python and
 JavaScript.  They grew more shell-like when they added string interpolation, in
 the 2010's:
 
@@ -111,6 +118,30 @@ lexing and parsing.
 
 On the other hand, stage 1 is **easy** to express.  If you're interested in
 Tree-sitter, I recommend starting with stage 1, as "practice".
+
+### More Implementations of Coarse Parsing
+
+- [micro-syntax][] in C++, re2c
+  - It's a simple syntax highlighter for shell, Python, C++, ASDL, and more languages
+  - It generates [src-tree.wwz](https://oils.pub/release/latest/pub/src-tree.wwz/)
+  - TODO
+    - We need a YSH definition
+    - `micro-syntax` should probably support regions and recursion, like Vim.
+- TODO: YSH itself is powerful enough to express coarse parsing!
+  - At each position, Vim must consider `syn match` and `syn region start=`
+    regexes.
+  - If none match, then it advances to the next byte.
+  - I think it must match each pattern separately, rather than using `|` to
+    match "in parallel".  re2c "longest match" semantics don't work.  But maybe
+    Python's backtracking "leftmost match" does?
+  - We also use `nextgroup=` and `end=''me=s-1` and `\\zs`
+- Trivia: Vim started developing `regexp_nfa.c` around 2013
+  - "Problem: syntax highlighting can be slow"
+  - e.g.
+    <https://github.com/vim/vim/commit/fbc0d2ea1e13fb55c267b72d64046e5ef984b97f>,
+    several people including Russ Cox are credited
+
+[micro-syntax]: https://github.com/oils-for-unix/oils/blob/master/doctools/micro_syntax.re2c.h
 
 ## Algorithm 2: Context-Free Parsing with Tree-sitter
 
