@@ -8,7 +8,7 @@ In this stage, handle:
 1. Comments: `# hi`
 1. Quotes that are quoted: `\' \"`
 1. String Literals 
-   - 3 kinds, 5 styles - `r' u' $"`
+   - 3 kinds, 6 styles - `r' u' $"`
    - And the corresponding multi-line string literals - `r''' u''' $"""`
 
 The key idea is that once we understand comments and string literals, then we

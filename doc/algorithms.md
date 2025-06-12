@@ -11,8 +11,8 @@ contrast these ways of doing it:
    incremental context-free parsing.
    - YSH should eventually have a Tree-sitter grammar.  But this is tricky
      because context-free grammars are too limited for "real languages".  As
-     with most Tree-sitter grammars (Python, JavaScript, C), recognizing YSH
-     will require writing **C code** in an external scanner.
+     with most languages (Python, JavaScript, C), recognizing YSH with
+     Tree-sitter will require writing **C code** in an external scanner.
 1. **Full Parsing** - we could use the YSH parser itself to create a 100%
    accurate syntax highlighter, though it won't be useful in text editors.
    - `ysh --tool syntax-tree myscript.ysh` shows you the syntax tree.
@@ -22,7 +22,7 @@ have to express YSH syntax within those limits.
 
 ## Background: YSH Syntax Has Lexer Modes
 
-YSH syntax is derived from Unix shell, which means that it has [lexer
+YSH syntax is derived from Unix shell syntax, which means that it has [lexer
 modes](https://www.oilshell.org/blog/2017/12/17.html).  The modes are roughly:
 
 1. Commands - `echo hi`
@@ -159,23 +159,6 @@ This set of docs is a good outline, but it may not be complete.
 
 ## Appendix
 
-### Notes on YSH Syntax
-
-To change:
-
-- `echo foo = bar` - we might want to make `=` special
-- `a = 42` should work, regardless of context
-- `$[x] @[array] @array` should be available in expression mode
-  - it's ok if `$x` is not there - that is a gentle nudge
-- Commands that end with expression: `$(call 42)` and `$(= 42)`
-- `--foo=r'raw'` is misleading, and same with `u'' b''`
-  - We should fix the YSH quirk.  Then using the `\<` word boundary will not
-    misunderstand any correct code.
-
-Note:
-
-- `pp [ch]` vs `pp *.[ch]` - the leading space distinguishes the two
-
 ### Structure of the Vim plugin
 
 This command shows an overview:
@@ -209,6 +192,23 @@ Summary:
   - [testdata/details.ysh](../testdata/details.ysh)
   - YSH features: sub and splice, expression keywords, redirects
   - Smart errors: bad backslash escapes
+
+### Notes on YSH Syntax
+
+To change:
+
+- `echo foo = bar` - we might want to make `=` special
+- `a = 42` should work, regardless of context
+- `$[x] @[array] @array` should be available in expression mode
+  - it's ok if `$x` is not there - that is a gentle nudge
+- Commands that end with expression: `$(call 42)` and `$(= 42)`
+- `--foo=r'raw'` is misleading, and same with `u'' b''`
+  - We should fix the YSH quirk.  Then using the `\<` word boundary will not
+    misunderstand any correct code.
+
+Note:
+
+- `pp [ch]` vs `pp *.[ch]` - the leading space distinguishes the two
 
 ### Links
 
