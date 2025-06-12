@@ -160,3 +160,10 @@ echo "\n"  # should be "\\n"
 Could highlight these as errors:
 
     var array = :| hi < ; |
+
+## Conclusion
+
+Let me know if you got this far!  And feel free to ask questions on Zulip:
+
+- <https://oilshell.zulipchat.com/>
+

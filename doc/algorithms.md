@@ -5,10 +5,12 @@ On Zulip, I was asked how to write a syntax highlighter for YSH.  Let's
 contrast these ways of doing it:
 
 1. **Coarse Parsing**
-   - With a regex-based system like Vim or TextMate, we can **accurately**
-     recognize YSH "lexer modes", producing an excellent highlighter.
+   - Editors like Vim and TextMate use the model of "regexes + a context
+     stack".
+   - With this model, we can recognize YSH "lexer modes", producing an
+     **accurate** highlighter.  Coarse does *not* mean inaccurate!
 1. **Context-Free Parsing**
-   - The model of Tree-sitter is resilient, incremental context-free parsing.
+   - Tree-sitter uses the model of resilient, incremental context-free parsing.
    - YSH should eventually have a Tree-sitter grammar.  But creating one is
      tricky because context-free grammars are too limited for "real languages".
      Recognizing most languages (Python, JavaScript, C) with Tree-sitter
@@ -16,11 +18,18 @@ contrast these ways of doing it:
      for YSH.
 1. **Full Parsing**
    - We could use the YSH parser itself to create a 100% accurate syntax
-     highlighter, though it won't be useful in text editors.
-   - `ysh --tool syntax-tree myscript.ysh` shows you the syntax tree.
+     highlighter.  `ysh --tool syntax-tree myscript.ysh` shows you the syntax
+     tree.
+   - This likely wouldn't be useful in text editors.
 
-The idea is that different tools have different computational models, so we
-have to express YSH syntax within those limits.
+So, different tools have different computational models, and we have to express
+YSH syntax within those limits.
+
+A **surprise** may be that "coarse parsing" is not only easier than
+context-free parsing, but more accurate.  For evidence of that, see the bugs
+fixed in `tree-sitter-bash`, particularly in the external scanner:
+
+- <https://github.com/tree-sitter/tree-sitter-bash/>
 
 ## Background: YSH Syntax Has Lexer Modes
 
@@ -83,12 +92,6 @@ The coarse parsing approach should work with:
 1. Emacs
    - I'm not sure if `font-lock` can do it, but Emacs also supports arbitrary
      Lisp code.
-
-It's important to realize that "coarse" does **not** mean "incorrect"!  Coarse
-parsing can actually be **more correct** than full parsing.  Look at all the
-bugs fixed in `tree-sitter-bash` for evidence of that:
-
-- <https://github.com/tree-sitter/tree-sitter-bash/commits/master/>
 
 ### Highlighting issues
 
