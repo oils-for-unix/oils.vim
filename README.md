@@ -49,11 +49,14 @@ And then go to:
 - <http://pages.oils.pub/>
   - source: <https://github.com/oils-for-unix/oils-for-unix.github.io>
 
-### Writing Your Own YSH Syntax Highlighter
+### Write Your Own YSH Syntax Highlighter
+
+I wrote this doc after writing the Vim highlighter:
 
 - [Three Algorithms for YSH Syntax Highlighting](doc/algorithms.md)
   - Coarse Parsing - three steps, with **screenshots**
-  - Context-free Parsing
+  - Context-free parsing
+  - Full parsing
 - [doc/notes.md](doc/notes.md)
 
 ## Links
