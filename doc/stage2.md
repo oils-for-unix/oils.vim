@@ -26,17 +26,17 @@ Here are some more examples
 
 
     echo "dq" $[42 + a[i]]
-          ^~   ^~~~~~~~~ -- expression within command
+          ^~   ^~~~~~~~~ expression within command
           |
           + string within command
 
     var x = "dq" ++ $(echo hi)
-             ^~       ^~~~~~~ -- command within expression
+             ^~       ^~~~~~~ command within expression
              |
              + string within expression
 
     echo "dq $(echo hi) $[42 + a[i]]"
-               ^~~~~~~    ^~~~~~~~~ -- expression within string
+               ^~~~~~~    ^~~~~~~~~ expression within string
                |
                + command within string
 

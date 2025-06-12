@@ -88,4 +88,10 @@ overall structure:
 1. Splicing - `@myarray`
 1. Redirect operators - `ls 2> /dev/null`
 
-See [stage 3](stage3.md) for more ideas.
+See [stage 3](stage3.md) for features that don't require recursion.
+
+Otherwise, move on to [stage 2](stage2.md), where we recognize the core of YSH:
+commands, expressions, and strings.
+
+
+
