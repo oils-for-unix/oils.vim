@@ -16,8 +16,8 @@ know that nested delimiters like `() [] {} $() $[]` are **real code**.
 
 ## Screenshots
 
-After recognizing comment and strings, you'll have a **nice and usable syntax
-highlighter**.  
+After recognizing comment and strings, you'll have a minimal, but **usable**
+syntax highlighter.
 
 ![Stage 1 Demo](https://pages.oils.pub/oils-vim/screenshots/stage1-demo.png)
 
@@ -34,7 +34,7 @@ should open a new string:
     echo "hi $[d["key"]]"   # this is the inner string
                  ^^^^^
 
-We can fix this with recursion, discussed in [stage 2](stage2.md).
+We can fix this with **recursion**, discussed in [stage 2](stage2.md).
 
 ## Files
 
@@ -44,36 +44,48 @@ We can fix this with recursion, discussed in [stage 2](stage2.md).
 
 ## Tips
 
-Everything in this stage can be expressed with regexes.
-
-(**My favorite regex** is `" ([^"\]|\\.)* "` - it correctly delimits C-style
-string literals with backslash escapes.  Related article:
-<https://research.swtch.com/pcdata>.)
-
 - Make sure that `echo not#comment` is not a comment.
   - In shell, a comment is a separate "word".
+
+Strings:
+
 - Note that `r''` and `$""` are synonyms for `''` and `""`.
 - Make sure that a `'` closes a raw string, even if there's a `\` before it
   - e.g. `r'C:\Program Files\'`.
 - Make sure that `\"` does **not** close a double quoted string - `"\""`
 - Likewise for J8 strings -  `b'\''`
 
+Recognizing strings with Vim regions:
+
+- Why do we skip `\.` and not `\'`?  So that when matching a string `'foo\\'`,
+  the `\\` is skipped, and we properly see the ending quote.
+
+Note that everything in this stage can be expressed with regexes.
+
+(**My favorite regex** is `" ([^"\]|\\.)* "` - it correctly delimits C-style
+string literals with backslash escapes.  Related article:
+<https://research.swtch.com/pcdata>.)
+
+
 ## Vim Mechanisms Used
 
 This stage uses Vim regions, with `syn region`.
 
-Why do we skip `\.` and not `\'`?  So that when matching a string `'foo\\'`,
-the `\\` is skipped, and we properly see the ending quote.
-
 Note: We haven't included `lexer-modes.vim`, so `contains=@dqMode` is
 **ignored**.
 
-## Optional: Make this minimal "flat" highlighter more usable
+## Optional: Make this minimal highlighter more usable
 
-Here are some minor enhancements that don't affect the overall structure:
+If it's hard to recognize lexer modes with your tool (e.g. Tree-sitter), you
+can skip stage 2, and add features to this minimal syntax highlighter.
+
+These features are "non-recursive", and can be added without affecting the
+overall structure:
 
 1. Keywords like `for func`
-1. `$name` and `${name}` (when unquoted, not within double quotes)
-1. `@myarray`
+1. Substitution - `$name` and `${name}`
+   - in commands and in double quotes, but not in single quotes
+1. Splicing - `@myarray`
+1. Redirect operators - `ls 2> /dev/null`
 
 See [stage 3](stage3.md) for more ideas.
