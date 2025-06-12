@@ -71,3 +71,7 @@ This repo is hosted at:
 
 - <https://github.com/oils-for-unix/oils.vim/>
 - <https://codeberg.org/oils/oils.vim>
+
+---
+
+![Stages of Coarse Parsing](https://pages.oils.pub/oils-vim/screenshots/side-by-side.png)

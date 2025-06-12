@@ -67,7 +67,7 @@ Coarse parsing is roughly equivalent to identifying these features:
     call       =          
     proc       func        # keywords with signatures
 
-<!-- TODO: screenshots of 3 stages -->
+![Stages of Coarse Parsing](https://pages.oils.pub/oils-vim/screenshots/side-by-side.png)
 
 The coarse parsing approach should work with:
 

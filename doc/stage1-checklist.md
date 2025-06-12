@@ -22,7 +22,9 @@ See:
 Install this Vim syntax definition with the instructions in
 [README.md](README.md), and see what it looks like:
 
+<!--
 ![YSH Minimal Lexing](https://oils.pub/image-deploy/ysh-minimal-lexing.png)
+-->
 
 ![Stage 1 Demo](https://pages.oils.pub/oils-vim/screenshots/stage1-demo.png)
 
