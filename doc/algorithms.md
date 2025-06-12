@@ -1,19 +1,19 @@
 Two Algorithms for YSH Syntax Highlighting
 ====
 
-I started this doc after writing a Vim syntax highlighter for YSH.  In Vim, we
-do what I call **"coarse parsing"**.
+On Zulip, I was asked how to write a syntax highlighter for YSH.  Let's
+contrast these ways of doing it:
 
-We also want a Tree-sitter highlighter.  Tree-sitter has the philosophy of
-**full parsing**, so I outline how we can support this style.
-
----
-
-But it's important to realize that `coarse != incorrect`!  Coarse parsing can
-actually be **more correct** than full parsing.  Look at the changelog of
-`tree-sitter-bash` for evidence of that:
-
-- <https://github.com/tree-sitter/tree-sitter-bash/commits/master/>
+1. **Coarse Parsing** - Using a regex-based system like Vim or TextMate, it's
+   possible to **accurately** recognize YSH "lexer modes", and produce an
+   excellent highlighter.
+1. **Context-Free Parsing** - The philosophy of Tree-sitter.
+   - YSH should eventually have a Tree-sitter grammar.  But this project is
+     tricky because context-free grammars are too limited for "real languages".
+     As with most Tree-sitter grammars (Python, JavaScript, C), recognizing YSH
+     will require writing **C code** in an external scanner.
+1. **Full Parsing** - we could use the YSH parser itself to create a 100%
+   accurate syntax highlighter, though it won't be useful in text editors.
 
 ## Background: YSH Syntax Has Lexer Modes
 
@@ -24,34 +24,41 @@ modes](https://www.oilshell.org/blog/2017/12/17.html).  The modes are roughly:
 1. Double-Quoted Strings - `echo "sum = $[x + 42], today is $(date)"`
 1. Expressions - `var x = 42 + a[i]`
 
-This makes YSH different than C or Java.
-
-But Python and JavaScript are also different than C and Java.  They grew more
-shell-like when they added string interpolation, in the 2010's:
+This makes YSH different than C or Java, but the same is true for Python and
+JavaScript.  They grew more shell-like when they added string interpolation, in
+the 2010's:
 
     console.log(`sum = ${x + 42}`)   // JavaScript    
 
     print(f'sum = {x + 42}')         # Python
 
+(See [demo/nested.py](../demo/nested.py) and
+[demo/nested.js](../demo/nested.js).)
+
 ## Algorithm 1: Coarse Parsing - Vim, TextMate
 
-With coarse parsing, we break the problem down into **4 steps**.  Refer to
+With coarse parsing, we break the problem down into **3 steps**.  Refer to
 these docs with **screenshots** for details:
 
 - [Stage 1: Lex Comments and String Literals - `# \ ' "`](stage1-checklist.md)
-  - [syntax/stage1-minimal.vim](../syntax/stage1-minimal.vim) - ~60 lines
-  - [testdata/minimal.ysh](../testdata/minimal.ysh)
-  - Vim features: regex matches, regex regions (without `contains=`)
 - [Stage 2: Correctly Switch Between Three Lexer Modes - `\ () [] $ @ =`](stage2-checklist.md)
-  - [syntax/stage2-recursive-modes.vim](syntax/stage2-recursive-modes.vim) - ~260 more lines
-  - [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh)
-  - Vim features: `syn cluster`, `contains=@cluster`, `matchgroup=`
-  - YSH features: nested pairs, sigil pairs
-- [Stage 3: Recognize Details Within Each Mode - `and or`](stage3-checklist.md)
-  - [syntax/stage3-details.vim](../syntax/stage3-details.vim) - ~90 more lines
-  - [testdata/details.vim](../testdata/details.vim) - ~90 more lines
-  - YSH features: sub and splice, expression keywords, redirects
-  - Smart errors: bad backslash escapes
+- [Stage 3: Recognize the Language Within Each Mode - `and or`](stage3-checklist.md)
+
+Coarse parsing is roughly equivalent to identifying these features:
+
+    r'    u'    $"         # string literals
+    r'''  u'''  $"""       # multi-line literals
+
+    ()    []    ()         # balanced pairs
+
+    $()   $[]  ${}         # sigil pairs
+    @()   @[]
+    ^()   ^[]      ^""
+
+    const      var         # keywords that take expressions
+    setvar     setglobal
+    call       =          
+    proc       func        # keywords with signatures
 
 The coarse parsing approach should work with:
 
@@ -62,66 +69,76 @@ The coarse parsing approach should work with:
    - I'm not sure if `font-lock` can do it, but Emacs also supports arbitrary
      Lisp code.
 
+It's important to realize that "coarse" does **not** mean "incorrect"!  Coarse
+parsing can actually be **more correct** than full parsing.  Look at all the
+bugs fixed in `tree-sitter-bash` for evidence of that:
+
+- <https://github.com/tree-sitter/tree-sitter-bash/commits/master/>
+
 ### Highlighting issues
 
-As mentioned, coarse parsing can be **more correct** than full parsing.  (In
-the real world, parsing is not declarative.)
-
-But let's be honest, and keep track of the caveats:
+But let's keep track of any correctness issues here:
 
 - stage 1
-  - `r''` with word boundary `\<` - requires YSH change
+  - `r''` with word boundary `\<` - TODO: YSH will change.
 - stage 2
   - `echo for` - `for` is not a keyword
 
-Although highlighting YSH is easier than highlighting bash, this is many fewer
-issues than `tree-sitter-bash` has!
-
-### Tree-sitter Can Express Stage 1
+### Project Idea: Tree-sitter Can Express Stage 1
 
 In Tree-sitter, Stage 2 is **hard** because recursive lexer modes require an
 external scanner, written in C.  The C API is unusual because of incremental
 lexing and parsing.
 
 On the other hand, stage 1 is **easy** to express.  If you're interested in
-Tree-sitter, I recommend starting with stage 1.
+Tree-sitter, I recommend starting with stage 1, as "practice".
 
-## Algorithm 2: Full Parsing - TreeSitter
+## Algorithm 2: Context-Free Parsing with Tree-sitter
 
-TODO
+Even though coarse parsing is easier than context-free parsing, it should give
+you much of the knowledge necessary to create a context-free parser.
 
-Notes:
+That said, it may be helpful for us to "recast" YSH syntax as context-free,
+with a YSH-only stateful lexer.  (Right now, OSH and YSH share the same
+lexer.)
 
-- Stateful YSH Lexer That Runs By Itself
+We could create such a YSH-only lexer, and a context-free grammar expressed
+with pgen2.  Some notes here:
 
-Approach:
+- [#tools-for-oils > Overview of stateful lexer problem](https://oilshell.zulipchat.com/#narrow/channel/403333-tools-for-oils/topic/Overview.20of.20stateful.20lexer.20problem/with/521811845)
+- [#tools-for-oils > YSH Lexer That Can Run By Itself](https://oilshell.zulipchat.com/#narrow/channel/403333-tools-for-oils/topic/YSH.20Lexer.20That.20Can.20Run.20By.20Itself/with/389082925)
 
-1. Create `lex_mode_e.YshDQ`
+Here's how I would start:
+
+1. Create `lex_mode_e.YshDQ`, for double-quoted strings in YSH.
 1. Add a string literal grammar in `ysh/grammar.pgen2`
-1. Interleave it with the expression parser
+1. Interleave double quoted strings with the expression parser
 
-Then do the same for YSH commands - add lexer mode, and a parser, and
-interleave them.
+Then do the same for YSH commands: add a lexer mode, a context-free grammar,
+and interleave them with the rest of the language.
 
 ## Comparisons
+
+As of 2025-06, our `ysh.vim` plugin is less than 500 lines.
+
+Shell syntax is harder to understand than YSH syntax, but these comparisons might be useful:
 
 - Vim's [sh.vim](https://github.com/vim/vim/blob/master/runtime/syntax/sh.vim) is 1009 lines
 - Emac's
   [sh-script.el](https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/sh-script.el)
   is 3400 lines
+- [tree-sitter-bash](https://github.com/tree-sitter/tree-sitter-bash)
+  - 1189 lines in `grammar.js`
+  - 1217 lines in the external `scanner.c`
 
-These plugins also do navigation and smart indenting, not just syntax
-highlighting.
-
-And shell syntax is harder to understand than YSH syntax.
-
-- TODO: tree-sitter-bash
+Note that some plugins (like Emacs) also do navigation and smart indenting, not
+just syntax highlighting.
 
 ## Notes
 
-- `pp [ch]` vs `pp *.[ch]` - the leading space distinguishes the two
+### YSH Syntax
 
-### YSH Syntax to Change
+To change:
 
 - `echo foo = bar` - we might want to make `=` special
 - `a = 42` should work, regardless of context
@@ -132,8 +149,32 @@ And shell syntax is harder to understand than YSH syntax.
   - We should fix the YSH quirk.  Then using the `\<` word boundary will not
     misunderstand any correct code.
 
+Note:
+
+- `pp [ch]` vs `pp *.[ch]` - the leading space distinguishes the two
+
+### Structure of the Vim plugin:
+
+- Stage 1 - ~60 lines
+  - [syntax/stage1.vim](../syntax/stage1.vim)
+  - [testdata/minimal.ysh](../testdata/minimal.ysh)
+  - Vim features: regex matches, regex regions (without `contains=`)
+- Stage 2 - ~260 more lines
+  - [syntax/stage2.vim](../syntax/stage2.vim)
+  - [syntax/lexer-modes.vim](../syntax/stage2.vim) - declarative definitions of
+    YSH lexer modes, with Vim `syn cluster`!  Vim is pretty nice.
+  - [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh)
+  - Vim features: `syn cluster`, `contains=@cluster`, `matchgroup=`
+  - YSH features: keywords, nested pairs, sigil pairs, `=`
+- Stage 3 - ~90 more lines
+  - [syntax/stage3.vim](../syntax/stage3.vim)
+  - [testdata/details.ysh](../testdata/details.ysh)
+  - YSH features: sub and splice, expression keywords, redirects
+  - Smart errors: bad backslash escapes
+
 ### Links
 
-- Shell-like string interpolation in Python and JS:
-  - [demo/nested.py](../demo/nested.py)
-  - [demo/nested.js](../demo/nested.js)
+- [Polyglot Language Understanding](https://github.com/oils-for-unix/oils/wiki/Polyglot-Language-Understanding)
+  - Some research for using the coarse parsing technique across multiple languages.
+  - One motivation for this is that I found Github's new source browser, with
+    semantic navigation, underwhelming.

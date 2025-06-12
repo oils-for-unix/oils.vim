@@ -1,7 +1,9 @@
 Vim Syntax Highlighting for Oils
 ====
 
-Right now we're doing YSH only, not OSH.
+This repo has an accurate Vim syntax highlighter for YSH.
+
+(Note: most editors already have shell plugins, so they understand OSH syntax!)
 
 ## Installation
 
@@ -17,7 +19,8 @@ I use [vim-plug][], which is configured in your `~/.vimrc` like this:
 
 ## Configuration
 
-My vimrc overrides these colors:
+YSH has more syntax than say Java, which can make it harder to pick colors.  My
+vimrc overrides these colors:
 
     let g:ysh_expr_color = 20        " blue  
     let g:ysh_sigil_pair_color = 55  " purple
@@ -26,14 +29,34 @@ My vimrc overrides these colors:
     let g:ysh_proc_name_color = 55   " purple
     let g:ysh_func_name_color = 89   " lighter purple
 
-## Local Testing
+## For contributors
 
-Temporarily change the line to point at a local copy:
+To test locally, temporarily change the line to point at a local copy:
 
     Plug '~/git/oils-for-unix/oils.vim'
 
-## Links
+Running tests:
 
+- TODO: use the OSH test framework!
+
+Export `testdata/` as HTML, and publish it;
+
+    ./run.sh write-html
+    ./run.sh deploy-html
+
+And then go to:
+
+- <http://pages.oils.pub/>
+  - source: <https://github.com/oils-for-unix/oils-for-unix.github.io>
+
+### Writing Your Own YSH Syntax Highlighter
+
+- [Two Algorithms for YSH Syntax Highlighting](doc/algorithms.md)
+  - Coarse Parsing - three steps, with **screenshots**
+  - Context-free Parsing
+- [doc/notes.md](doc/notes.md)
+
+## Links
 
 Here's an alternative plugin supports more features:
 
@@ -42,12 +65,9 @@ Here's an alternative plugin supports more features:
 Though I found an issue where it incorrectly highlighted single quotes within
 `#` comments.
 
-So I am trying something simpler.
+### Code Hosts
 
-### Writing Your Own YSH Syntax Highlighter
+This repo is hosted at:
 
-- [Two Algorithms for YSH Syntax Highlighting](doc/algorithms.md)
-  - Coarse Parsing - four steps, with **screenshots**
-  - Full Parsing
-- [doc/notes.md](doc/notes.md)
-
+- <https://github.com/oils-for-unix/oils.vim/>
+- <https://codeberg.org/oils/oils.vim>

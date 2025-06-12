@@ -26,21 +26,21 @@ count-stages() {
   pushd syntax
 
   echo 'STAGE 1'
-  wc -l stage1-* lib-comment-string.vim
+  wc -l stage1.vim lib-comment-string.vim
   echo
 
   echo 'STAGE 2'
-  wc -l stage2-* \
-    lib-vim-clusters.vim \
+  wc -l stage2.vim \
+    lexer-modes.vim \
     lib-command-expr-dq.vim
   echo
 
   echo 'STAGE 3'
-  wc -l stage3-* \
+  wc -l stage3.vim \
     lib-details.vim 
   echo
 
-  if false; then
+  if true; then
     echo 'ALL'
     wc -l *.vim
     echo
