@@ -1,6 +1,10 @@
 Stage 3: Recgonize Details Within Each Mode - `and or`
 ====
 
+## Screenshots
+
+![Stage 3 Demo](http://pages.oils.pub/oils-vim/screenshots/stage3-demo.png)
+
 ### Substitutions and Splicing
 
 - [lib-sub-splice.vim](syntax/lib-sub-splice.vim)
@@ -69,9 +73,9 @@ These appear in both commands an array literals:
   - command echo; command -v echo
   - maybe we just treat them as keywords
 
-## Smart Errors by "Over-Lexing" - `\n`
+## Smart Errors by "Over-Lexing" 
 
-### Backslashes mean different things in different modes
+### Backslashes mean different things in different modes - `\n`
 
 - `\;` in the unquoted lexer mode, but not `\n`
 - `\$` in double quoted strings, but not `\n`
@@ -91,3 +95,16 @@ echo \n    # should be n
 
 echo "\n"  # should be "\\n"
 ```   
+
+### Sigil Pairs - `$ @`
+
+TODO
+
+- `parse_dollar` - `echo $.` should be an error
+- `@.` should also be an error?
+
+### Arrays vs Commands
+
+Could highlight these as errors:
+
+    var array = :| hi < ; |

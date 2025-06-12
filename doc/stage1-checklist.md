@@ -17,10 +17,16 @@ See:
 - [testdata/minimal.ysh](testdata/minimal.ysh)
 - [syntax/stage1-minimal.vim](syntax/stage1-minimal.vim)
 
+## Screenshots
+
 Install this Vim syntax definition with the instructions in
 [README.md](README.md), and see what it looks like:
 
 ![YSH Minimal Lexing](https://oils.pub/image-deploy/ysh-minimal-lexing.png)
+
+![Stage 1 Demo](http://pages.oils.pub/oils-vim/screenshots/stage1-demo.png)
+
+![Stage 1 Nested Double Quotes](http://pages.oils.pub/oils-vim/screenshots/stage1-nested-dq.png)
 
 At the end, you will be left with a **pretty nice syntax highlighter**.  But
 there is a bug with nested double quotes:

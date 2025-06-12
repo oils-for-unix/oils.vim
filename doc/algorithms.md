@@ -1,4 +1,4 @@
-Two Algorithms for YSH Syntax Highlighting
+Three Algorithms for YSH Syntax Highlighting
 ====
 
 On Zulip, I was asked how to write a syntax highlighter for YSH.  Let's
@@ -7,13 +7,18 @@ contrast these ways of doing it:
 1. **Coarse Parsing** - Using a regex-based system like Vim or TextMate, it's
    possible to **accurately** recognize YSH "lexer modes", and produce an
    excellent highlighter.
-1. **Context-Free Parsing** - The philosophy of Tree-sitter.
-   - YSH should eventually have a Tree-sitter grammar.  But this project is
-     tricky because context-free grammars are too limited for "real languages".
-     As with most Tree-sitter grammars (Python, JavaScript, C), recognizing YSH
+1. **Context-Free Parsing** - The model of Tree-sitter is resilient,
+   incremental context-free parsing.
+   - YSH should eventually have a Tree-sitter grammar.  But this is tricky
+     because context-free grammars are too limited for "real languages".  As
+     with most Tree-sitter grammars (Python, JavaScript, C), recognizing YSH
      will require writing **C code** in an external scanner.
 1. **Full Parsing** - we could use the YSH parser itself to create a 100%
    accurate syntax highlighter, though it won't be useful in text editors.
+   - `ysh --tool syntax-tree myscript.ysh` shows you the syntax tree.
+
+The idea is that different tools have different computational models, so we
+have to express YSH syntax within those limits.
 
 ## Background: YSH Syntax Has Lexer Modes
 
@@ -46,6 +51,8 @@ these docs with **screenshots** for details:
 
 Coarse parsing is roughly equivalent to identifying these features:
 
+    # comments
+
     r'    u'    $"         # string literals
     r'''  u'''  $"""       # multi-line literals
 
@@ -53,12 +60,14 @@ Coarse parsing is roughly equivalent to identifying these features:
 
     $()   $[]  ${}         # sigil pairs
     @()   @[]
-    ^()   ^[]      ^""
+    ^()   ^[]       ^""
 
     const      var         # keywords that take expressions
     setvar     setglobal
     call       =          
     proc       func        # keywords with signatures
+
+<!-- TODO: screenshots of 3 stages -->
 
 The coarse parsing approach should work with:
 
@@ -80,6 +89,7 @@ bugs fixed in `tree-sitter-bash` for evidence of that:
 But let's keep track of any correctness issues here:
 
 - stage 1
+  - `echo not#comment` vs `echo yes;#comment` (easy to fix)
   - `r''` with word boundary `\<` - TODO: YSH will change.
 - stage 2
   - `echo for` - `for` is not a keyword

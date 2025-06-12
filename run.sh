@@ -81,7 +81,7 @@ write-index() {
 }
 
 deploy-html() {
-  write-index
+  #write-index
 
   local dest=../pages/oils-vim/
   mkdir -p $dest

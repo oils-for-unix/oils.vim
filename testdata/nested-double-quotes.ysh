@@ -6,3 +6,6 @@
 var mydict = {word: 'double'}
 
 echo "nested $[mydict["word"]] quotes"
+
+
+

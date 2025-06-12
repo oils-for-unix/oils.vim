@@ -21,6 +21,12 @@ See:
 - [testdata/recursive-modes.ysh](testdata/recursive-modes.ysh)
 - [syntax/stage2-recursive-modes.vim](stage2-recursive-modes.vim)
 
+## Screenshots
+
+![Stage 2 Demo](http://pages.oils.pub/oils-vim/screenshots/stage2-demo.png)
+
+![Stage 2 Nested Double Quotes](http://pages.oils.pub/oils-vim/screenshots/stage2-nested-dq.png)
+
 ### Switching to Expression Mode
 
 - `typedArgs` - `pp (f(x))`

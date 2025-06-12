@@ -44,7 +44,7 @@ proc demo {
 
 proc make-jobs {
   for line in (io.stdin) {
-    # 15 ms minimum
+    # 150 ms minimum
     var milliseconds = max(line, 150)
     var seconds = milliseconds / 1000
     echo "$seconds"
