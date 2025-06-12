@@ -3,13 +3,11 @@ Stage 3: Recgonize Details Within Each Mode - `and or`
 
 ## Screenshots
 
-![Stage 3 Demo](http://pages.oils.pub/oils-vim/screenshots/stage3-demo.png)
+![Stage 3 Demo](https://pages.oils.pub/oils-vim/screenshots/stage3-demo.png)
 
 ### Substitutions and Splicing
 
-- [lib-sub-splice.vim](syntax/lib-sub-splice.vim)
-
-Var S
+- [lib-details.vim](../syntax/lib-details.vim)
 
 ### Multi-Line
 

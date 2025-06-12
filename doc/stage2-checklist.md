@@ -23,9 +23,9 @@ See:
 
 ## Screenshots
 
-![Stage 2 Demo](http://pages.oils.pub/oils-vim/screenshots/stage2-demo.png)
+![Stage 2 Demo](https://pages.oils.pub/oils-vim/screenshots/stage2-demo.png)
 
-![Stage 2 Nested Double Quotes](http://pages.oils.pub/oils-vim/screenshots/stage2-nested-dq.png)
+![Stage 2 Nested Double Quotes](https://pages.oils.pub/oils-vim/screenshots/stage2-nested-dq.png)
 
 ### Switching to Expression Mode
 

@@ -51,7 +51,7 @@ And then go to:
 
 ### Writing Your Own YSH Syntax Highlighter
 
-- [Two Algorithms for YSH Syntax Highlighting](doc/algorithms.md)
+- [Three Algorithms for YSH Syntax Highlighting](doc/algorithms.md)
   - Coarse Parsing - three steps, with **screenshots**
   - Context-free Parsing
 - [doc/notes.md](doc/notes.md)
