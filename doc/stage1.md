@@ -4,7 +4,7 @@ Stage 1: Lex Comments and String Literals - `# \ ' "`
 In this stage, handle:
 
 1. Comments: `# hi`
-1. Quotes that are Quoted: `\' \"`
+1. Quotes that are quoted: `\' \"`
 1. String Literals 
    - 3 kinds, 5 styles - `r' u' $"`
    - And the corresponding multi-line string literals - `r''' u''' $"""`
@@ -14,8 +14,8 @@ that nested delimiters like `() [] {} $() $[]` are **real code**.
 
 See:
 
-- [testdata/minimal.ysh](testdata/minimal.ysh)
-- [syntax/stage1-minimal.vim](syntax/stage1-minimal.vim)
+- [syntax/stage1.vim](../syntax/stage1.vim)
+- [testdata/minimal.ysh](../testdata/minimal.ysh)
 
 ## Screenshots
 

@@ -45,9 +45,9 @@ the 2010's:
 With coarse parsing, we break the problem down into **3 steps**.  Refer to
 these docs with **screenshots** for details:
 
-- [Stage 1: Lex Comments and String Literals - `# \ ' "`](stage1-checklist.md)
-- [Stage 2: Correctly Switch Between Three Lexer Modes - `\ () [] $ @ =`](stage2-checklist.md)
-- [Stage 3: Recognize the Language Within Each Mode - `and or`](stage3-checklist.md)
+- [Stage 1: Lex Comments and String Literals - `# \ ' "`](stage1.md)
+- [Stage 2: Correctly Switch Between Three Lexer Modes - `\ () [] $ @ =`](stage2.md)
+- [Stage 3: Recognize the Language Within Each Mode - `and or`](stage3.md)
 
 Coarse parsing is roughly equivalent to identifying these features:
 
@@ -106,7 +106,7 @@ Tree-sitter, I recommend starting with stage 1, as "practice".
 ## Algorithm 2: Context-Free Parsing with Tree-sitter
 
 Even though coarse parsing is easier than context-free parsing, it should give
-you much of the knowledge necessary to create a context-free parser.
+you much of the YSH knowledge necessary to create a context-free parser.
 
 That said, it may be helpful for us to "recast" YSH syntax as context-free,
 with a YSH-only stateful lexer.  (Right now, OSH and YSH share the same
@@ -144,9 +144,9 @@ Shell syntax is harder to understand than YSH syntax, but these comparisons migh
 Note that some plugins (like Emacs) also do navigation and smart indenting, not
 just syntax highlighting.
 
-## Notes
+## Appendix
 
-### YSH Syntax
+### Notes on YSH Syntax
 
 To change:
 
@@ -163,7 +163,22 @@ Note:
 
 - `pp [ch]` vs `pp *.[ch]` - the leading space distinguishes the two
 
-### Structure of the Vim plugin:
+### Structure of the Vim plugin
+
+This command shows an overview:
+
+    ./run.sh count-lines  
+
+Guide:
+
+- `ysh.vim` chooses one of `stage{1,2,3}.vim`
+- `stage{1,2,3}.vim` includes other files
+- `lexer-modes.vim` is the "high level structure"
+- `lib-*.vim` recognize different features
+- `testdata/` has examples of each feature
+  - We use Vim's `:TOhtml` to publish it to <https://pages.oils.pub/oils-vim/>
+
+Summary:
 
 - Stage 1 - ~60 lines
   - [syntax/stage1.vim](../syntax/stage1.vim)

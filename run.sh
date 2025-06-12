@@ -22,7 +22,7 @@ show-modes() {
   grep -B 1 'contains=' syntax/stage2-*.vim
 }
 
-count-stages() {
+count-lines() {
   pushd syntax
 
   echo 'STAGE 1'
@@ -106,13 +106,22 @@ run-test() {
   echo status=$status
 }
 
-regexp-test-vim() {
+test-vim-regexp() {
   run-test _tmp/regexp-test.log demo/regexp-test.vim
 }
 
-ysh-test-vim() {
+test-ysh-vim() {
   run-test _tmp/ysh-test.log syntax/ysh-test.vim
 }
 
+all-tests() {
+  # TODO: use OSH test framework!  byo test
+
+  test-vim-regexp
+
+  test-ysh-vim
+
+  test-files
+}
 
 "$@"

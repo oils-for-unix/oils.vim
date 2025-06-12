@@ -35,9 +35,9 @@ To test locally, temporarily change the line to point at a local copy:
 
     Plug '~/git/oils-for-unix/oils.vim'
 
-Running tests:
+Run all tests:
 
-- TODO: use the OSH test framework!
+    ./run.sh all-tests
 
 Export `testdata/` as HTML, and publish it;
 
