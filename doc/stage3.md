@@ -1,6 +1,8 @@
 Stage 3: Recgonize Details Within Each Mode - `and or`
 ====
 
+(Up: [YSH Syntax Highlighting](algorithms.md))
+
 ## Screenshots
 
 ![Stage 3 Demo](https://pages.oils.pub/oils-vim/screenshots/stage3-demo.png)
@@ -8,6 +10,19 @@ Stage 3: Recgonize Details Within Each Mode - `and or`
 ### Substitutions and Splicing
 
 - [lib-details.vim](../syntax/lib-details.vim)
+
+### Var Subs
+
+In YSH, yar subs **non-recursive** leaves.  But we add them here to show off
+the DQ-string lexer mode.
+
+- `$1` and `${12}`, but not `$12`
+- `$x` and `${x}` 
+  - Recognizing double-quoted `"$foo"` or `"${foo}"` requires stage 2, e.g. with Vim
+    `contains=`.  Not all syntax metalanguages support lexer modes (e.g.
+    Treesitter).
+  - TODO: ysh `${x|html}` `${x .%3d}`
+
 
 ### Multi-Line
 

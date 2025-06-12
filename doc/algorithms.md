@@ -67,6 +67,10 @@ Coarse parsing is roughly equivalent to identifying these features:
     call       =          
     proc       func        # keywords with signatures
 
+Here are the 3 stages, side-by-side.  The first stage is minimal; the second
+stage recognizes lexer modes (e.g. commands vs. expressions); and the third
+fills in details.
+
 ![Stages of Coarse Parsing](https://pages.oils.pub/oils-vim/screenshots/side-by-side.png)
 
 The coarse parsing approach should work with:
@@ -143,6 +147,15 @@ Shell syntax is harder to understand than YSH syntax, but these comparisons migh
 
 Note that some plugins (like Emacs) also do navigation and smart indenting, not
 just syntax highlighting.
+
+## Please Ask Questions on Zulip
+
+If you're interested in supporting YSH in a new editor, please ask questions at
+`#tools-for-oils` at <https://oilshell.zulipchat.com/>.
+
+We'd like to help create many syntax highlighters!
+
+This set of docs is a good outline, but it may not be complete.
 
 ## Appendix
 

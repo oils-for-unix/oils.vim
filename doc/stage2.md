@@ -1,6 +1,20 @@
 Stage 2: Correctly Switch Between Three Lexer Modes - `\ () [] $ @ =`
 ====
 
+(Up: [YSH Syntax Highlighting](algorithms.md))
+
+This stage is the trickiest, because it involves **recursion**.
+
+In stage 1, we showed the "nested double quotes bug":
+
+![Stage 1 Nested Double Quotes](https://pages.oils.pub/oils-vim/screenshots/stage1-nested-dq.png)
+
+We fix it in this stage, with recursion:
+
+![Stage 2 Nested Double Quotes](https://pages.oils.pub/oils-vim/screenshots/stage2-nested-dq.png)
+
+## Lexer Modes
+
 [A Tour of YSH](https://oils.pub/release/latest/doc/ysh-tour.html) describes
 these three mutually recursive **sublanguages**, which are lexed differently.
 
@@ -8,24 +22,36 @@ these three mutually recursive **sublanguages**, which are lexed differently.
 1. Words/Strings
 1. Expressions
 
-It's done with **Vim Regions**.
+Here are some more examples
 
-- In Vim, we use **regions**.
-- TextMate and SublimeText may be similar.
-- It's harder in TreeSitter, because stateful / modal lexers require external
-  scanners in C, which have an awkward interface constrained by incremental
-  parsing.
 
-See:
+    echo "dq" $[42 + a[i]]
+          ^~   ^~~~~~~~~ -- expression within command
+          |
+          + string within command
 
-- [testdata/recursive-modes.ysh](testdata/recursive-modes.ysh)
-- [syntax/stage2-recursive-modes.vim](stage2-recursive-modes.vim)
+    var x = "dq" ++ $(echo hi)
+             ^~       ^~~~~~~ -- command within expression
+             |
+             + string within expression
+
+    echo "dq $(echo hi) $[42 + a[i]]"
+               ^~~~~~~    ^~~~~~~~~ -- expression within string
+               |
+               + command within string
 
 ## Screenshots
 
 ![Stage 2 Demo](https://pages.oils.pub/oils-vim/screenshots/stage2-demo.png)
 
-![Stage 2 Nested Double Quotes](https://pages.oils.pub/oils-vim/screenshots/stage2-nested-dq.png)
+## Files
+
+- [syntax/stage2.vim](../syntax/stage2.vim)
+  - [syntax/lexer-modes.vim](../syntax/lexer-modes.vim) - the high-level structure
+  - [syntax/lib-command-expr-dq.vim](../syntax/lib-command-expr-dq.vim)
+- [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh)
+
+## Details
 
 ### Switching to Expression Mode
 
@@ -39,18 +65,6 @@ See:
 
 - `commandSub commandSplice caretCommand` - `$(echo hi) @(echo hi) ^(echo hi)`
 - `yshArrayLiteral` - `:| a b |`
-
-### Var Subs
-
-In YSH, yar subs **non-recursive** leaves.  But we add them here to show off
-the DQ-string lexer mode.
-
-- `$1` and `${12}`, but not `$12`
-- `$x` and `${x}` 
-  - Recognizing double-quoted `"$foo"` or `"${foo}"` requires stage 2, e.g. with Vim
-    `contains=`.  Not all syntax metalanguages support lexer modes (e.g.
-    Treesitter).
-  - TODO: ysh `${x|html}` `${x .%3d}`
 
 ### YSH Keywords
 
@@ -66,7 +80,14 @@ So we might as well do all the keywords, like `for func`.
 - `nestedParen nestedBracket nestedBrace` - used to match multi-line
   expressions within nested delimiters (a rule borrowed from Python)
 
-### Vim Mechanisms Used
+# Vim Mechanisms Used
+
+Here, we do it with **Vim regions**.
+
+- TextMate and SublimeText may be similar.
+- It's harder in TreeSitter, because stateful / modal lexers require external
+  scanners in C, which have an awkward interface constrained by incremental
+  parsing.
 
 Vim regions (`syn region`) do all the heavy lifting of lexer modes:
 
@@ -83,4 +104,3 @@ Region parameters:
 - `matchgroup=`
   - `matchgroup=Normal` is necessary for nesting of delimiters, like `()` within `$()`
 - `end=' #'me=s-2` to say that the end of the match is before the delimiter ` #`, not after
-
