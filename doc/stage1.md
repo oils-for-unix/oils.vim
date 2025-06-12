@@ -42,6 +42,7 @@ We can fix this with **recursion**, discussed in [stage 2](stage2.md).
   - [syntax/lib-comment-string.vim](../syntax/lib-comment-string.vim)
 - [testdata/minimal.ysh](../testdata/minimal.ysh) - This file has **examples**
   of what we want to recognize.
+  - The highlighted version is published to <https://pages.oils.pub/oils-vim/>.
 
 ## Tips
 

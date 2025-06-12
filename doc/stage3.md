@@ -1,15 +1,29 @@
-Stage 3: Recgonize Details Within Each Mode - `and or`
+Stage 3: Recgonize the Language Within Each Mode - `and or`
 ====
 
 (Up: [YSH Syntax Highlighting](algorithms.md))
+
+In [stage 2](stage2.md), we recognized three mutually recursive lexer modes:
+command, expression, and double-quoted strings.
+
+Now we can recognize expression keywords like `and`:
+
+    echo and                # based on context, we know this is not a keyword!
+    var x = true and false  # it's a keyword!
 
 ## Screenshots
 
 ![Stage 3 Demo](https://pages.oils.pub/oils-vim/screenshots/stage3-demo.png)
 
-### Substitutions and Splicing
+## Files
 
-- [lib-details.vim](../syntax/lib-details.vim)
+- [syntax/stage3.vim](../syntax/stage3.vim)
+  - [syntax/lib-details.vim](../syntax/lib-details.vim)
+- [testdata/details.ysh](../testdata/details.ysh) - This file has **examples**
+  of what we want to recognize.
+  - The highlighted version is published to <https://pages.oils.pub/oils-vim/>.
+
+## Notes
 
 ### Var Subs
 
@@ -23,6 +37,7 @@ the DQ-string lexer mode.
     Treesitter).
   - TODO: ysh `${x|html}` `${x .%3d}`
 
+## TODO
 
 ### Multi-Line
 

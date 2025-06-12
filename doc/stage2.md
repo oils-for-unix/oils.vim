@@ -56,10 +56,11 @@ The nested double quotes example is:
   - [syntax/lib-command-expr-dq.vim](../syntax/lib-command-expr-dq.vim)
 - [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh) - This file
   has **examples** of what we want to recognize.
+  - The highlighted version is published to <https://pages.oils.pub/oils-vim/>.
 
-## Notes
+## Overall Structure in `lexer-modes.vim`
 
-First, look at `lexer-modes.vim`.  Notice these definitions:
+Notice these definitions in `lexer-modes.vim`:
 
     syn cluster dqMode
           \ contains=varSubName,@dollarSubInExpr
@@ -73,9 +74,16 @@ First, look at `lexer-modes.vim`.  Notice these definitions:
 This is exactly the recursive structure of YSH syntax!  It is defined concisely
 with Vim syntax clusters, which are named sets of regions.
 
----
+## Prerequisites
 
 Now let's look through `lib-command-expr-dq.vim`.
+
+### Backslash-Quoted Operators
+
+In stage 1, we had to recognize `\'` and `\"` before we recognized `'strings'`.
+
+Likewise, we now have to recognize `\$ \@ \( \) \[ \]` before we recognize
+balanced delimiters `() []` and sigil pairs `$() $[]`.
 
 ### YSH Keywords
 
@@ -86,6 +94,8 @@ To rec expressions, we have to recognize **keywords**:
 - The `call` and `=` keywords are followed by expressions.
 - `proc` and `func` are followed by a name, then parameter lists.
 - TODO: `var const setvar setglobal` should also be followed by expressions
+
+## Notes
 
 ### Switching to Expression Mode
 
@@ -118,7 +128,7 @@ expressions within nested delimiters:
     var result = f(x,
                    42 + a[i])
 
-### More Notes
+### Subtle Issues
 
 `rhsExpr` and `exprAfterKeyword` end after a newline, `;` or ` #`.  Examples:
 
