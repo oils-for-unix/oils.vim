@@ -37,7 +37,7 @@ hi def link equalsKeyword Keyword
 hi def link funcKeyword Keyword
 hi def link procKeyword Keyword
 
-" skipwhite seems necessary to avoid conflict with typedArgs start=' ('
+" skipwhite seems necessary to avoid conflict with spaceParen start=' ('
 syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramList
 " also allow hyphens
 syn match procName '[a-zA-Z_-][a-zA-Z0-9_-]*' contained skipwhite nextgroup=paramList
@@ -74,7 +74,9 @@ syn region paramList matchgroup=Normal start='(' end=')' contained
       \ contains=@nested,@exprMode
 
 " pp (x) - space before (
-syn region typedArgs matchgroup=Normal start=' (' end=')' 
+" if (x)
+" return (x)
+syn region spaceParen matchgroup=Normal start=' (' end=')' 
       \ contains=@nested,@exprMode
 
 " pp [x] - space before [
@@ -153,7 +155,7 @@ hi def link caretExpr yshExpr
 hi def link rhsExpr yshExpr
 hi def link exprAfterKeyword yshExpr
 
-hi def link typedArgs yshExpr
+hi def link spaceParen yshExpr
 hi def link lazyTypedArgs yshExpr
 
 hi def link paramList Normal

@@ -40,7 +40,8 @@ We can fix this with **recursion**, discussed in [stage 2](stage2.md).
 
 - [syntax/stage1.vim](../syntax/stage1.vim)
   - [syntax/lib-comment-string.vim](../syntax/lib-comment-string.vim)
-- [testdata/minimal.ysh](../testdata/minimal.ysh)
+- [testdata/minimal.ysh](../testdata/minimal.ysh) - This file has **examples**
+  of what we want to recognize.
 
 ## Tips
 

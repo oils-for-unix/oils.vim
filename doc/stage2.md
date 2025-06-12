@@ -22,8 +22,7 @@ these three mutually recursive **sublanguages**, which are lexed differently.
 1. Words/Strings
 1. Expressions
 
-Here are some more examples
-
+Here are some more examples:
 
     echo "dq" $[42 + a[i]]
           ^~   ^~~~~~~~~ expression within command
@@ -40,6 +39,12 @@ Here are some more examples
                |
                + command within string
 
+The nested double quotes example is:
+
+    echo "nested $[mydict["word"]] quotes"
+                   ^~~~~~~|    |~ expression within string
+                          |++++|  string within expression within string
+
 ## Screenshots
 
 ![Stage 2 Demo](https://pages.oils.pub/oils-vim/screenshots/stage2-demo.png)
@@ -49,16 +54,55 @@ Here are some more examples
 - [syntax/stage2.vim](../syntax/stage2.vim)
   - [syntax/lexer-modes.vim](../syntax/lexer-modes.vim) - the high-level structure
   - [syntax/lib-command-expr-dq.vim](../syntax/lib-command-expr-dq.vim)
-- [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh)
+- [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh) - This file
+  has **examples** of what we want to recognize.
 
-## Details
+## Notes
+
+First, look at `lexer-modes.vim`.  Notice these definitions:
+
+    syn cluster dqMode
+          \ contains=varSubName,@dollarSubInExpr
+
+    syn cluster commandMode
+          \ ...
+
+    syn cluster exprMode
+          \ ...
+
+This is exactly the recursive structure of YSH syntax!  It is defined concisely
+with Vim syntax clusters, which are named sets of regions.
+
+---
+
+Now let's look through `lib-command-expr-dq.vim`.
+
+### YSH Keywords
+
+Our goal is to recognize commands, words, and expressions in YSH code.
+
+To rec expressions, we have to recognize **keywords**:
+
+- The `call` and `=` keywords are followed by expressions.
+- `proc` and `func` are followed by a name, then parameter lists.
+- TODO: `var const setvar setglobal` should also be followed by expressions
 
 ### Switching to Expression Mode
 
-- `typedArgs` - `pp (f(x))`
+These rules were the trickiest to develop:
+
+- `spaceParen` - `pp (f(x))` and `if (x) {` and `return (x)` ...
 - `lazyTypedArgs` - `pp [f(x)]`
 - `rhsExpr` - `var x = f(x)`
 - `exprAfterKeyword` - `call f(x)` and `= f(x)`
+- `exprSub exprSplice caretExpr` - `$[f(x)] @[f(x)] ^[f(x)]`
+
+Parameter lists are similar to expressions:
+
+- `paramList` - `proc my-proc (x, y) {`
+
+Sigil pairs:
+
 - `exprSub exprSplice caretExpr` - `$[f(x)] @[f(x)] ^[f(x)]`
 
 ### Switching to Command Mode
@@ -66,32 +110,26 @@ Here are some more examples
 - `commandSub commandSplice caretCommand` - `$(echo hi) @(echo hi) ^(echo hi)`
 - `yshArrayLiteral` - `:| a b |`
 
-### YSH Keywords
+### Python-like Rule for Multi-Line Expressions
 
-We define that the `call` and `=` keywords are followed by expressions.
+`nestedParen nestedBracket nestedBrace` are used to match multi-line
+expressions within nested delimiters:
 
-So we might as well do all the keywords, like `for func`.
+    var result = f(x,
+                   42 + a[i])
 
-### Issues
+### Tips
 
 - `rhsExpr` and `exprAfterKeyword` - they can end after `;` or ` #`
   - `var x = f(42); echo next'
   - `var x = f(42)  # comment
-- `nestedParen nestedBracket nestedBrace` - used to match multi-line
-  expressions within nested delimiters (a rule borrowed from Python)
 
 # Vim Mechanisms Used
 
-Here, we do it with **Vim regions**.
+Again, we use **Vim regions**, which can be **recursive**.  TextMate and
+SublimeText may be similar.
 
-- TextMate and SublimeText may be similar.
-- It's harder in TreeSitter, because stateful / modal lexers require external
-  scanners in C, which have an awkward interface constrained by incremental
-  parsing.
-
-Vim regions (`syn region`) do all the heavy lifting of lexer modes:
-
-- `contains=` for defining what's valid in each mode.  For example:
+- `contains=` for defines what's valid in each mode.  For example:
   - in DQ strings, `$[sub]` is allowed
   - in commands, `$[sub]` and `@[splice]` are allowed
   - in expressions, `^[lazy]` is allowed (`$[sub]` and `@[splice]` may come later)
@@ -104,3 +142,7 @@ Region parameters:
 - `matchgroup=`
   - `matchgroup=Normal` is necessary for nesting of delimiters, like `()` within `$()`
 - `end=' #'me=s-2` to say that the end of the match is before the delimiter ` #`, not after
+
+## Next
+
+If this all makes sense, move on to [stage 3](stage3.md).
