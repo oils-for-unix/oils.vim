@@ -4,13 +4,13 @@
 
 " $name
 syn match varSubName '\$[a-zA-Z_][a-zA-Z0-9_]*'
-" ${name}
-syn match varSubBracedName '\v\$\{[a-zA-Z_][a-zA-Z0-9_]*\}'
+" ${name} and ${name %3d} (not recursive)
+syn match varSubBracedName '\v\$\{[a-zA-Z_][a-zA-Z0-9_]*[^}]*\}'
 " $1 is valid, but not $11.  Should be ${11}
 syn match varSubNumber '\$[0-9]'
-" ${12}
+" ${12} and ${12 %3d}
 " \v means + is an operator
-syn match varSubBracedNumber '\v\$\{[0-9]+\}'
+syn match varSubBracedNumber '\v\$\{[0-9]+[^}]*\}'
 
 " @splice - \< word boundary doesn't work because @ is a non-word char
 " Use 2 patterns to avoid complex \z expressions
@@ -24,10 +24,7 @@ hi def link varSubBracedNumber yshVarSub
 " @array_splice is considered var sub
 hi def link varSplice yshVarSub
 
-" TODO:
-" - ${x %03d} and %{12 %03d}
-" - $$ $- ...
-"
+" TODO: $$ $- ...
 
 
 "

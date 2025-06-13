@@ -9,13 +9,16 @@ setvar dq = 'zz'
 setglobal g = "yy"
 
 proc p { echo hi }
-func f(x) { return (x) }
+func myFunc(x; offset=0) { return (x) }
 
 call len('str'); echo next
 call len('str')  # comment
 
 = len(g); echo next
   = len(g)  # = keyword
+
+# test for ; inside ()
+call myFunc(42; offset=10); echo next
 
 #=foo
 #echo =foo
@@ -237,6 +240,10 @@ var _x = x
 echo $name42 $name42x
 echo ${name42} ${name42x}
 echo $_x ${_x}
+
+# YSH has non-recursive ${}
+echo ${file:-} "foo ${base_dir:-}"
+echo ${12:-} "foo ${12:-}"
 
 echo foo@example.com  foo@example  # should not be highlighted as a splice
 
