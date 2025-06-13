@@ -48,14 +48,13 @@ true | call (42)
 # && ||
 
 #
-# Bugs
+# Bugs fixed
 #
 
 proc p (...args; x) {
   json write (args)
 }
 
-# TODO: Fix all of these
 p proc a b c (42)
 p func x y z (42)
 
@@ -64,3 +63,5 @@ p setvar x = (42)
 p setglobal a[i] = (42)
 
 p call (42)
+
+echo notbare = 42

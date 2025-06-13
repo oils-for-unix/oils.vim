@@ -9,7 +9,7 @@
 " call and setvar.  I think a gentle nudge to write "echo 'for'" is OK.
 
 syn keyword shellKeyword if elif else case while for in
-syn keyword yshKeyword break continue return
+hi def link shellKeyword Keyword
 
 " Regex to anchor keywords.
 " Here \( \| \) are regex operators, because \v 'very magic' mode doesn't work
@@ -25,22 +25,22 @@ let firstWordPrefix = firstWord . '\s*' . startMatch
 " call f(x)
 for kw in ['const', 'var', 'setvar', 'setglobal', 'call']
   let kwRegex = firstWordPrefix . kw . '\>'
-  execute 'syn match exprKeyword "' . kwRegex . '" nextgroup=exprAfterKeyword'
+  execute 'syn match yshKeyword "' . kwRegex . '" nextgroup=exprAfterKeyword'
 endfor
 
-" = f(x)  # handled differently than exprKeyword, rhsExpr
+" = f(x)  # handled differently than rhsExpr
 let equalsRegex = $"{firstWordPrefix}="
-execute 'syn match exprKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
+execute 'syn match yshKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
 
 let funcRegex = firstWordPrefix . 'func\>'
 let procRegex = firstWordPrefix . 'proc\>'
 
-execute 'syn match exprKeyword "' . funcRegex . '" nextgroup=funcName skipwhite'
-execute 'syn match exprKeyword "' . procRegex . '" nextgroup=procName skipwhite'
+execute 'syn match yshKeyword "' . funcRegex . '" nextgroup=funcName skipwhite'
+execute 'syn match yshKeyword "' . procRegex . '" nextgroup=procName skipwhite'
 
-hi def link shellKeyword Keyword
+" control flow is statically parsed in YSH
+syn keyword yshKeyword break continue return
 hi def link yshKeyword Keyword
-hi def link exprKeyword Keyword
 
 " skipwhite seems necessary to avoid conflict with spaceParen start=' ('
 syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramList
