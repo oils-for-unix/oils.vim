@@ -88,15 +88,16 @@ syn region spaceParen matchgroup=Normal start=' (' end=')'
 syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']' 
      \ contains=@nested,@exprMode
 
-" var x = f(42, a[i])
+" Bare assignment
+"   x = f(42, a[i])
 " rhsExpr starts with ' = ' (leading space distinguishes from = keyword)
 " and ends with
 " - a comment, with me=s-2 for ending BEFORE the #
 " - semicolon ; with me=s-1
 " - end of line
 " matchgroup=Normal prevents = from being highlighted
-syn region rhsExpr matchgroup=Normal start=' = ' end=' #'me=s-2 end=';'me=s-1 end='$'
-      \ contains=@nested,@exprMode
+let bareStartRegex = firstWordPrefix . '[a-zA-Z_][a-zA-Z0-9_]* = ' 
+execute 'syn region rhsExpr matchgroup=Normal start="' . bareStartRegex . '" end=" #"me=s-2 end=";"me=s-1 end="$" contains=@nested,@exprMode'
 
 " call f(x)
 " = f(x)
