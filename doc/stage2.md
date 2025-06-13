@@ -5,7 +5,7 @@ Stage 2: Correctly Switch Between Three Lexer Modes - `\ () [] $ @ =`
 
 This stage is the trickiest, because it involves **recursion**.
 
-In stage 1, we showed the "nested double quotes bug":
+In [stage 1](stage1.md), we showed the "nested double quotes bug":
 
 ![Stage 1 Nested Double Quotes](https://pages.oils.pub/oils-vim/screenshots/stage1-nested-dq.png)
 
@@ -100,16 +100,14 @@ Now let's look through `lib-command-expr-dq.vim`.
 
 ### Backslash-Quoted Operators
 
-In stage 1, we had to recognize `\'` and `\"` before we recognized `'strings'`.
+In [stage 1](stage1.md), we had to recognize `\'` and `\"` before we recognized `'strings'`.
 
 Likewise, we now have to recognize `\$ \@ \( \) \[ \]` before we recognize
 balanced delimiters `() []` and sigil pairs `$() $[]`.
 
 ### YSH Keywords
 
-Our goal is to recognize commands, words, and expressions in YSH code.
-
-To rec expressions, we have to recognize **keywords**:
+We also have to recognize **keywords** before we recognize expressions:
 
 - The `call` and `=` keywords are followed by expressions.
 - `proc` and `func` are followed by a name, then parameter lists.

@@ -3,7 +3,7 @@ Vim Syntax Highlighting for Oils
 
 This repo has an accurate Vim syntax highlighter for YSH.
 
-(Note: most editors already have shell plugins, so they understand OSH syntax!)
+(Note: most editors have shell plugins, so they already understand OSH syntax!)
 
 ## Installation
 
