@@ -23,26 +23,24 @@ let firstWordPrefix = firstWord . '\s*' . startMatch
 " const x = 42
 " setvar a[i] = 42
 " call f(x)
-let exprKeywords = ['const', 'var', 'setvar', 'setglobal', 'call']
-
-for kw in exprKeywords
+for kw in ['const', 'var', 'setvar', 'setglobal', 'call']
   let kwRegex = firstWordPrefix . kw . '\>'
   execute 'syn match exprKeyword "' . kwRegex . '" nextgroup=exprAfterKeyword'
 endfor
 
-" = f(x)  # handled differently than rhsExpr
+" = f(x)  # handled differently than exprKeyword, rhsExpr
 let equalsRegex = $"{firstWordPrefix}="
 execute 'syn match exprKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
 
-syn keyword funcKeyword func nextgroup=funcName skipwhite
-syn keyword procKeyword proc nextgroup=procName skipwhite
+let funcRegex = firstWordPrefix . 'func\>'
+let procRegex = firstWordPrefix . 'proc\>'
+
+execute 'syn match exprKeyword "' . funcRegex . '" nextgroup=funcName skipwhite'
+execute 'syn match exprKeyword "' . procRegex . '" nextgroup=procName skipwhite'
 
 hi def link shellKeyword Keyword
 hi def link yshKeyword Keyword
 hi def link exprKeyword Keyword
-
-hi def link funcKeyword Keyword
-hi def link procKeyword Keyword
 
 " skipwhite seems necessary to avoid conflict with spaceParen start=' ('
 syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramList
