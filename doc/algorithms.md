@@ -91,7 +91,7 @@ fills in details.
 ![Stages of Coarse Parsing](https://pages.oils.pub/oils-vim/screenshots/side-by-side.png)
 
 You can see `testdata/` rendered with each of 3 stages at
-<https://pages.oils.pub/oils-vim/>`.
+<https://pages.oils.pub/oils-vim/>.
 
 ---
 
