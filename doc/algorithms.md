@@ -8,7 +8,7 @@ these ways of doing it:
    - Editors like Vim and TextMate use the model of *regexes + a context
      stack*.
    - With this model, we can recognize YSH "lexer modes", and produce an
-     **accurate** highlighter.  Coarse does *not* mean inaccurate!
+     **accurate** highlighter.  Coarse does not mean inaccurate!
 1. **Context-Free Parsing**
    - Tree-sitter uses the model of resilient, incremental context-free parsing.
    - YSH should eventually have a Tree-sitter grammar.  But creating one is
@@ -26,11 +26,10 @@ So, different tools have different computational models, and we have to express
 YSH syntax within those limits.
 
 After writing this Vim plugin for YSH, I wrote docs describing the "coarse
-parsing" algorithm, linked below.
-
-A **surprise** may be that coarse parsing is not only easier than context-free
-parsing, but more accurate.  For evidence of that, see the bugs fixed in
-[tree-sitter-bash][], particularly in the external scanner:
+parsing" algorithm, linked below.  It's perhaps **surprising** that coarse
+parsing is not only easier than context-free parsing, but more accurate.  For
+evidence of that, see the bugs fixed in [tree-sitter-bash][], particularly in
+the external scanner:
 
 - <https://github.com/tree-sitter/tree-sitter-bash/commits/master/src/scanner.c>
 
@@ -91,6 +90,11 @@ fills in details.
 
 ![Stages of Coarse Parsing](https://pages.oils.pub/oils-vim/screenshots/side-by-side.png)
 
+You can see `testdata/` rendered with each of 3 stages at
+<https://pages.oils.pub/oils-vim/>`.
+
+---
+
 The coarse parsing approach should work with:
 
 1. Vim
@@ -102,7 +106,7 @@ The coarse parsing approach should work with:
 
 ### Highlighting issues
 
-But let's keep track of any correctness issues here:
+Let's keep track of any correctness issues here:
 
 - stage 1
   - `echo not#comment` vs `echo yes;#comment` (easy to fix)
@@ -149,7 +153,7 @@ Tree-sitter, I recommend starting with stage 1, as "practice".
 ## Algorithm 2: Context-Free Parsing with Tree-sitter
 
 Even though coarse parsing is easier than context-free parsing, it should give
-you much of the YSH knowledge necessary to create a context-free parser.
+you most of the YSH knowledge necessary to create a context-free parser.
 
 That said, it may be helpful for us to "recast" YSH syntax as context-free,
 with a YSH-only stateful lexer.  (Right now, OSH and YSH share the same
@@ -180,12 +184,12 @@ Shell syntax is harder to understand than YSH syntax, but these comparisons migh
 - Emac's
   [sh-script.el](https://cgit.git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/sh-script.el)
   is 3400 lines
-- [tree-sitter-bash](https://github.com/tree-sitter/tree-sitter-bash)
+- [tree-sitter-bash][]
   - 1189 lines in `grammar.js`
   - 1217 lines in the external `scanner.c`
 
-Note that some plugins (like Emacs) also do navigation and smart indenting, not
-just syntax highlighting.
+Note that some plugins (like Emacs) also implement smart navigation and
+indenting, not just syntax highlighting.
 
 ## Please Ask Questions on Zulip
 
@@ -232,7 +236,7 @@ Summary:
   - [syntax/stage3.vim](../syntax/stage3.vim)
   - [testdata/details.ysh](../testdata/details.ysh)
   - YSH features: sub and splice, expression keywords, ...
-  - Smart errors: bad backslash escapes
+  - Smart errors: bad `\` escapes, ...
 
 ### Notes on YSH Syntax
 
