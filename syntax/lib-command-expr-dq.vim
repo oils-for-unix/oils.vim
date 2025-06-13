@@ -28,15 +28,15 @@ for kw in ['const', 'var', 'setvar', 'setglobal', 'call']
   execute 'syn match yshKeyword "' . kwRegex . '" nextgroup=exprAfterKeyword'
 endfor
 
-" = f(x)  # handled differently than rhsExpr
-let equalsRegex = $"{firstWordPrefix}="
-execute 'syn match yshKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
-
 let funcRegex = firstWordPrefix . 'func\>'
 let procRegex = firstWordPrefix . 'proc\>'
 
 execute 'syn match yshKeyword "' . funcRegex . '" nextgroup=funcName skipwhite'
 execute 'syn match yshKeyword "' . procRegex . '" nextgroup=procName skipwhite'
+
+" = f(x)  # slightly different regex
+let equalsRegex = firstWordPrefix . '='
+execute 'syn match yshKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
 
 " control flow is statically parsed in YSH
 syn keyword yshKeyword break continue return
@@ -63,9 +63,7 @@ syn region nestedParen matchgroup=nestedPair start='(' end=')' transparent conta
 syn region nestedBracket matchgroup=nestedPair start='\[' end=']' transparent contained
       \ contains=@nested,@exprMode
 
-" TODO: why is {} colored Special, when the nestedPair should be Normal?
 " This is only used for expressions, not for command blocks { }
-" skip='\\[{}]' could be useful
 syn region nestedBrace matchgroup=nestedPair start='{' end='}' transparent contained
       \ contains=@nested,@exprMode
 
@@ -90,20 +88,16 @@ syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']'
 
 " Bare assignment
 "   x = f(42, a[i])
-" rhsExpr starts with ' = ' (leading space distinguishes from = keyword)
-" and ends with
-" - a comment, with me=s-2 for ending BEFORE the #
-" - semicolon ; with me=s-1
-" - end of line
-" matchgroup=Normal prevents = from being highlighted
-let bareStartRegex = firstWordPrefix . '[a-zA-Z_][a-zA-Z0-9_]* = ' 
-execute 'syn region rhsExpr matchgroup=Normal start="' . bareStartRegex . '" end=" #"me=s-2 end=";"me=s-1 end="$" contains=@nested,@exprMode'
+let bareAssignRegex = firstWordPrefix . '[a-zA-Z_][a-zA-Z0-9_]* =' 
+execute 'syn match yshExpr "' . bareAssignRegex . '" nextgroup=exprAfterKeyword'
 
-" call f(x)
-" = f(x)
+" exprAfterKeyword
+"   starts with space, and ends with:
+"   - a comment, with me=s-2 for ending BEFORE the #
+"   - semicolon ; with me=s-1
+"   - end of line
 syn region exprAfterKeyword start='\s' end=' #'me=s-2 end=';'me=s-1 end='$' contained
       \ contains=@nested,@exprMode
-" note: call is the same as =, but the 'call' keyword also interferes
 
 "
 " --> Expression Mode

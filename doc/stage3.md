@@ -101,6 +101,10 @@ own little lexical language:
 
 Note: YSH array literals like `:| my-array echo hi |` don't have redirects.
 
+### Prefix Env Bindings
+
+    PYTHONPATH=. foo/bar.py
+
 ### Word Language
 
 - `~/src` and `~bob/src`

@@ -24,8 +24,13 @@ var c = (f(2), f(1), f(0), a[0], {})
 # bare assignment
 hay define Package
 Package foo {
-  x = 42    
+  x = 42 + f(1)
   y = ['foo', "$y"]
+  multi_line = [
+    'a',
+    'b',
+    $(echo hi),
+  ]
 }
 
 pp (1 + (a[1] + 3)); echo next

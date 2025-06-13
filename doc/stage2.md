@@ -107,11 +107,12 @@ balanced delimiters `() []` and sigil pairs `$() $[]`.
 
 ### YSH Keywords
 
-We also have to recognize **keywords** before we recognize expressions:
+We also have to recognize **keywords** before we recognize expressions.  These
+keywords are all treated similarly:
 
-- The `call` and `=` keywords are followed by expressions.
-- `proc` and `func` are followed by a name, then parameter lists.
-- TODO: `var const setvar setglobal` should also be followed by expressions
+    call =                      # followed by a RHS expression
+    var const setvar setglobal  # followed by a LHS and RHS expression
+    proc func                   # followed by a name, then a parameter list
 
 ## Notes
 
@@ -119,10 +120,10 @@ We also have to recognize **keywords** before we recognize expressions:
 
 These rules were the trickiest to develop:
 
+- `exprAfterKeyword` - `call = var const setvar setglobal`
 - `spaceParen` - `pp (f(x))` and `if (x) {` and `return (x)` ...
 - `lazyTypedArgs` - `pp [f(x)]`
-- `rhsExpr` - `var x = f(x)`
-- `exprAfterKeyword` - `call f(x)` and `= f(x)`
+- `rhsExpr` - `= f(x)`
 - `exprSub exprSplice caretExpr` - `$[f(x)] @[f(x)] ^[f(x)]`
 
 Parameter lists are similar to expressions:

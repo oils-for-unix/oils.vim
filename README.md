@@ -81,8 +81,4 @@ This repo is hosted at:
 
 ## TODO
 
-- Command keywords should be anchored to line, or after `;`
-  - `=`
-  - `proc func`
-  - `var setvar ...` should be followed by expressions, to avoid `=` rule?
 - Fix `--foo=r'bar'` issue in YSH
