@@ -71,8 +71,28 @@ Notice these definitions in `lexer-modes.vim`:
     syn cluster exprMode
           \ ...
 
-This is exactly the recursive structure of YSH syntax!  It is defined concisely
-with Vim syntax clusters, which are named sets of regions.
+This is exactly the recursive structure of YSH syntax!  It's defined concisely
+with Vim syntax **clusters**, which are named sets of **regions**.
+
+---
+
+We reference the clusters/modes in `lib-command-expr-dq.vim`, e.g. `@exprMode`
+and `@commandMode`:
+
+    syn region exprSub matchgroup=sigilPair start='\$\[' end=']'
+          \ contains=nestedBracket,@exprMode
+
+    syn region commandSub matchgroup=sigilPair start='\$(' end=')'
+          \ contains=nestedParen,@commandMode
+
+This is a nice way of saying that `$[]` contains expressions, and that `$()`
+contains commands.
+
+We also include `nestedBracket` and `nestedParen`, so that balanced
+delimiters in `$[a[i]]` and `$(json write (x))` are correctly matched.
+
+(This is why it's called *coarse parsing* - within each region, we only match
+what we need to!)
 
 ## Prerequisites
 

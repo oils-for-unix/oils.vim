@@ -3,26 +3,24 @@
 "
 
 syn keyword shellKeyword if elif else case while for in
-syn keyword yshKeyword const var setvar setglobal break continue return
+syn keyword yshKeyword break continue return
 
-" beginning of line or ; 
-" then whitespace
-" Are have to use \( \| \) here as operators, because \v doesn't work with \> " ?
-" On Vim 9, \v seems buggy?
+" TODO: these should also be anchored to the beginning of a line
+syn keyword yshKeyword const var setvar setglobal 
 
-let firstWord = '\(^\|[;|&]\)'  " begin line or ; or | or &
+" Here \( \| \) are regex operators, because \v 'very magic' mode doesn't work
+" with \> ?  This seems like a Vim 9 bug?
+let firstWord = '\(^\|[;|&]\)'  " beginning of line or ; or | or &
+
 let space = '\s*'
 let endWord = '\>'
 let startMatch = '\zs'
 
-" The call and = keywords are followed by an expression
-
+" call f(x)
 let callRegex = $"{firstWord}{space}{startMatch}call{endWord}"
-
 execute 'syn match callKeyword "' . callRegex . '" nextgroup=exprAfterKeyword'
-"syn keyword callKeyword call nextgroup=exprAfterKeyword 
 
-" The = keyword occurs at the beginning of a line (different than rhsExpr)
+" = f(x)  # handled differently than rhsExpr
 let equalsRegex = $"{firstWord}{space}="
 execute 'syn match equalsKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
 
