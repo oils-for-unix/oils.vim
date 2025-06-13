@@ -139,8 +139,6 @@ Notes:
   - as well as unquoted in expressions
 
 ```   
-var myarray = :| hi ; > |  # no operator chars
-
 var x = u'foo \yff'        # no byte escapes
 
 var x = b'invalid \z'      # no \z
@@ -166,4 +164,3 @@ Could highlight these as errors:
 Let me know if you got this far!  And feel free to ask questions on Zulip:
 
 - <https://oilshell.zulipchat.com/>
-

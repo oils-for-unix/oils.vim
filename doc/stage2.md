@@ -151,6 +151,7 @@ We use these region paramters:
 - `nextgroup=` - for `call` and `=` keywords, `func` and `proc`
 - `matchgroup=`
   - `matchgroup=Normal` is necessary for nesting of delimiters, like `()` within `$()`
+- `\zs` in patterns to set the start position
 - `end=' #'me=s-2` to say that the end of the match is before the delimiter ` #`, not after
 - `skipwhite` for `func` and `proc`, to avoid `spaceParen` matching
   - Note: it seems like we should be able to avoid `skipwhite`?  Another
@@ -166,8 +167,11 @@ We use Vim 8 string interpolation:
     let name = 'world'
     let greeting = $"hello {world}"  # like shell, with {} rather than ${}
 
-We use `execute 'syn match "' . callRegex . '"' so that we can test `callRegex`
-in [syntax/ysh-test.vim](../syntax/ysh-test.vim).
+We use dynamic evaluation with `execute`.
+
+For example, `execute 'syn match "' . callRegex . '"'` is apparently the only
+way to extract `callRegex` into a variable, so it can be tested in
+[syntax/ysh-test.vim](../syntax/ysh-test.vim).
 
 ## Next
 

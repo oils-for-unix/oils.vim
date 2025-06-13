@@ -134,12 +134,15 @@ Tree-sitter, I recommend starting with stage 1, as "practice".
   - I think it must match each pattern separately, rather than using `|` to
     match "in parallel".  re2c "longest match" semantics don't work.  But maybe
     Python's backtracking "leftmost match" does?
-  - We also use `nextgroup=` and `end=''me=s-1` and `\\zs`
+  - We also use `nextgroup=` and `end=''me=s-1` and `\zs` (start position)
 - Trivia: Vim started developing `regexp_nfa.c` around 2013
   - "Problem: syntax highlighting can be slow"
   - e.g.
     <https://github.com/vim/vim/commit/fbc0d2ea1e13fb55c267b72d64046e5ef984b97f>,
     several people including Russ Cox are credited
+- [lobste.rs thread on
+  parsing](https://lobste.rs/s/495rx9/which_i_have_opinions_about_parsing#c_dpaqyq)
+  - at least 2 people are using coarse parsing
 
 [micro-syntax]: https://github.com/oils-for-unix/oils/blob/master/doctools/micro_syntax.re2c.h
 
@@ -153,7 +156,7 @@ with a YSH-only stateful lexer.  (Right now, OSH and YSH share the same
 lexer.)
 
 We could create such a YSH-only lexer, and a context-free grammar expressed
-with pgen2.  Some notes here:
+with `pgen2`.  Some notes here:
 
 - [#tools-for-oils > Overview of stateful lexer problem](https://oilshell.zulipchat.com/#narrow/channel/403333-tools-for-oils/topic/Overview.20of.20stateful.20lexer.20problem/with/521811845)
 - [#tools-for-oils > YSH Lexer That Can Run By Itself](https://oilshell.zulipchat.com/#narrow/channel/403333-tools-for-oils/topic/YSH.20Lexer.20That.20Can.20Run.20By.20Itself/with/389082925)
@@ -186,18 +189,18 @@ just syntax highlighting.
 
 ## Please Ask Questions on Zulip
 
-If you're interested in supporting YSH in a new editor, please ask questions at
+If you're interested in supporting YSH in a new editor, please ask questions on
 `#tools-for-oils` at <https://oilshell.zulipchat.com/>.
 
 We'd like to help create many syntax highlighters!
 
-This set of docs is a good outline, but it may not be complete.
+These docs are a good overview, but they may not be complete.
 
 ## Appendix
 
 ### Structure of the Vim plugin
 
-This command shows an overview:
+This command shows how the code is structured:
 
     ./run.sh count-lines  
 
@@ -218,15 +221,17 @@ Summary:
   - Vim features: regex matches, regex regions (without `contains=`)
 - Stage 2 - ~260 more lines
   - [syntax/stage2.vim](../syntax/stage2.vim)
-  - [syntax/lexer-modes.vim](../syntax/stage2.vim) - declarative definitions of
+  - [syntax/lexer-modes.vim](../syntax/lexer-modes.vim) - declarative definitions of
     YSH lexer modes, with Vim `syn cluster`!  Vim is pretty nice.
   - [testdata/recursive-modes.ysh](../testdata/recursive-modes.ysh)
-  - Vim features: `syn cluster`, `contains=@cluster`, `matchgroup=`
-  - YSH features: keywords, nested pairs, sigil pairs, `=`
+  - Vim features: `syn cluster`, `contains=@cluster`, `matchgroup=`,
+    `nextgroup=`, `skipwhite`
+  - YSH features: keywords, nested pairs, sigil pairs, multi-line expressions,
+    all the command <-> expression transitions
 - Stage 3 - ~90 more lines
   - [syntax/stage3.vim](../syntax/stage3.vim)
   - [testdata/details.ysh](../testdata/details.ysh)
-  - YSH features: sub and splice, expression keywords, redirects
+  - YSH features: sub and splice, expression keywords, ...
   - Smart errors: bad backslash escapes
 
 ### Notes on YSH Syntax
