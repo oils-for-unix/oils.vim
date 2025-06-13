@@ -258,3 +258,6 @@ echo $(echo \{ \})
 pushd /tmp
 cd /
 popd
+
+# time is a keyword, which takes a pipeline
+time echo hi | wc -l

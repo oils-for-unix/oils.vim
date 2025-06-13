@@ -8,7 +8,7 @@
 " But in Vim, we only do this for YSH keywords that take expressions, like
 " call and setvar.  I think a gentle nudge to write "echo 'for'" is OK.
 
-syn keyword shellKeyword if elif else case while for in
+syn keyword shellKeyword if elif else case while for in time
 hi def link shellKeyword Keyword
 
 " Regex to anchor keywords.
