@@ -2,13 +2,12 @@
 echo yes # comment
 
 # should be highlighted, but isn't
-
 echo yes;#comment
 
 
 var s='s'
 
-# spaces are required
+# fixed
 var i =len(s)
 var i= len(s)
 

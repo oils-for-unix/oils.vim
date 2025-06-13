@@ -2,37 +2,50 @@
 " Keywords (call and = take expressions)
 "
 
+" Note: it's more accurate if some of these keywords, like 'if for break', are
+" anchored to the first word.  This solves the 'echo for' corner case.
+"
+" But in Vim, we only do this for YSH keywords that take expressions, like
+" call and setvar.  I think a gentle nudge to write "echo 'for'" is OK.
+
 syn keyword shellKeyword if elif else case while for in
 syn keyword yshKeyword break continue return
 
 " TODO: these should also be anchored to the beginning of a line
-syn keyword yshKeyword const var setvar setglobal 
+syn keyword yshKeyword setvar setglobal 
 
 " Here \( \| \) are regex operators, because \v 'very magic' mode doesn't work
 " with \> ?  This seems like a Vim 9 bug?
 let firstWord = '\(^\|[;|&]\)'  " beginning of line or ; or | or &
 let space = '\s*'
+" Vim construct
 let startMatch = '\zs'
 
 let firstWordPrefix = firstWord . space . startMatch
 
 let endWord = '\>'
 
+" const x = 42
+let constRegex = $"{firstWordPrefix}const{endWord}"
+execute 'syn match exprKeyword "' . constRegex . '" nextgroup=exprAfterKeyword'
+
+let varRegex = $"{firstWordPrefix}var{endWord}"
+execute 'syn match exprKeyword "' . varRegex . '" nextgroup=exprAfterKeyword'
+
 " call f(x)
 let callRegex = $"{firstWordPrefix}call{endWord}"
-execute 'syn match callKeyword "' . callRegex . '" nextgroup=exprAfterKeyword'
+execute 'syn match exprKeyword "' . callRegex . '" nextgroup=exprAfterKeyword'
 
 " = f(x)  # handled differently than rhsExpr
 let equalsRegex = $"{firstWordPrefix}="
-execute 'syn match equalsKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
+execute 'syn match exprKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
 
 syn keyword funcKeyword func nextgroup=funcName skipwhite
 syn keyword procKeyword proc nextgroup=procName skipwhite
 
 hi def link shellKeyword Keyword
 hi def link yshKeyword Keyword
-hi def link callKeyword Keyword
-hi def link equalsKeyword Keyword
+hi def link exprKeyword Keyword
 
 hi def link funcKeyword Keyword
 hi def link procKeyword Keyword
