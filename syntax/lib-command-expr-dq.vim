@@ -11,30 +11,24 @@
 syn keyword shellKeyword if elif else case while for in
 syn keyword yshKeyword break continue return
 
-" TODO: these should also be anchored to the beginning of a line
-syn keyword yshKeyword setvar setglobal 
-
+" Regex to anchor keywords.
 " Here \( \| \) are regex operators, because \v 'very magic' mode doesn't work
 " with \> ?  This seems like a Vim 9 bug?
 let firstWord = '\(^\|[;|&]\)'  " beginning of line or ; or | or &
-let space = '\s*'
-" Vim construct
+" Special vim construct
 let startMatch = '\zs'
 
-let firstWordPrefix = firstWord . space . startMatch
-
-let endWord = '\>'
+let firstWordPrefix = firstWord . '\s*' . startMatch
 
 " const x = 42
-let constRegex = $"{firstWordPrefix}const{endWord}"
-execute 'syn match exprKeyword "' . constRegex . '" nextgroup=exprAfterKeyword'
-
-let varRegex = $"{firstWordPrefix}var{endWord}"
-execute 'syn match exprKeyword "' . varRegex . '" nextgroup=exprAfterKeyword'
-
+" setvar a[i] = 42
 " call f(x)
-let callRegex = $"{firstWordPrefix}call{endWord}"
-execute 'syn match exprKeyword "' . callRegex . '" nextgroup=exprAfterKeyword'
+let exprKeywords = ['const', 'var', 'setvar', 'setglobal', 'call']
+
+for kw in exprKeywords
+  let kwRegex = firstWordPrefix . kw . '\>'
+  execute 'syn match exprKeyword "' . kwRegex . '" nextgroup=exprAfterKeyword'
+endfor
 
 " = f(x)  # handled differently than rhsExpr
 let equalsRegex = $"{firstWordPrefix}="

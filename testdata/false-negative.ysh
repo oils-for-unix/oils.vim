@@ -7,7 +7,7 @@ echo yes;#comment
 
 var s='s'
 
-# fixed
+# bug FIXED
 var i =len(s)
 var i= len(s)
 
@@ -17,11 +17,7 @@ call len(s)
 pp [ s ]
 pp ( s )
 
-# BUG
-# Hm maybe we don't need rhsExpr
-# we need exprAfterKeyword for const, var, setvar, setglobal ?
-# Including the =
-
+# bug FIXED
 setvar i += len(s)
 setvar i -= len(s)
 
