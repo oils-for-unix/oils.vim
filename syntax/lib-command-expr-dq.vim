@@ -1,3 +1,5 @@
+source <sfile>:h/lib-regex.vim
+
 "
 " Keywords (call and = take expressions)
 "
@@ -43,9 +45,8 @@ syn keyword yshKeyword break continue return
 hi def link yshKeyword Keyword
 
 " skipwhite seems necessary to avoid conflict with spaceParen start=' ('
-syn match funcName '[a-zA-Z_][a-zA-Z0-9_]*' contained skipwhite nextgroup=paramList
-" also allow hyphens
-syn match procName '[a-zA-Z_-][a-zA-Z0-9_-]*' contained skipwhite nextgroup=paramList
+execute 'syn match funcName "' . varNameRegex . '" contained skipwhite nextgroup=paramList'
+execute 'syn match procName "' . procNameRegex . '" contained skipwhite nextgroup=paramList'
 
 " ^"" - string literal that only appears in expression mode
 syn region caretDqString matchgroup=sigilPair start='\^"' skip='\\.' end='"' 
@@ -88,7 +89,7 @@ syn region lazyTypedArgs matchgroup=Normal start=' \[' end=']'
 
 " Bare assignment
 "   x = f(42, a[i])
-let bareAssignRegex = firstWordPrefix . '[a-zA-Z_][a-zA-Z0-9_]* =' 
+let bareAssignRegex = firstWordPrefix . varNameRegex . ' =' 
 execute 'syn match yshExpr "' . bareAssignRegex . '" nextgroup=exprAfterKeyword'
 
 " exprAfterKeyword

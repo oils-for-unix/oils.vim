@@ -105,3 +105,15 @@ var b = b'''
 # echo b'\y BAD'
 # echo b'\yGG BAD'
 # echo b'\m BAD'
+
+
+FOO=bar env -i echo
+
+FOO=bar SPAM_EGGS='baz' env -i echo
+
+# Invalid env name
+# FOO=bar SPAM-EGGS='baz' env -i echo
+
+var argv_array = :| echo hi |
+@argv_array bye
+echo @argv_array bye

@@ -1,21 +1,28 @@
+source <sfile>:h/lib-regex.vim
+
 "
 " Substitutions, splicing
 "
 
 " $name
-syn match varSubName '\$[a-zA-Z_][a-zA-Z0-9_]*'
+let regex = '\v\$' . varNameRegex 
+execute 'syn match varSubName "' . regex . '"'
+
 " ${name} and ${name %3d} (not recursive)
-syn match varSubBracedName '\v\$\{[a-zA-Z_][a-zA-Z0-9_]*[^}]*\}'
+" \v so \{ is literal
+let regex = '\v\$\{' . varNameRegex . '[^}]*\}'
+execute 'syn match varSubBracedName "' . regex . '"'
+
 " $1 is valid, but not $11.  Should be ${11}
 syn match varSubNumber '\$[0-9]'
 " ${12} and ${12 %3d}
 " \v means + is an operator
 syn match varSubBracedNumber '\v\$\{[0-9]+[^}]*\}'
 
-" @splice - \< word boundary doesn't work because @ is a non-word char
-" Use 2 patterns to avoid complex \z expressions
-syn match varSplice '[ \t]@[a-zA-Z_][a-zA-Z0-9_]*'
-syn match varSplice '^@[a-zA-Z_][a-zA-Z0-9_]*'
+" @splice at beginning of line or preceded by space
+" \< word boundary doesn't work because @ is a non-word char
+let regex = '\v(^|\s)\@' . varNameRegex
+execute 'syn match varSplice "' . regex . '"'
 
 hi def link varSubName yshVarSub
 hi def link varSubBracedName yshVarSub
