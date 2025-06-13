@@ -120,10 +120,9 @@ keywords are all treated similarly:
 
 These rules were the trickiest to develop:
 
-- `exprAfterKeyword` - `call = var const setvar setglobal`
+- `exprAfterKeyword` - `call = var const setvar setglobal` and bare assignment
 - `spaceParen` - `pp (f(x))` and `if (x) {` and `return (x)` ...
 - `lazyTypedArgs` - `pp [f(x)]`
-- `rhsExpr` - `= f(x)`
 - `exprSub exprSplice caretExpr` - `$[f(x)] @[f(x)] ^[f(x)]`
 
 Parameter lists are similar to expressions:
