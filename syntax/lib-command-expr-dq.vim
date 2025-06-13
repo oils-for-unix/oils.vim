@@ -11,17 +11,19 @@ syn keyword yshKeyword const var setvar setglobal
 " Here \( \| \) are regex operators, because \v 'very magic' mode doesn't work
 " with \> ?  This seems like a Vim 9 bug?
 let firstWord = '\(^\|[;|&]\)'  " beginning of line or ; or | or &
-
 let space = '\s*'
-let endWord = '\>'
 let startMatch = '\zs'
 
+let firstWordPrefix = firstWord . space . startMatch
+
+let endWord = '\>'
+
 " call f(x)
-let callRegex = $"{firstWord}{space}{startMatch}call{endWord}"
+let callRegex = $"{firstWordPrefix}call{endWord}"
 execute 'syn match callKeyword "' . callRegex . '" nextgroup=exprAfterKeyword'
 
 " = f(x)  # handled differently than rhsExpr
-let equalsRegex = $"{firstWord}{space}="
+let equalsRegex = $"{firstWordPrefix}="
 execute 'syn match equalsKeyword "' . equalsRegex . '" nextgroup=exprAfterKeyword'
 
 syn keyword funcKeyword func nextgroup=funcName skipwhite
