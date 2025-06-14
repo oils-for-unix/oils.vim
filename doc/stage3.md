@@ -48,7 +48,6 @@ In YSH, var subs are **non-recursive** leaves.
 - `$1` and `${12}`, but not `$12`
 - `$x` and `${x}`
   - may occur in commands, or double-quoted strings
-- TODO: ysh `${x|html}` `${x .%3d}`
 - `echo @myarray`
 
 ## TODO

@@ -110,9 +110,8 @@ Let's keep track of any correctness issues here:
 
 - stage 1
   - `echo not#comment` vs `echo yes;#comment` (easy to fix)
-  - `r''` with word boundary `\<` - TODO: YSH will change.
 - stage 2
-  - `echo for` - `for` is not a keyword
+  - `echo for` - `for` is not a keyword (easy to fix)
 
 ### Project Idea: Tree-sitter Can Express Stage 1
 
