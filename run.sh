@@ -12,7 +12,7 @@ test-files() {
   for f in testdata/*.ysh; do
     echo "=== $f ==="
     # 'demo' arg for screenshot.ysh
-    ysh $f demo
+    ../oils/bin/ysh $f demo
     echo
   done
 }

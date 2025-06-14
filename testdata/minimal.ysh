@@ -75,9 +75,11 @@ var r2 = r'C:\Program Files\' # r'' prefix is allowed
 
 # corner cases for r''
 echo ls --foo='bar'
-echo ls --foo=r'bar'
-echo ls bar'bar'
-echo ls -r'bar' 
+
+# disallowed
+#echo ls --foo=r'bar'
+#echo ls bar'bar'
+#echo ls -r'bar' 
 
 # beginning of line
 'echo'

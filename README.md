@@ -78,7 +78,3 @@ This repo is hosted at:
 ---
 
 ![Stages of Coarse Parsing](https://pages.oils.pub/oils-vim/screenshots/side-by-side.png)
-
-## TODO
-
-- Fix `--foo=r'bar'` issue in YSH
